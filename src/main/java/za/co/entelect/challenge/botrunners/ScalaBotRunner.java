@@ -4,14 +4,14 @@ import za.co.entelect.challenge.config.BotMetaData;
 
 import java.io.IOException;
 
-public class JavaScriptBotRunner extends BotRunner {
-    public JavaScriptBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+public class ScalaBotRunner extends BotRunner {
+    public ScalaBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
         super(botMetaData, timeoutInMilliseconds);
     }
 
     @Override
     protected void runBot() throws IOException {
-        String line = "node \"" + this.getBotFileName() + "\"";
+        String line = "java -jar \"" + this.getBotFileName() + "\"";
         runSimpleCommandLineCommand(line, 0);
     }
 
