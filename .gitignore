@@ -1,6 +1,10 @@
-# Ignoring intelij specifics
-.idea/
-*.iml
 
-*.class
-*.log
+.idea/modules/
+
+.idea/modules.xml
+
+.idea/libraries/
+
+target/
+
+.idea/
