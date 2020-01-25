@@ -1,4 +1,4 @@
-name := "ec-2020-game-engine"
+name := "game-engine"
 
 version := "0.1"
 
