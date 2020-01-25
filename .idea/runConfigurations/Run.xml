@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run" type="SbtRunConfiguration" factoryName="sbt Task" show_console_on_std_err="false" show_console_on_std_out="false">
     <option name="allowRunningInParallel" value="false" />
-    <option name="tasks" value="~run" />
+    <option name="tasks" value="run" />
     <option name="useSbtShell" value="true" />
     <option name="vmparams" value="-Xms512M -Xmx1024M -Xss1M -XX:+CMSClassUnloadingEnabled" />
     <option name="workingDir" value="$PROJECT_DIR$" />
