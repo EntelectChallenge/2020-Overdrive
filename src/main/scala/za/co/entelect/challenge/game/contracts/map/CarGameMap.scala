@@ -1,11 +1,15 @@
 package za.co.entelect.challenge.game.contracts.map
 
+import java.util
+
 import za.co.entelect.challenge.game.contracts.common.RefereeMessage
 import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer, GamePlayer}
+import za.co.entelect.challenge.game.contracts.player.Player
 
 import scala.collection.JavaConverters._
 
-class CarGameMap extends GameMap {
+class CarGameMap(list: util.List[Player]) extends GameMap {
+
   override def getCurrentRound: Int = {
     return 0;
   }
@@ -15,11 +19,11 @@ class CarGameMap extends GameMap {
   }
 
   override def getWinningPlayer: GamePlayer = {
-    return new GamePlayer {
-        override def getHealth: Int = ???
 
-        override def getScore: Int = ???
-    };
+    var firstPlayer = list.get(0);
+    var firstGamePlayer = firstPlayer.getGamePlayer();
+
+    return firstGamePlayer;
   }
 
   override def getRefereeIssues: RefereeMessage = {

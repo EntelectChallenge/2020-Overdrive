@@ -1,11 +1,11 @@
 package za.co.entelect.challenge.game.contracts.game
 
-class CarGamePlayer extends GamePlayer{
+class CarGamePlayer(health: Int, score: Int) extends GamePlayer{
   override def getHealth: Int = {
-    return 75;
+    return health;
   }
 
   override def getScore: Int = {
-    return 2563;
+    return score;
   }
 }
