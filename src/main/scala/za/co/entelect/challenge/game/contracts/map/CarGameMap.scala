@@ -8,19 +8,19 @@ import za.co.entelect.challenge.game.contracts.player.Player
 
 import scala.collection.JavaConverters._
 
-class CarGameMap(list: util.List[Player]) extends GameMap {
+class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, blocks: Array[Block], var round: Int) extends GameMap {
 
   override def getCurrentRound: Int = {
-    return 0;
+    return round;
   }
 
-  override def setCurrentRound(i: Int): Unit = {
-    println("setCurrentRound");
+  override def setCurrentRound(currentRound: Int): Unit = {
+    round = currentRound;
   }
 
   override def getWinningPlayer: GamePlayer = {
 
-    var firstPlayer = list.get(0);
+    var firstPlayer = players.get(0);
     var firstGamePlayer = firstPlayer.getGamePlayer();
 
     return firstGamePlayer;
