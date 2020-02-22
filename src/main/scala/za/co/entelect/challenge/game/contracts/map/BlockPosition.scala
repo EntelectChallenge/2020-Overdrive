@@ -8,4 +8,11 @@ class BlockPosition(lane: Int, blockNumber: Int) {
     def getBlockNumber(): Int = {
         return blockNumber;
     }
+
+    override def toString() : String = { 
+        val stringRepresentation = 
+            "lane: " + lane + 
+            " blockNumber: " + blockNumber; 
+        return stringRepresentation;
+    }
 }

@@ -9,4 +9,8 @@ class Block(position: BlockPosition, mapObject: Int, var occupiedByPlayerWithId:
             " occupiedByPlayerWithId: " + occupiedByPlayerWithId;
         return stringRepresentation;
     } 
+
+    def getPosition(): BlockPosition = {
+        return position;
+    }
 }

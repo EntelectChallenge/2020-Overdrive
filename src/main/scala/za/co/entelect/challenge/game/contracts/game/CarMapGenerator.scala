@@ -10,17 +10,17 @@ import za.co.entelect.challenge.game.contracts.map.BlockObjectEnum;
 
 import za.co.entelect.challenge.game.contracts.player.Player
 
-class CarMapGenerator extends GameMapGenerator {
+class CarMapGenerator(seed: Int) extends GameMapGenerator {
     override def generateGameMap(players: util.List[Player]): GameMap = {
         val registeredPlayers = registerGamePlayers(players);
 
-        val mapGenerationSeed = generateSeedForMapGeneration();
+        val mapGenerationSeed = seed;
         val lanes = 4;
         val trackLength = 1500;
         val intialisationRound = 0;
         
         val randomNumberGenerator = new scala.util.Random(mapGenerationSeed);
-        val blocks = generateBlocks(lanes, trackLength, randomNumberGenerator);
+        val blocks = generateBlocks(lanes, trackLength, randomNumberGenerator, players);
 
         val carGameMap = new CarGameMap(
             players, 
@@ -30,23 +30,27 @@ class CarMapGenerator extends GameMapGenerator {
             blocks, 
             intialisationRound
         );
+
         return carGameMap;
     }
 
     def registerGamePlayers(players: util.List[Player]): util.List[Player] = {
         val defaultHealth = 0;
         val defaultScore = 0;
-        players.forEach(x => x.playerRegistered(new CarGamePlayer(defaultHealth,defaultScore)));
+        val initialSpeed = 5;
+        val initialState = "ready";
+
+        for (i <- 0 to (players.size() - 1)) {
+            val currentPlayer = players.get(i);
+            val playerId = i + 1;
+            val newGamePlayer = new CarGamePlayer(defaultHealth, defaultScore, playerId, initialSpeed, initialState); 
+            currentPlayer.playerRegistered(newGamePlayer);
+        }
+
         return players;
     }
 
-    def generateSeedForMapGeneration(): Int = {
-        val r = scala.util.Random;
-        val randomInteger = r.nextInt(100);
-        return randomInteger;
-    }
-
-    def generateBlocks(lanes: Int, trackLength: Int, randomNumberGenerator: scala.util.Random): Array[Block] = {
+    def generateBlocks(lanes: Int, trackLength: Int, randomNumberGenerator: scala.util.Random, players: util.List[Player]): Array[Block] = {
         var blocks = new Array[Block](lanes*trackLength);
         val blockObjectCreator = new BlockObjectEnum;
 
@@ -65,13 +69,15 @@ class CarMapGenerator extends GameMapGenerator {
             }
 
             val emptyPlayer = 0;
-            var playerOccupyingBlock = emptyPlayer;
+            var idOfPlayerOccupyingBlock = emptyPlayer;
             if(lane == 1 && blockNumber == 1) {
-                playerOccupyingBlock = 1;
+                val firstPlayer = players.get(0).getGamePlayer().asInstanceOf[CarGamePlayer];
+                idOfPlayerOccupyingBlock = firstPlayer.getGamePlayerId();
             } else if (lane == 3 && blockNumber == 1) {
-                playerOccupyingBlock = 2;
+                val secondPlayer = players.get(1).getGamePlayer().asInstanceOf[CarGamePlayer];
+                idOfPlayerOccupyingBlock = secondPlayer.getGamePlayerId();
             }
-            blocks(i) = new Block(position, generatedMapObject, playerOccupyingBlock);
+            blocks(i) = new Block(position, generatedMapObject, idOfPlayerOccupyingBlock);
         }
 
         return blocks;

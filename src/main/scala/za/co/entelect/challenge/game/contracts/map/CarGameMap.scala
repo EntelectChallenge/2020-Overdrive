@@ -19,14 +19,30 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
   }
 
   override def getWinningPlayer: GamePlayer = {
-
-    var firstPlayer = players.get(0);
-    var firstGamePlayer = firstPlayer.getGamePlayer();
-
-    return firstGamePlayer;
+    if (round > 1) {
+      var firstPlayer = players.get(0);
+      var firstGamePlayer = firstPlayer.getGamePlayer();
+      return firstGamePlayer;
+    }
+    else {
+      return null;
+    }
   }
 
   override def getRefereeIssues: RefereeMessage = {
-    return new RefereeMessage(true, List("", "", "").asJava)
+    throw new NotImplementedError("Car game map get referee issues");
+  }
+
+  def getMapFragment(gameplayer: CarGamePlayer): CarGameMapFragment = {
+    val gamePlayerId = gameplayer.getGamePlayerId();
+    val indexOfPlayerOnTrack = blocks.indexWhere(x => x.occupiedByPlayerWithId == gamePlayerId);
+    val playerBlock = blocks(indexOfPlayerOnTrack);
+    val playerBlockPosition = playerBlock.getPosition();
+    val playerSpeed = gameplayer.getSpeed();
+    val playerState = gameplayer.getState();
+    val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState);
+    val lanes = blocks.filter(x => playerBlockPosition.getBlockNumber() - x.getPosition().getBlockNumber() <= 5 || x.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber() <= 20);
+    val carGameMapFragment = new CarGameMapFragment(round, player, lanes);
+    return carGameMapFragment;
   }
 }
