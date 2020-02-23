@@ -35,14 +35,30 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def getMapFragment(gameplayer: CarGamePlayer): CarGameMapFragment = {
     val gamePlayerId = gameplayer.getGamePlayerId();
-    val indexOfPlayerOnTrack = blocks.indexWhere(x => x.occupiedByPlayerWithId == gamePlayerId);
-    val playerBlock = blocks(indexOfPlayerOnTrack);
-    val playerBlockPosition = playerBlock.getPosition();
+    val playerBlockPosition = getPlayerBlockPosition(gamePlayerId);
     val playerSpeed = gameplayer.getSpeed();
     val playerState = gameplayer.getState();
     val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState);
     val lanes = blocks.filter(x => ((scala.math.abs(playerBlockPosition.getBlockNumber() - x.getPosition().getBlockNumber()) <= 5) || (scala.math.abs(x.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber()) <= 20)));
     val carGameMapFragment = new CarGameMapFragment(round, player, lanes);
     return carGameMapFragment;
+  }
+
+  def getPlayerBlockPosition(gameplayerId: Int): BlockPosition = {
+    val indexOfPlayerOnTrack = blocks.indexWhere(x => x.occupiedByPlayerWithId == gameplayerId);
+    val playerBlock = blocks(indexOfPlayerOnTrack);
+    val playerBlockPosition = playerBlock.getPosition();
+    return playerBlockPosition;
+  }
+
+  def getGamePlayers(): Array[GamePlayer] = {
+    var gamePlayers = new Array[GamePlayer](players.size());
+    for ( i <- 0 to (players.size() - 1)) {
+      val player = players.get(i);
+      val gamePlayer = player.getGamePlayer();
+      gamePlayers(i) = gamePlayer;
+    };
+    return gamePlayers;
+    
   }
 }
