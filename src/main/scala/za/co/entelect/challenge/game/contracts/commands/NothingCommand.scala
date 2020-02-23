@@ -9,6 +9,8 @@ import za.co.entelect.challenge.game.contracts.map.BlockPosition
 
 class NothingCommand extends RawCommand {
 
+    private val MAX_BLOCKNUMBER: Int = 1500;
+
     override def performCommand(gameMap: GameMap, player: GamePlayer) = {
         val carGameMap = gameMap.asInstanceOf[CarGameMap];
         var carGamePlayer = player.asInstanceOf[CarGamePlayer];
@@ -17,14 +19,15 @@ class NothingCommand extends RawCommand {
 
         carGameMap.vacateBlock(currentPosition);
 
-        val futureBlockNumber = currentPosition.getBlockNumber() + carGamePlayer.getSpeed();
+        val futureBlockNumber = scala.math.min(MAX_BLOCKNUMBER, currentPosition.getBlockNumber() + carGamePlayer.getSpeed());
         val futurePosition = new BlockPosition(currentPosition.getLane(), futureBlockNumber);
-        carGameMap.occupyBlock(futurePosition, gamePlayerId);
-
+        
         val playerHitMud = carGameMap.pathIncludesMud(currentPosition, futurePosition);
         if(playerHitMud) {
             carGamePlayer.reduceSpeed();
         }
+
+        carGameMap.occupyBlock(futurePosition, gamePlayerId);
     }
 
 }
