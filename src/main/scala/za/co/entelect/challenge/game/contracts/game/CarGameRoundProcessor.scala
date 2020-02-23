@@ -1,5 +1,7 @@
 package za.co.entelect.challenge.game.contracts.game
+
 import java.util
+import scala.collection.JavaConverters._
 
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.map.GameMap
@@ -23,7 +25,8 @@ class CarGameRoundProcessor extends GameRoundProcessor{
   }
 
   override def getErrorList(gameMap: GameMap): util.List[String] = {
-    throw new NotImplementedError("Car game round processor get error list => game map only");
+    return new Array[String](0).toList.asJava;
+    //TODO: Fix error reporting
   }
 
   override def getErrorList(gameMap: GameMap, player: GamePlayer): util.List[String] = {

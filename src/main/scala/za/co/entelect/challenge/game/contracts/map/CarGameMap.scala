@@ -10,6 +10,8 @@ import scala.collection.JavaConverters._
 
 class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, blocks: Array[Block], var round: Int) extends GameMap {
 
+  private val MUD: Int = 1;
+
   override def getCurrentRound: Int = {
     return round;
   }
@@ -59,6 +61,52 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
       gamePlayers(i) = gamePlayer;
     };
     return gamePlayers;
-    
+  }
+
+  def getCarGamePlayers(): Array[CarGamePlayer] = {
+    var carGamePlayers = new Array[CarGamePlayer](players.size());
+    for ( i <- 0 to (players.size() - 1)) {
+      val player = players.get(i);
+      val gamePlayer = player.getGamePlayer();
+      val carGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer];
+      carGamePlayers(i) = carGamePlayer;
+    };
+    return carGamePlayers;
+  }
+
+  def vacateBlock(position: BlockPosition) = {
+    val blockToVacate = getBlock(position);
+    blockToVacate.vacate();
+  }
+
+  def occupyBlock(position: BlockPosition, gamePlayerId: Int) = {
+    val blockToOccupy = getBlock(position);
+    blockToOccupy.occupy(gamePlayerId);
+  }
+
+  private def getBlock(position: BlockPosition): Block = {
+    val laneOfInterest = position.getLane();
+    val blockNumberOfInterest = position.getBlockNumber();
+    val indexOfBlockOfInterest = blocks.indexWhere(x => x.getPosition().getLane() == laneOfInterest && x.getPosition().getBlockNumber() == blockNumberOfInterest);
+    val blockOfInterest = blocks(indexOfBlockOfInterest);
+    return blockOfInterest;
+  }
+
+  def pathIncludesMud(startPosition: BlockPosition, endPosition: BlockPosition): Boolean = {
+    val startLane = startPosition.getLane();
+    val startBlockNumber = startPosition.getBlockNumber();
+    val endLane = endPosition.getLane();
+    val endBlockNumber = endPosition.getBlockNumber();
+    val blocksWithMud = 
+      blocks.find(x => 
+        (x.getPosition().getLane() == endLane && x.getPosition().getBlockNumber() >= startBlockNumber && x.getPosition().getBlockNumber() <= endBlockNumber) &&
+        x.getMapObject() == MUD
+      );
+    val pathIncludesMud = blocksWithMud.isDefined;
+    return pathIncludesMud;
+  }
+
+  def getBlocks(): Array[Block] = {
+    return blocks;
   }
 }
