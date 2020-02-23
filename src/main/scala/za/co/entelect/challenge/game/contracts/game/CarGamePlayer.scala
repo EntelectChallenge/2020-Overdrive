@@ -39,4 +39,16 @@ class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int, 
       case invalidSpeed => throw new Exception("Invalid current speed: " + invalidSpeed.toString())
     };
   }
+
+  def increaseSpeed() = {
+    speed match {
+      case MINIMUM_SPEED => speed = SPEED_STATE_1
+      case SPEED_STATE_1 => speed = SPEED_STATE_2
+      case INITIAL_SPEED => speed = SPEED_STATE_2
+      case SPEED_STATE_2 => speed = SPEED_STATE_3
+      case SPEED_STATE_3 => speed = MAXIMUM_SPEED
+      case MAXIMUM_SPEED => speed = MAXIMUM_SPEED
+      case invalidSpeed => throw new Exception("Invalid current speed: " + invalidSpeed.toString())
+    }
+  }
 }
