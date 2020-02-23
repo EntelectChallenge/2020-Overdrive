@@ -8,23 +8,9 @@ import za.co.entelect.challenge.game.contracts.map.GameMap
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 
-class JsonRenderer extends GameMapRenderer {
-    def render(gameMap: GameMap, gamePlayer: GamePlayer): String = {
-        val carGameMap: CarGameMap = gameMap.asInstanceOf[CarGameMap];
+class JsonRenderer extends BaseMapRenderer {
 
-        val shouldRenderFragment = gamePlayer != null;
-        if(shouldRenderFragment) 
-        {
-            val carGamePlayer: CarGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer];
-            return renderFragment(carGameMap, carGamePlayer);
-        } 
-        else 
-        {
-            return renderVisualiserMap(carGameMap);
-        }
-    }
-
-    def renderFragment(gameMap: CarGameMap, gamePlayer: CarGamePlayer): String = {
+    override def renderFragment(gameMap: CarGameMap, gamePlayer: CarGamePlayer): String = {
         val mapFragment = gameMap.getMapFragment(gamePlayer);
         val mapFragmentPlayer = mapFragment.getPlayer();
         val mapFragmentPlayerPosition = mapFragmentPlayer.getPosition();
@@ -57,7 +43,7 @@ class JsonRenderer extends GameMapRenderer {
         return jsonString;
     }
 
-    def renderVisualiserMap(gameMap: CarGameMap) : String = {
+    override def renderVisualiserMap(gameMap: CarGameMap) : String = {
         val globalMapJsonStructure = 
             ("players" -> 
                 gameMap.getCarGamePlayers().toList.map 
@@ -86,9 +72,5 @@ class JsonRenderer extends GameMapRenderer {
             );
         val jsonString = prettyRender(globalMapJsonStructure);
         return jsonString;
-    }
-
-    def commandPrompt(gamePlayer: GamePlayer): String = {
-        throw new NotImplementedError("Json renderer command prompt");
     }
 }
