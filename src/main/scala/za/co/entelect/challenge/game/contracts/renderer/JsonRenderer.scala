@@ -41,21 +41,51 @@ class JsonRenderer extends GameMapRenderer {
                 ("state" -> mapFragmentPlayer.getState())
             ) ~
             ("lanes" -> 
-                mapFragment.getLanes().toList.map {l => 
+                mapFragment.getLanes().toList.map 
+                {
+                    l => 
                     ("position" ->
                         ("lane" -> l.getPosition().getLane()) ~
                         ("blockNumber" -> l.getPosition().getBlockNumber())
                     ) ~
                     ("object" -> l.getMapObject()) ~
                     ("occupiedByPlayerWithId" -> l.getOccupiedByPlayerWithId())
-                });
+                }
+            );
         
         val jsonString = prettyRender(mapFragmentJsonStructure);
         return jsonString;
     }
 
     def renderVisualiserMap(gameMap: CarGameMap) : String = {
-        throw new NotImplementedError("Json renderer render visualiser map");
+        val globalMapJsonStructure = 
+            ("players" -> 
+                gameMap.getCarGamePlayers().toList.map 
+                {
+                    x => 
+                    ("id" -> x.getGamePlayerId()) ~
+                    ("position" ->
+                        ("lane" -> gameMap.getPlayerBlockPosition(x.getGamePlayerId()).getLane()) ~
+                        ("blockNumber" -> gameMap.getPlayerBlockPosition(x.getGamePlayerId()).getBlockNumber())
+                    ) ~
+                    ("blockrate" -> x.getSpeed()) ~
+                    ("state" -> x.getState())
+                }
+            ) ~
+            ("blocks" -> 
+                gameMap.getBlocks().toList.map
+                {
+                    l => 
+                    ("position" ->
+                        ("lane" -> l.getPosition().getLane()) ~
+                        ("blockNumber" -> l.getPosition().getBlockNumber())
+                    ) ~
+                    ("object" -> l.getMapObject()) ~
+                    ("occupied-by-player-with-id" -> l.getOccupiedByPlayerWithId())
+                }
+            );
+        val jsonString = prettyRender(globalMapJsonStructure);
+        return jsonString;
     }
 
     def commandPrompt(gamePlayer: GamePlayer): String = {
