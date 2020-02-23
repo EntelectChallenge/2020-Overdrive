@@ -1,15 +1,15 @@
 package za.co.entelect.challenge.command;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AccelerateCommand implements Command {
 
-    private final int speed;
-
-    public AccelerateCommand(int speed) {
-        this.speed = speed;
+    public AccelerateCommand() {
     }
 
     @Override
     public String render() {
-        return String.format("accelerate %d ", speed);
+        return String.format("Accelerate");
     }
 }

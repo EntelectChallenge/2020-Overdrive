@@ -27,16 +27,15 @@ public class Main {
 
         for (int i = 0; i < 1; i++) {
             try {
-                int roundNumber = 0;
+                int roundNumber = sc.nextInt();
 
-                String statePath = String.format("../%s/%d/%s", ROUNDS_DIRECTORY, roundNumber, STATE_FILE_NAME);
-                System.out.println(Paths.get(statePath));
+                String statePath = String.format("%s/%d/%s", ROUNDS_DIRECTORY, roundNumber, STATE_FILE_NAME);
                 String state = new String(Files.readAllBytes(Paths.get(statePath)));
 
                 GameState gameState = gson.fromJson(state, GameState.class);
                 Command command = new Bot(random, gameState).run();
 
-                System.out.println(String.format("C;%d;%s", roundNumber, command.render()));
+                System.out.println(String.format(command.render()));
                 break;
             } catch (Exception e) {
                 e.printStackTrace();

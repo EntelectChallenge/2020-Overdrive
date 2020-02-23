@@ -4,5 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public enum State {
     @SerializedName("accelerating")
-    ACCELERATING
+    ACCELERATING,
+    @SerializedName("ready")
+    READY
 }
