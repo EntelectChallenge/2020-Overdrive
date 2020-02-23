@@ -62,7 +62,7 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
             var generatedMapObject = blockObjectCreator.empty();
             val startingBlockForGeneratedMapObjects = 6;
             val finalBlockForGeneratedMapObject = trackLength;
-            if(blockNumber >= startingBlockForGeneratedMapObjects && blockNumber > finalBlockForGeneratedMapObject) {
+            if(blockNumber >= startingBlockForGeneratedMapObjects && blockNumber < finalBlockForGeneratedMapObject) {
                 generatedMapObject = blockObjectCreator.generateMapObject(randomNumberGenerator);
             } else if (blockNumber == finalBlockForGeneratedMapObject) {
                 generatedMapObject = blockObjectCreator.finishLine();
