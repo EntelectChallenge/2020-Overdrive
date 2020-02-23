@@ -5,7 +5,11 @@ import za.co.entelect.challenge.game.contracts.command.RawCommand
 class CommandFactory {
     private val NO_COMMAND = "No Command";
     private val NOTHING = "Nothing";
+
     private val CHANGE_LANE = "Change Lane";
+    private val LEFT = "Left";
+    private val RIGHT = "Right";
+
     private val ACCELERATE = "Accelerate";
     private val DECELERATE = "Decelerate";
 
@@ -32,7 +36,13 @@ class CommandFactory {
     }
 
     private def makeChangeLaneCommand(direction: String): RawCommand = {
-        return new ChangeLaneCommand(direction);
+        val left = true;
+        val right = false;
+        direction match {
+            case LEFT => return new ChangeLaneCommand(left);
+            case RIGHT => return new ChangeLaneCommand(right);
+            case invalidDirection => return defaultToNothingCommand("Invalid direction given for change lane command: " + invalidDirection.toString());
+        }
     } 
 
     private def makeAccelerateCommand(): RawCommand = {
