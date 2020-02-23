@@ -12,6 +12,7 @@ class ChangeLaneCommand(isLeft: Boolean) extends RawCommand {
     private val MIN_LANE = 1;
     private val MAX_LANE = 4;
     private val MAX_BLOCKNUMBER: Int = 1500;
+    private val CHANGE_LANE_PENALTY: Int = 1;
 
     override def performCommand(gameMap: GameMap, player: GamePlayer) = {
         val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -29,8 +30,13 @@ class ChangeLaneCommand(isLeft: Boolean) extends RawCommand {
         {   
             futureLane = scala.math.min(MAX_LANE, futureLane + 1);
         }
-        val futureBlockNumber = scala.math.min(MAX_BLOCKNUMBER, currentPosition.getBlockNumber() + carGamePlayer.getSpeed()); //ensure player cannot move outside of map
+        val futureBlockNumber = scala.math.min(MAX_BLOCKNUMBER, currentPosition.getBlockNumber() + carGamePlayer.getSpeed() - CHANGE_LANE_PENALTY);
         val futurePosition = new BlockPosition(currentPosition.getLane(), futureBlockNumber);
+
+        val playerHitMud = carGameMap.pathIncludesMud(currentPosition, futurePosition);
+        if(playerHitMud) {
+            carGamePlayer.reduceSpeed();
+        }
 
         carGameMap.occupyBlock(futurePosition, gamePlayerId);
     }
