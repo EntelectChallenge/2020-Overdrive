@@ -41,7 +41,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val playerSpeed = gameplayer.getSpeed();
     val playerState = gameplayer.getState();
     val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState);
-    val lanes = blocks.filter(x => playerBlockPosition.getBlockNumber() - x.getPosition().getBlockNumber() <= 5 || x.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber() <= 20);
+    val lanes = blocks.filter(x => ((scala.math.abs(playerBlockPosition.getBlockNumber() - x.getPosition().getBlockNumber()) <= 5) || (scala.math.abs(x.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber()) <= 20)));
     val carGameMapFragment = new CarGameMapFragment(round, player, lanes);
     return carGameMapFragment;
   }
