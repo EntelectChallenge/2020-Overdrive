@@ -23,7 +23,7 @@ public class Bot {
     }
 
     public Command run() {
-        return new AccelerateCommand(gameState.player.speed);
+        return new ChangeLaneCommand(1);
     }
 
     //TODO very convoluted, need to refactor
@@ -31,20 +31,20 @@ public class Bot {
         ArrayList<Lane> blocks = new ArrayList<>();
         if (lane - 1 == 0) {
             for (int l = lane; l <= lane + 1; l++) {
-                for (int i = block; i <= block + maxSpeed + (26 * (lane-1)); i++) {
-                    blocks.add(gameState.map[i+(26 * (l-1))]);
+                for (int i = block; i <= block + maxSpeed + (26 * (lane - 1)); i++) {
+                    blocks.add(gameState.map[i + (26 * (l - 1))]);
                 }
             }
-        } else if ( lane + 1 == 5) {
+        } else if (lane + 1 == 5) {
             for (int l = lane - 1; l <= lane; l++) {
-                for (int i = block + (26 * (lane-2)); i <= block + maxSpeed + (26 * (lane-2)); i++) {
-                    blocks.add(gameState.map[i+(26 * (l-3))]);
+                for (int i = block + (26 * (lane - 2)); i <= block + maxSpeed + (26 * (lane - 2)); i++) {
+                    blocks.add(gameState.map[i + (26 * (l - 3))]);
                 }
             }
         } else {
             for (int l = lane - 1; l <= lane + 1; l++) {
                 for (int i = block; i <= block + maxSpeed; i++) {
-                    blocks.add(gameState.map[i+(26 * (l-1))]);
+                    blocks.add(gameState.map[i + (26 * (l - 1))]);
                 }
             }
         }
