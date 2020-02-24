@@ -23,7 +23,7 @@ public class Bot {
     }
 
     public Command run() {
-        return new ChangeLaneCommand(1);
+        return new AccelerateCommand();
     }
 
     //TODO very convoluted, need to refactor
