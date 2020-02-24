@@ -16,6 +16,6 @@ public class ChangeLaneCommand implements Command {
 
     @Override
     public String render() {
-        return String.format("Change Lane: %s", direction.getLabel());
+        return String.format("Change Lane:%s", direction.getLabel());
     }
 }
