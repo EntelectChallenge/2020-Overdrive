@@ -25,17 +25,17 @@ public class Main {
         Gson gson = new Gson();
         Random random = new Random(System.nanoTime());
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 1; i < 3; i++) {
             try {
                 int roundNumber = sc.nextInt();
 
-                String statePath = String.format("%s/%d/%s", ROUNDS_DIRECTORY, roundNumber, STATE_FILE_NAME);
+                String statePath = String.format("%s/%d/%s", ROUNDS_DIRECTORY, i, STATE_FILE_NAME);
                 String state = new String(Files.readAllBytes(Paths.get(statePath)));
 
                 GameState gameState = gson.fromJson(state, GameState.class);
                 Command command = new Bot(random, gameState).run();
 
-                System.out.println(String.format(command.render()));
+                System.out.println(String.format("C;%d;%s", roundNumber, command.render()));
                 break;
             } catch (Exception e) {
                 e.printStackTrace();
