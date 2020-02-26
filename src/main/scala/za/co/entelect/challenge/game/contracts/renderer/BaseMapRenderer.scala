@@ -26,6 +26,6 @@ abstract class BaseMapRenderer extends GameMapRenderer {
     def renderVisualiserMap(carGameMap: CarGameMap): String
     
     override def commandPrompt(gamePlayer: GamePlayer): String = {
-        throw new NotImplementedError("Console renderer command prompt");
+        throw new NotImplementedError("Base map renderer => command prompt");
     }
 }
