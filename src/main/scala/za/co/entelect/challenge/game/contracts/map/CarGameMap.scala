@@ -38,12 +38,12 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
       val firstPlayerAcrossTheLine = winningPlayers(0);
       return firstPlayerAcrossTheLine;
     } 
-    else //fastest player across the line => if tie then player with lowest id (point system will correct this injustice)
+    else
     {
       val winnersSortedBySpeed = winningPlayers.sortBy(x => x.asInstanceOf[CarGamePlayer].getSpeed());
       val winnersWithTheHighestSpeed = winnersSortedBySpeed.filter(x => x.asInstanceOf[CarGamePlayer].getSpeed() == winnersSortedBySpeed.last.asInstanceOf[CarGamePlayer].getSpeed());
-      val fasterPlayerWithLowestPlayerId = winnersWithTheHighestSpeed.sortBy(x => x.asInstanceOf[CarGamePlayer].getGamePlayerId()).last;
-      return fasterPlayerWithLowestPlayerId;
+      val fastestPlayerWithHighestScore = winnersWithTheHighestSpeed.sortBy(x => x.getScore()).last;
+      return fastestPlayerWithHighestScore;
     }
   }
 

@@ -54,4 +54,6 @@ object Config {
 
     def BACKWARDS_VISIBILITY: Int = 5;
     def FOREWARDS_VISIBILITY: Int = 20;
+
+    def HIT_MUD_SCORE_PENALTY: Int = -3;
 }

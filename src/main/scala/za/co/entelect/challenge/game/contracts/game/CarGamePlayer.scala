@@ -2,7 +2,7 @@ package za.co.entelect.challenge.game.contracts.game
 
 import za.co.entelect.challenge.game.contracts.Config.Config
 
-class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int) extends GamePlayer{
+class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: Int) extends GamePlayer{
   private val MINIMUM_SPEED: Int = Config.MINIMUM_SPEED;
   private val SPEED_STATE_1: Int = Config.SPEED_STATE_1;
   private val INITIAL_SPEED: Int = Config.INITIAL_SPEED;
@@ -18,6 +18,10 @@ class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int) 
 
   override def getScore: Int = {
     return score;
+  }
+
+  private def updateScore(scoreChange: Int) = {
+    score += scoreChange;
   }
 
   def getGamePlayerId(): Int = {
@@ -52,6 +56,7 @@ class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int) 
     val allowStop: Boolean = false;
     reduceSpeed(allowStop);
     setState(Config.HIT_MUD_PLAYER_STATE);
+    updateScore(Config.HIT_MUD_SCORE_PENALTY);
   }
 
   def decelerate() = {
