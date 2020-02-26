@@ -7,10 +7,9 @@ import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer, GamePlayer}
 import za.co.entelect.challenge.game.contracts.player.Player
 
 import scala.collection.JavaConverters._
+import za.co.entelect.challenge.game.contracts.Config.Config
 
 class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, blocks: Array[Block], var round: Int) extends GameMap {
-
-  private val MUD: Int = 1;
 
   override def getCurrentRound: Int = {
     return round;
@@ -21,7 +20,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
   }
 
   override def getWinningPlayer: GamePlayer = {
-    if (round > 1) {
+    if (round > 2) {
       var firstPlayer = players.get(0);
       var firstGamePlayer = firstPlayer.getGamePlayer();
       return firstGamePlayer;
@@ -41,7 +40,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val playerSpeed = gameplayer.getSpeed();
     val playerState = gameplayer.getState();
     val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState);
-    val lanes = blocks.filter(x => ((scala.math.abs(playerBlockPosition.getBlockNumber() - x.getPosition().getBlockNumber()) <= 5) || (scala.math.abs(x.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber()) <= 20)));
+    val lanes = blocks.filter(block => ((scala.math.abs(playerBlockPosition.getBlockNumber() - block.getPosition().getBlockNumber()) <= Config.BACKWARDS_VISIBILITY) || (scala.math.abs(block.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber()) <= Config.FOREWARDS_VISIBILITY)));
     val carGameMapFragment = new CarGameMapFragment(round, player, lanes);
     return carGameMapFragment;
   }
@@ -100,7 +99,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val blocksWithMud = 
       blocks.find(x => 
         (x.getPosition().getLane() == endLane && x.getPosition().getBlockNumber() >= startBlockNumber && x.getPosition().getBlockNumber() <= endBlockNumber) &&
-        x.getMapObject() == MUD
+        x.getMapObject() == Config.MUD_MAP_OBJECT
       );
     val pathIncludesMud = blocksWithMud.isDefined;
     return pathIncludesMud;

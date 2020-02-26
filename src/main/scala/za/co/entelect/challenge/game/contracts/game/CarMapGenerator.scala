@@ -6,27 +6,26 @@ import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.map.CarGameMap;
 import za.co.entelect.challenge.game.contracts.map.Block;
 import za.co.entelect.challenge.game.contracts.map.BlockPosition;
-import za.co.entelect.challenge.game.contracts.map.BlockObjectEnum;
+import za.co.entelect.challenge.game.contracts.map.BlockObjectCreator;
 
 import za.co.entelect.challenge.game.contracts.player.Player
+import za.co.entelect.challenge.game.contracts.Config.Config
 
 class CarMapGenerator(seed: Int) extends GameMapGenerator {
+
     override def generateGameMap(players: util.List[Player]): GameMap = {
         val registeredPlayers = registerGamePlayers(players);
 
-        val mapGenerationSeed = seed;
-        val lanes = 4;
-        val trackLength = 1500;
         val intialisationRound = 0;
         
-        val randomNumberGenerator = new scala.util.Random(mapGenerationSeed);
-        val blocks = generateBlocks(lanes, trackLength, randomNumberGenerator, players);
+        val randomNumberGenerator = new scala.util.Random(seed);
+        val blocks = generateBlocks(Config.NUMBER_OF_LANES, Config.TRACK_LENGTH, randomNumberGenerator, players);
 
         val carGameMap = new CarGameMap(
             players, 
-            mapGenerationSeed, 
-            lanes, 
-            trackLength, 
+            seed, 
+            Config.NUMBER_OF_LANES, 
+            Config.TRACK_LENGTH, 
             blocks, 
             intialisationRound
         );
@@ -35,15 +34,11 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
     }
 
     def registerGamePlayers(players: util.List[Player]): util.List[Player] = {
-        val defaultHealth = 0;
-        val defaultScore = 0;
-        val initialSpeed = 5;
-        val initialState = "ready";
 
         for (i <- 0 to (players.size() - 1)) {
             val currentPlayer = players.get(i);
             val playerId = i + 1;
-            val newGamePlayer = new CarGamePlayer(defaultHealth, defaultScore, playerId, initialSpeed, initialState); 
+            val newGamePlayer = new CarGamePlayer(Config.DEFAULT_HEALTH, Config.DEFAULT_SCORE, playerId, Config.INITIAL_SPEED, Config.READY_PLAYER_STATE); 
             currentPlayer.playerRegistered(newGamePlayer);
         }
 
@@ -52,34 +47,49 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
 
     def generateBlocks(lanes: Int, trackLength: Int, randomNumberGenerator: scala.util.Random, players: util.List[Player]): Array[Block] = {
         var blocks = new Array[Block](lanes*trackLength);
-        val blockObjectCreator = new BlockObjectEnum;
+        val blockObjectCreator = new BlockObjectCreator;
 
         for ( i <- 0 to (blocks.length - 1)) {
             val lane = i/trackLength + 1;
             val blockNumber = i%trackLength + 1;
             val position = new BlockPosition(lane, blockNumber);
 
-            var generatedMapObject = blockObjectCreator.empty();
-            val startingBlockForGeneratedMapObjects = 6;
+            var generatedMapObject = Config.EMPTY_MAP_OBJECT;
             val finalBlockForGeneratedMapObject = trackLength;
-            if(blockNumber >= startingBlockForGeneratedMapObjects && blockNumber < finalBlockForGeneratedMapObject) {
+            if(blockNumber >= Config.STARTING_BLOCK_FOR_GENERATED_MAP_OBJECTS && blockNumber < Config.TRACK_LENGTH) {
                 generatedMapObject = blockObjectCreator.generateMapObject(randomNumberGenerator);
             } else if (blockNumber == finalBlockForGeneratedMapObject) {
-                generatedMapObject = blockObjectCreator.finishLine();
+                generatedMapObject = Config.FINISH_LINE_MAP_OBJECT;
             }
-
-            val emptyPlayer = 0;
-            var idOfPlayerOccupyingBlock = emptyPlayer;
-            if(lane == 1 && blockNumber == 1) {
-                val firstPlayer = players.get(0).getGamePlayer().asInstanceOf[CarGamePlayer];
-                idOfPlayerOccupyingBlock = firstPlayer.getGamePlayerId();
-            } else if (lane == 3 && blockNumber == 1) {
-                val secondPlayer = players.get(1).getGamePlayer().asInstanceOf[CarGamePlayer];
-                idOfPlayerOccupyingBlock = secondPlayer.getGamePlayerId();
-            }
-            blocks(i) = new Block(position, generatedMapObject, idOfPlayerOccupyingBlock);
+           
+            blocks(i) = new Block(position, generatedMapObject, Config.EMPTY_PLAYER);
         }
+
+        val playerOneId = players.get(0).getGamePlayer().asInstanceOf[CarGamePlayer].getGamePlayerId();
+        setPlayerOneStartPosition(blocks, playerOneId);
+
+        val playerTwoId = players.get(1).getGamePlayer().asInstanceOf[CarGamePlayer].getGamePlayerId();
+        setPlayerTwoStartPosition(blocks, playerTwoId);
 
         return blocks;
     }
+
+    private def setPlayerOneStartPosition(blocks: Array[Block], playerOneId: Int) = {
+        setStartPosition(blocks, Config.PLAYER_ONE_START_LANE, Config.PLAYER_ONE_START_BLOCK, playerOneId);
+    }
+
+    private def setPlayerTwoStartPosition(blocks: Array[Block], playerTwoId: Int) = {
+        setStartPosition(blocks, Config.PLAYER_TWO_START_LANE, Config.PLAYER_TWO_START_BLOCK, playerTwoId);
+    }
+
+    private def setStartPosition(blocks: Array[Block], startLane: Int, startBlock: Int, playerId: Int) = {
+        var playerStartBlock = blocks.find(block => block.getPosition().getLane() == startLane && block.getPosition().getBlockNumber() == startBlock);
+        if (playerStartBlock.isEmpty) 
+        {
+            throw new Exception("Failed to initialise map: " + "lane " + startLane + " block" + startBlock + " could not be found");
+        }
+        playerStartBlock.get.occupy(playerId);
+    }
+
+
 }

@@ -7,10 +7,6 @@ class CarGameEngine extends GameEngine {
     override def isGameComplete(gameMap: GameMap): Boolean = {
         val winner = gameMap.getWinningPlayer();
         val gameIsComplete = winner != null;
-        if(gameIsComplete) {
-            return true;
-        } else {
-            return false;
-        }
+        return gameIsComplete;
     }
 }

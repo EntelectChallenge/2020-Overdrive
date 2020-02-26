@@ -1,8 +1,8 @@
 package za.co.entelect.challenge.game.contracts.map
 
-class Block(position: BlockPosition, mapObject: Int, var occupiedByPlayerWithId: Int) {
+import za.co.entelect.challenge.game.contracts.Config.Config
 
-    private val NO_PLAYER: Int = 0;
+class Block(position: BlockPosition, mapObject: Int, var occupiedByPlayerWithId: Int) {
 
     override def toString() : String = { 
         val stringRepresentation = "Block: {" +
@@ -26,7 +26,7 @@ class Block(position: BlockPosition, mapObject: Int, var occupiedByPlayerWithId:
     }
 
     def vacate() = {
-        occupiedByPlayerWithId = NO_PLAYER;
+        occupiedByPlayerWithId = Config.EMPTY_PLAYER;
     }
 
     def occupy(gamePlayerId: Int) {

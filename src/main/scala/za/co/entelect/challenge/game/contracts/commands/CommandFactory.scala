@@ -1,25 +1,25 @@
 package za.co.entelect.challenge.game.contracts.commands
 
 import za.co.entelect.challenge.game.contracts.command.RawCommand
+import za.co.entelect.challenge.game.contracts.Config.Config
 
 class CommandFactory {
-    private val NO_COMMAND = "No Command";
-    private val NOTHING = "Nothing";
+    private val NO_COMMAND = Config.NO_COMMAND;
+    private val NOTHING = Config.NOTHING_COMMAND;
 
-    private val CHANGE_LANE = "Change Lane";
-    private val LEFT = "Left";
-    private val RIGHT = "Right";
+    private val TURN_LEFT = Config.TURN_LEFT_COMMAND;
+    private val TURN_RIGHT = Config.TURN_RIGHT_COMMAND;
 
-    private val ACCELERATE = "Accelerate";
-    private val DECELERATE = "Decelerate";
+    private val ACCELERATE = Config.ACCELERATE_COMMAND;
+    private val DECELERATE = Config.DECELERATE_COMMAND;
 
     def makeCommand(commandText: String): RawCommand = {
-        val splitCommand = commandText.split(":");
-        val commandHeader = splitCommand(0);
+        val commandHeader = commandText.toUpperCase();
         commandHeader match {
           case NO_COMMAND  => return defaultToNothingCommand("Bot did nothing");
           case NOTHING => return makeNothingCommand();
-          case CHANGE_LANE => return makeChangeLaneCommand(splitCommand(1));
+          case TURN_LEFT => return makeTurnLeftCommand();
+          case TURN_RIGHT => return makeTurnRightCommand();
           case ACCELERATE => return makeAccelerateCommand();
           case DECELERATE => return makeDecelerateCommand();
           case invalidCommandType  => return defaultToNothingCommand("Bot sent invalid command: " + invalidCommandType.toString())
@@ -35,15 +35,15 @@ class CommandFactory {
         return new NothingCommand;
     }
 
-    private def makeChangeLaneCommand(direction: String): RawCommand = {
-        val left = true;
-        val right = false;
-        direction match {
-            case LEFT => return new ChangeLaneCommand(left);
-            case RIGHT => return new ChangeLaneCommand(right);
-            case invalidDirection => return defaultToNothingCommand("Invalid direction given for change lane command: " + invalidDirection.toString());
-        }
-    } 
+    private def makeTurnLeftCommand(): RawCommand = {
+        val isLeft = true;
+        return new ChangeLaneCommand(isLeft);
+    }
+    
+    private def makeTurnRightCommand(): RawCommand = {
+        val isLeft = false;
+        return new ChangeLaneCommand(isLeft);
+    }
 
     private def makeAccelerateCommand(): RawCommand = {
         return new AccelerateCommand;

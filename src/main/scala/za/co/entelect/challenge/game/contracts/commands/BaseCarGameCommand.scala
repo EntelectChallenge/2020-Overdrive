@@ -6,12 +6,9 @@ import za.co.entelect.challenge.game.contracts.game.GamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.BlockPosition
+import za.co.entelect.challenge.game.contracts.Config.Config
 
 abstract class BaseCarGameCommand extends RawCommand {
-
-    private val MIN_LANE = 1;
-    private val MAX_LANE = 4;
-    private val MAX_BLOCKNUMBER: Int = 1500;
 
     override def performCommand(gameMap: GameMap, player: GamePlayer) = {
         val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -41,14 +38,14 @@ abstract class BaseCarGameCommand extends RawCommand {
     }
 
     private def getFutuerPositionWithinBoundsOfLanes(futurePosition: BlockPosition): BlockPosition = {
-        val laneAtleastMinimum = scala.math.max(MIN_LANE, futurePosition.getLane());
-        val laneAtmostMaximum = scala.math.min(MAX_LANE, laneAtleastMinimum);
+        val laneAtleastMinimum = scala.math.max(Config.MIN_LANE, futurePosition.getLane());
+        val laneAtmostMaximum = scala.math.min(Config.MAX_LANE, laneAtleastMinimum);
         val futurePositionWithinBoundsOfLanes = new BlockPosition(laneAtmostMaximum, futurePosition.getBlockNumber());
         return futurePositionWithinBoundsOfLanes;
     }
 
     private def getFuturePositionWithinBlockNumberBounds(futurePosition: BlockPosition): BlockPosition = {
-        val blockNumberAtmostMaximum = scala.math.min(MAX_BLOCKNUMBER, futurePosition.getBlockNumber());
+        val blockNumberAtmostMaximum = scala.math.min(Config.TRACK_LENGTH, futurePosition.getBlockNumber());
         val futurePositionWithingBlockNumberBounds = new BlockPosition(futurePosition.getLane(), blockNumberAtmostMaximum);
         return futurePositionWithingBlockNumberBounds;
     }

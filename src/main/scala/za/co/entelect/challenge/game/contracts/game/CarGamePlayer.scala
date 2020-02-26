@@ -1,12 +1,14 @@
 package za.co.entelect.challenge.game.contracts.game
 
+import za.co.entelect.challenge.game.contracts.Config.Config
+
 class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int, var state: String) extends GamePlayer{
-  private val MINIMUM_SPEED: Int = 0;
-  private val SPEED_STATE_1: Int = 3;
-  private val INITIAL_SPEED: Int = 5;
-  private val SPEED_STATE_2: Int = 6;
-  private val SPEED_STATE_3: Int = 8;
-  private val MAXIMUM_SPEED: Int = 9; 
+  private val MINIMUM_SPEED: Int = Config.MINIMUM_SPEED;
+  private val SPEED_STATE_1: Int = Config.SPEED_STATE_1;
+  private val INITIAL_SPEED: Int = Config.INITIAL_SPEED;
+  private val SPEED_STATE_2: Int = Config.SPEED_STATE_2;
+  private val SPEED_STATE_3: Int = Config.SPEED_STATE_3;
+  private val MAXIMUM_SPEED: Int = Config.MAXIMUM_SPEED; 
 
   override def getHealth: Int = {
     return health;
