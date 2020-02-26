@@ -49,19 +49,21 @@ class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int) 
   }
 
   def hitMud() = {
-    reduceSpeed();
+    val allowStop: Boolean = false;
+    reduceSpeed(allowStop);
     setState(Config.HIT_MUD_PLAYER_STATE);
   }
 
   def decelerate() = {
-    reduceSpeed();
+    val allowStop = true;
+    reduceSpeed(allowStop);
     setState(Config.DECELERATING_PLAYER_STATE);
   }
 
-  private def reduceSpeed() = {
+  private def reduceSpeed(allowStop: Boolean) = {
     speed match {
       case MINIMUM_SPEED => speed = MINIMUM_SPEED
-      case SPEED_STATE_1 => speed = MINIMUM_SPEED
+      case SPEED_STATE_1 => speed = if(allowStop) MINIMUM_SPEED else SPEED_STATE_1
       case INITIAL_SPEED => speed = SPEED_STATE_1
       case SPEED_STATE_2 => speed = SPEED_STATE_1
       case SPEED_STATE_3 => speed = SPEED_STATE_2
