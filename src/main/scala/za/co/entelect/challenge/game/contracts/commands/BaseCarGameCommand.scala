@@ -27,6 +27,10 @@ abstract class BaseCarGameCommand extends RawCommand {
         }
 
         carGameMap.occupyBlock(futurePositionWithingAllBounds, carGamePlayerId);
+
+        if (futurePositionWithingAllBounds.getBlockNumber() == Config.TRACK_LENGTH) {
+            carGamePlayer.finish();
+        }
     }
 
     def getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap: CarGameMap, carGamePlayer: CarGamePlayer, currentPlayerPosition: BlockPosition): BlockPosition

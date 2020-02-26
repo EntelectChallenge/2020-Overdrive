@@ -8,6 +8,7 @@ import za.co.entelect.challenge.game.contracts.player.Player
 
 import scala.collection.JavaConverters._
 import za.co.entelect.challenge.game.contracts.Config.Config
+import scala.collection.mutable
 
 class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, blocks: Array[Block], var round: Int) extends GameMap {
 
@@ -20,13 +21,29 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
   }
 
   override def getWinningPlayer: GamePlayer = {
-    if (round > 2) {
-      var firstPlayer = players.get(0);
-      var firstGamePlayer = firstPlayer.getGamePlayer();
-      return firstGamePlayer;
+    val winningPlayers = mutable.ListBuffer[GamePlayer]();
+    for (i <- 0 to (players.size() - 1)) {
+      val gamePlayer = players.get(i).getGamePlayer();
+      val carGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer];
+      if (carGamePlayer.getState() == Config.FINISHED_PLAYER_STATE)
+      {
+        winningPlayers.addOne(gamePlayer);
+      }
     }
-    else {
+
+    if (winningPlayers.size == 0) {
       return null;
+    } 
+    else if (winningPlayers.size == 1) {
+      val firstPlayerAcrossTheLine = winningPlayers(0);
+      return firstPlayerAcrossTheLine;
+    } 
+    else //fastest player across the line => if tie then player with lowest id (point system will correct this injustice)
+    {
+      val winnersSortedBySpeed = winningPlayers.sortBy(x => x.asInstanceOf[CarGamePlayer].getSpeed());
+      val winnersWithTheHighestSpeed = winnersSortedBySpeed.filter(x => x.asInstanceOf[CarGamePlayer].getSpeed() == winnersSortedBySpeed.last.asInstanceOf[CarGamePlayer].getSpeed());
+      val fasterPlayerWithLowestPlayerId = winnersWithTheHighestSpeed.sortBy(x => x.asInstanceOf[CarGamePlayer].getGamePlayerId()).last;
+      return fasterPlayerWithLowestPlayerId;
     }
   }
 

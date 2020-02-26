@@ -87,6 +87,10 @@ class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int) 
     };
   }
 
+  def finish() = {
+    setState(Config.FINISHED_PLAYER_STATE);
+  }
+
   private def setState(newPlayerState: String) = {
     state = newPlayerState;
   }
