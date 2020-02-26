@@ -22,6 +22,7 @@ public class Bot {
         this.myCar = getMyCar(gameState);
 
         directionList.add(-1);
+        directionList.add(0);
         directionList.add(1);
     }
 
@@ -30,9 +31,13 @@ public class Bot {
     }
 
     public Command run() {
-        Map blocks = getBlocksInFront(myCar.position.lane, myCar.position.block, maxSpeed);
+        Map<Integer, Object> blocks = getBlocksInFront(myCar.position.lane, myCar.position.block, maxSpeed);
 
-        if (blocks.values().contains(Object.MUD)) {
+        if (blocks.containsValue(Object.MUD)) {
+            int i = random.nextInt(directionList.size());
+            if (i == 0) {
+                return new DecelerateCommand();
+            }
             return new ChangeLaneCommand(directionList.get(random.nextInt(directionList.size())));
         }
         return new AccelerateCommand();
@@ -42,9 +47,9 @@ public class Bot {
      * Returns map of blocks and the objects in the for the current lanes, returns the amount of blocks that can be
      * traversed at max speed.
      **/
-    private Map getBlocksInFront(int lane, int block, int maxSpeed) {
+    private Map<Integer, Object> getBlocksInFront(int lane, int block, int maxSpeed) {
         Lane[] lanes = gameState.map;
-        Map blocks = new Hashtable();
+        Map<Integer, Object> blocks = new Hashtable<Integer, Object>();
         if (lane - 1 == 0) {
             for (int i = block; i <= block + maxSpeed + (26 * (lane - 1)); i++) {
                 blocks.put(lanes[i].position.block, lanes[i].object);
