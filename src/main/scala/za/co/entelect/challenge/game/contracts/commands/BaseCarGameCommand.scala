@@ -13,6 +13,13 @@ abstract class BaseCarGameCommand extends RawCommand {
     override def performCommand(gameMap: GameMap, player: GamePlayer) = {
         val carGameMap = gameMap.asInstanceOf[CarGameMap];
         var carGamePlayer = player.asInstanceOf[CarGamePlayer];
+
+        //handle ticking powerups
+        if (carGamePlayer.getState() == Config.USED_POWERUP_BOOST_PLAYER_STATE || carGamePlayer.getState() == Config.BOOSTING_PLAYER_STATE) 
+        {
+            carGamePlayer.boosting();
+        }
+
         val carGamePlayerId = carGamePlayer.getGamePlayerId();
         val currentBlockThatHasBeenVacated = getCurrentBlockThatHasBeenVacated(carGameMap, carGamePlayerId);
 
@@ -21,13 +28,21 @@ abstract class BaseCarGameCommand extends RawCommand {
         val futurePositionWithLaneBounds = getFutuerPositionWithinBoundsOfLanes(futurePosition)
         val futurePositionWithingAllBounds = getFuturePositionWithinBlockNumberBounds(futurePositionWithLaneBounds);
 
+        //handle collisions with map objects (obstacles => pickups)
         val playerHitMud = carGameMap.pathIncludesMud(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds);
         if(playerHitMud) {
             carGamePlayer.hitMud();
         }
 
+        val playerPickedUpBoost = carGameMap.pathIncludesBoost(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds);
+        if(playerPickedUpBoost) {
+            carGamePlayer.pickupBoost();
+        }
+
+        //place player in new position
         carGameMap.occupyBlock(futurePositionWithingAllBounds, carGamePlayerId);
 
+        //check win condition
         if (futurePositionWithingAllBounds.getBlockNumber() == Config.TRACK_LENGTH) {
             carGamePlayer.finish();
         }

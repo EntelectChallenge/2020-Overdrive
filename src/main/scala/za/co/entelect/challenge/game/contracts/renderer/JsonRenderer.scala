@@ -7,6 +7,7 @@ import za.co.entelect.challenge.game.contracts.game.GamePlayer
 import za.co.entelect.challenge.game.contracts.map.GameMap
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
+import za.co.entelect.challenge.game.contracts.Config.Config
 
 class JsonRenderer extends BaseMapRenderer {
 
@@ -16,7 +17,7 @@ class JsonRenderer extends BaseMapRenderer {
         val mapFragmentPlayerPosition = mapFragmentPlayer.getPosition();
         val mapFragmentJsonStructure = 
             ("currentRound" -> mapFragment.getCurrentRound()) ~
-            ("maxRounds" -> 1500) ~
+            ("maxRounds" -> Config.TRACK_LENGTH) ~
             ("player" ->
                 ("id" -> mapFragmentPlayer.getId()) ~
                 ("position" ->
@@ -24,7 +25,9 @@ class JsonRenderer extends BaseMapRenderer {
                     ("blockNumber" -> mapFragmentPlayerPosition.getBlockNumber())
                 ) ~
                 ("speed" -> mapFragmentPlayer.getSpeed()) ~
-                ("state" -> mapFragmentPlayer.getState())
+                ("state" -> mapFragmentPlayer.getState()) ~
+                ("power-ups" -> mapFragmentPlayer.getPowerups().toList) ~
+                ("boost-counter" -> mapFragmentPlayer.getBoostCounter())
             ) ~
             ("lanes" -> 
                 mapFragment.getLanes().toList.map 
@@ -55,7 +58,9 @@ class JsonRenderer extends BaseMapRenderer {
                         ("blockNumber" -> gameMap.getPlayerBlockPosition(x.getGamePlayerId()).getBlockNumber())
                     ) ~
                     ("blockrate" -> x.getSpeed()) ~
-                    ("state" -> x.getState())
+                    ("state" -> x.getState()) ~
+                    ("power-ups" -> x.getPowerups().toList) ~
+                    ("boost-counter" -> x.getBoostCounter())
                 }
             ) ~
             ("blocks" -> 

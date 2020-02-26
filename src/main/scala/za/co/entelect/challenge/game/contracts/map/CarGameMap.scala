@@ -56,7 +56,9 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val playerBlockPosition = getPlayerBlockPosition(gamePlayerId);
     val playerSpeed = gameplayer.getSpeed();
     val playerState = gameplayer.getState();
-    val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState);
+    val playerPowerups = gameplayer.getPowerups();
+    val playerBoostCounter = gameplayer.getBoostCounter();
+    val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState, playerPowerups, playerBoostCounter);
     val lanes = blocks.filter(block => ((scala.math.abs(playerBlockPosition.getBlockNumber() - block.getPosition().getBlockNumber()) <= Config.BACKWARDS_VISIBILITY) || (scala.math.abs(block.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber()) <= Config.FOREWARDS_VISIBILITY)));
     val carGameMapFragment = new CarGameMapFragment(round, player, lanes);
     return carGameMapFragment;
@@ -109,17 +111,27 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
   }
 
   def pathIncludesMud(startPosition: BlockPosition, endPosition: BlockPosition): Boolean = {
+    val pathIncludesMud = pathIncludesMapObject(startPosition, endPosition, Config.MUD_MAP_OBJECT);
+    return pathIncludesMud;
+  }
+
+  def pathIncludesBoost(startPosition: BlockPosition, endPosition: BlockPosition): Boolean = {
+    val pathIncludesBoost = pathIncludesMapObject(startPosition, endPosition, Config.BOOST_MAP_OBJECT);
+    return pathIncludesBoost;
+  }
+
+  private def pathIncludesMapObject(startPosition: BlockPosition, endPosition: BlockPosition, mapObject: Int): Boolean = {
     val startLane = startPosition.getLane();
     val startBlockNumber = startPosition.getBlockNumber();
     val endLane = endPosition.getLane();
     val endBlockNumber = endPosition.getBlockNumber();
-    val blocksWithMud = 
+    val blocksWithObject = 
       blocks.find(x => 
         (x.getPosition().getLane() == endLane && x.getPosition().getBlockNumber() >= startBlockNumber && x.getPosition().getBlockNumber() <= endBlockNumber) &&
-        x.getMapObject() == Config.MUD_MAP_OBJECT
+        x.getMapObject() == mapObject
       );
-    val pathIncludesMud = blocksWithMud.isDefined;
-    return pathIncludesMud;
+    val pathIncludesObject = blocksWithObject.isDefined;
+    return pathIncludesObject;
   }
 
   def getBlocks(): Array[Block] = {
