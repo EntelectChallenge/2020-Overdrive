@@ -2,13 +2,15 @@ package za.co.entelect.challenge.game.contracts.game
 
 import za.co.entelect.challenge.game.contracts.Config.Config
 
-class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int, var state: String) extends GamePlayer{
+class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int) extends GamePlayer{
   private val MINIMUM_SPEED: Int = Config.MINIMUM_SPEED;
   private val SPEED_STATE_1: Int = Config.SPEED_STATE_1;
   private val INITIAL_SPEED: Int = Config.INITIAL_SPEED;
   private val SPEED_STATE_2: Int = Config.SPEED_STATE_2;
   private val SPEED_STATE_3: Int = Config.SPEED_STATE_3;
   private val MAXIMUM_SPEED: Int = Config.MAXIMUM_SPEED; 
+
+  private var state: String = "";
 
   override def getHealth: Int = {
     return health;
@@ -30,7 +32,33 @@ class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int, 
     return state;
   }
 
-  def reduceSpeed() = {
+  def getReady() = {
+    setState(Config.READY_PLAYER_STATE);
+  }
+
+  def doNothing() = {
+    setState(Config.NOTHING_PLAYER_STATE);
+  }
+
+  def turnRight() = {
+    setState(Config.TURNING_RIGHT_PLAYER_STATE);
+  }
+
+  def turnLeft() = {
+    setState(Config.TURNING_LEFT_PLAYER_STATE);
+  }
+
+  def hitMud() = {
+    reduceSpeed();
+    setState(Config.HIT_MUD_PLAYER_STATE);
+  }
+
+  def decelerate() = {
+    reduceSpeed();
+    setState(Config.DECELERATING_PLAYER_STATE);
+  }
+
+  private def reduceSpeed() = {
     speed match {
       case MINIMUM_SPEED => speed = MINIMUM_SPEED
       case SPEED_STATE_1 => speed = MINIMUM_SPEED
@@ -42,7 +70,12 @@ class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int, 
     };
   }
 
-  def increaseSpeed() = {
+  def accelerate() = {
+    increaseSpeed();
+    setState(Config.ACCELERATING_PLAYER_STATE);
+  }
+
+  private def increaseSpeed() = {
     speed match {
       case MINIMUM_SPEED => speed = SPEED_STATE_1
       case SPEED_STATE_1 => speed = SPEED_STATE_2
@@ -51,6 +84,10 @@ class CarGamePlayer(health: Int, score: Int, gamePlayerId: Int, var speed: Int, 
       case SPEED_STATE_3 => speed = MAXIMUM_SPEED
       case MAXIMUM_SPEED => speed = MAXIMUM_SPEED
       case invalidSpeed => throw new Exception("Invalid current speed: " + invalidSpeed.toString())
-    }
+    };
+  }
+
+  private def setState(newPlayerState: String) = {
+    state = newPlayerState;
   }
 }

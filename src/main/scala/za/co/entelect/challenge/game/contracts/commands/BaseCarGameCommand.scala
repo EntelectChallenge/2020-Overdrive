@@ -23,7 +23,7 @@ abstract class BaseCarGameCommand extends RawCommand {
 
         val playerHitMud = carGameMap.pathIncludesMud(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds);
         if(playerHitMud) {
-            carGamePlayer.reduceSpeed();
+            carGamePlayer.hitMud();
         }
 
         carGameMap.occupyBlock(futurePositionWithingAllBounds, carGamePlayerId);

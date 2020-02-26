@@ -12,6 +12,7 @@ class NothingCommand extends BaseCarGameCommand {
     override def getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap: CarGameMap, carGamePlayer: CarGamePlayer, currentPlayerPosition: BlockPosition): BlockPosition = {
         val futureBlockNumber = currentPlayerPosition.getBlockNumber() + carGamePlayer.getSpeed();
         val futurePosition = new BlockPosition(currentPlayerPosition.getLane(), futureBlockNumber);
+        carGamePlayer.doNothing();
         return futurePosition;
     }
 

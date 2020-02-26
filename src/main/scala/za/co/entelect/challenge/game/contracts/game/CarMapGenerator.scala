@@ -38,7 +38,8 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
         for (i <- 0 to (players.size() - 1)) {
             val currentPlayer = players.get(i);
             val playerId = i + 1;
-            val newGamePlayer = new CarGamePlayer(Config.DEFAULT_HEALTH, Config.DEFAULT_SCORE, playerId, Config.INITIAL_SPEED, Config.READY_PLAYER_STATE); 
+            val newGamePlayer = new CarGamePlayer(Config.DEFAULT_HEALTH, Config.DEFAULT_SCORE, playerId, Config.INITIAL_SPEED); 
+            newGamePlayer.getReady();
             currentPlayer.playerRegistered(newGamePlayer);
         }
 

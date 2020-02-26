@@ -13,9 +13,17 @@ class ChangeLaneCommand(isLeft: Boolean) extends BaseCarGameCommand {
     override def getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap: CarGameMap, carGamePlayer: CarGamePlayer, currentPlayerPosition: BlockPosition): BlockPosition = {
         val futureBlockNumber = currentPlayerPosition.getBlockNumber() + carGamePlayer.getSpeed() - Config.CHANGE_LANE_PENALTY;
         
-        val futureLane = 
-            if (isLeft) currentPlayerPosition.getLane() - 1 
-            else currentPlayerPosition.getLane() + 1;
+        var futureLane = currentPlayerPosition.getLane();
+        if (isLeft) 
+        {
+            futureLane -= 1;
+            carGamePlayer.turnLeft();
+        }
+        else 
+        {
+            futureLane += 1;
+            carGamePlayer.turnRight();
+        }
 
         val futurePosition = new BlockPosition(futureLane, futureBlockNumber);
         return futurePosition;
