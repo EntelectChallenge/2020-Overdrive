@@ -34,6 +34,16 @@ abstract class BaseCarGameCommand extends RawCommand {
             carGamePlayer.hitMud();
         }
 
+        val playerHitOil = carGameMap.pathIncludesOilSpill(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds)
+        if (playerHitOil) {
+            carGamePlayer.hitOil()
+        }
+
+        val playerPickedUpOilItem = carGameMap.pathIncludesOilItem(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds);
+        if(playerPickedUpOilItem) {
+            carGamePlayer.pickupOilItem()
+        }
+
         val playerPickedUpBoost = carGameMap.pathIncludesBoost(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds);
         if(playerPickedUpBoost) {
             carGamePlayer.pickupBoost();

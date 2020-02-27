@@ -46,9 +46,12 @@ object Config {
     def BOOST_GENERATION_PERCENTAGE: Int = 1;
     
     def MUD_MAP_OBJECT: Int = 1;
-    def FINISH_LINE_MAP_OBJECT: Int = 2;
-    def BOOST_MAP_OBJECT: Int = 3;
+    def OIL_SPILL_MAP_OBJECT: Int = 2
+    def OIL_ITEM_MAP_OBJECT: Int = 3
+    def FINISH_LINE_MAP_OBJECT: Int = 4;
+    def BOOST_MAP_OBJECT: Int = 5;
 
+    def OIL_POWERUP_ITEM: String = "OIL";
     def BOOST_POWERUP_ITEM: String = "BOOST";
     def BOOST_DURATION: Int = 5;
 
@@ -63,11 +66,13 @@ object Config {
     def DECELERATE_COMMAND: String = "DECELERATE";
 
     def USE_BOOST_COMMAND: String = "USE_BOOST";
+    def USE_OIL_COMMAND: String = "USE_OIL";
 
     def BACKWARDS_VISIBILITY: Int = 5;
     def FOREWARDS_VISIBILITY: Int = 20;
 
     def HIT_MUD_SCORE_PENALTY: Int = -3;
+    def HIT_OIL_SCORE_PENALTY: Int = -4;
     def PICKUP_POWERUP_BONUS: Int = 4;
     def USE_POWERUP_BONUS: Int = 4;
 }

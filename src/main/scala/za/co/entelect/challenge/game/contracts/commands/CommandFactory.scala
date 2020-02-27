@@ -14,6 +14,7 @@ class CommandFactory {
     private val DECELERATE = Config.DECELERATE_COMMAND;
 
     private val USE_BOOST = Config.USE_BOOST_COMMAND;
+    private val USE_OIL = Config.USE_OIL_COMMAND
 
     def makeCommand(commandText: String): RawCommand = {
         val commandHeader = commandText.toUpperCase();
@@ -25,6 +26,7 @@ class CommandFactory {
           case ACCELERATE => return makeAccelerateCommand();
           case DECELERATE => return makeDecelerateCommand();
           case USE_BOOST => return makeUseBoostCommand();
+          case USE_OIL => makeUseOilCommand();
           case invalidCommandType  => return defaultToNothingCommand("Bot sent invalid command: " + invalidCommandType.toString())
       }
     }
@@ -59,4 +61,7 @@ class CommandFactory {
     private def makeUseBoostCommand(): RawCommand = {
         return new UseBoostCommand;
     }
+
+    private def makeUseOilCommand(): RawCommand = new UseOilCommand
+
 }

@@ -65,6 +65,26 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     updateScore(Config.HIT_MUD_SCORE_PENALTY);
   }
 
+  def hitOil() = {
+    val allowStop: Boolean = false
+    reduceSpeed(allowStop)
+    setState(Config.HIT_OIL_PLAYER_STAE)
+    updateScore(Config.HIT_OIL_SCORE_PENALTY)
+  }
+
+  def hasOilItem: Boolean = powerups.contains(Config.OIL_POWERUP_ITEM)
+
+  def useOilItem(): Unit = {
+    powerups.subtractOne(Config.OIL_POWERUP_ITEM)
+    setState(Config.USED_POWERUP_OIL_PLAYER_STATE)
+    updateScore(Config.USE_POWERUP_BONUS)
+  }
+
+  def pickupOilItem() = {
+    powerups.addOne(Config.OIL_POWERUP_ITEM);
+    updateScore(Config.PICKUP_POWERUP_BONUS);
+  }
+
   def pickupBoost() = {
     powerups.addOne(Config.BOOST_POWERUP_ITEM);
     updateScore(Config.PICKUP_POWERUP_BONUS);
