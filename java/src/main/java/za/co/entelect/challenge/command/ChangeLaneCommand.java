@@ -9,9 +9,9 @@ public class ChangeLaneCommand implements Command {
     public ChangeLaneCommand(int laneIndicator) {
         if (laneIndicator == 1) {
             this.direction = Direction.valueOf("Right");
+        } else {
+            this.direction = Direction.valueOf("Left");
         }
-
-        this.direction = Direction.valueOf("Left");
     }
 
     @Override
