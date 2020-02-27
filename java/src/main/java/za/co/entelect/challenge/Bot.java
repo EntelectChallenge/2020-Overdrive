@@ -31,9 +31,9 @@ public class Bot {
     }
 
     public Command run() {
-        Map<Integer, Object> blocks = getBlocksInFront(myCar.position.lane, myCar.position.block, maxSpeed);
+        List blocks = getBlocksInFront(myCar.position.lane, myCar.position.block, maxSpeed);
 
-        if (blocks.containsValue(Object.MUD)) {
+        if (blocks.contains(Object.MUD)) {
             int i = random.nextInt(directionList.size());
             if (i == 0) {
                 return new DecelerateCommand();
@@ -43,27 +43,40 @@ public class Bot {
         return new AccelerateCommand();
     }
 
+    private HashMap<Integer, Lane[]> getListMapStructure() {
+        Integer mapWidth = Arrays.stream(gameState.map)
+                .map(b -> b.position.block)
+                .mapToInt(v -> v)
+                .max().orElse(0);
+        Integer mapHeight = Arrays.stream(gameState.map)
+                .map(b -> b.position.lane)
+                .mapToInt(v -> v)
+                .max().orElse(0);
+        HashMap<Integer, Lane[]> map = new HashMap<Integer, Lane[]>();
+
+        for (int lane = 1; lane <= mapHeight; lane++) {
+            Lane[] blocks = new Lane[mapWidth];
+            for (int block = 0; block < mapWidth; block++) {
+                blocks[block] = (gameState.map[((lane - 1) * mapWidth) + block]);
+            }
+            map.put(lane, blocks);
+        }
+
+        return map;
+    }
+
     /**
      * Returns map of blocks and the objects in the for the current lanes, returns the amount of blocks that can be
      * traversed at max speed.
      **/
-    private Map<Integer, Object> getBlocksInFront(int lane, int block, int maxSpeed) {
-        Lane[] lanes = gameState.map;
-        Map<Integer, Object> blocks = new Hashtable<Integer, Object>();
-        if (lane - 1 == 0) {
-            for (int i = block; i <= block + maxSpeed + (26 * (lane - 1)); i++) {
-                blocks.put(lanes[i].position.block, lanes[i].object);
-            }
-        } else if (lane + 1 == 5) {
-            for (int i = block + (26 * (lane - 1)); i <= block + maxSpeed + (26 * (lane - 1)); i++) {
-                blocks.put(lanes[i].position.block, lanes[i].object);
-            }
-        } else {
-            for (int i = block; i <= block + maxSpeed; i++) {
-                blocks.put(lanes[i + (26 * (lane - 1))].position.block, lanes[i + (26 * (lane - 1))].object);
-            }
-        }
+    private List getBlocksInFront(int lane, int block, int maxSpeed) {
+        HashMap<Integer, Lane[]> map = getListMapStructure();
+        List blocks = new ArrayList();
 
+        Lane[] laneList = map.get(lane);
+        for (int i = block - 1; i <= block + maxSpeed; i++) {
+            blocks.add(laneList[i].object);
+        }
         return blocks;
     }
 
