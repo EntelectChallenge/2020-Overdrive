@@ -17,7 +17,7 @@ class JsonRenderer extends BaseMapRenderer {
         val mapFragmentPlayerPosition = mapFragmentPlayer.getPosition();
         val mapFragmentJsonStructure = 
             ("currentRound" -> mapFragment.getCurrentRound()) ~
-            ("maxRounds" -> Config.TRACK_LENGTH) ~
+            ("maxRounds" -> Config.MAX_ROUNDS) ~
             ("player" ->
                 ("id" -> mapFragmentPlayer.getId()) ~
                 ("position" ->

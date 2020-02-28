@@ -5,6 +5,7 @@ object Config {
     def TRACK_LENGTH: Int = 1500;
     def MIN_LANE = 1;
     def MAX_LANE = 4;
+    def MAX_ROUNDS = 600;
 
     def EMPTY_PLAYER: Int = 0;
     
