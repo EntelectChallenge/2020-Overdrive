@@ -38,7 +38,7 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
             }
             else
             {
-                "," + powerups(i);
+                powerupAsString = powerupAsString + "," + powerups(i);
             }
         }
         powerupAsString += "]" 
