@@ -44,7 +44,8 @@ object Config {
 
     def MUD_GENERATION_PERCENTAGE: Int = 10;
     def BOOST_GENERATION_PERCENTAGE: Int = 1;
-    
+    def OIL_ITEM_GENERATION_PERCENTAGE: Int = 1
+
     def MUD_MAP_OBJECT: Int = 1;
     def OIL_SPILL_MAP_OBJECT: Int = 2
     def OIL_ITEM_MAP_OBJECT: Int = 3
