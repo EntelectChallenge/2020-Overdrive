@@ -10,9 +10,9 @@ import za.co.entelect.challenge.game.contracts.map.BlockPosition
 class AccelerateCommand extends BaseCarGameCommand {
 
     override def getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap: CarGameMap, carGamePlayer: CarGamePlayer, currentPlayerPosition: BlockPosition): BlockPosition = {
+        carGamePlayer.accelerate();
         val futureBlockNumber = currentPlayerPosition.getBlockNumber() + carGamePlayer.getSpeed();
         val futurePosition = new BlockPosition(currentPlayerPosition.getLane(), futureBlockNumber);
-        carGamePlayer.accelerate();
         return futurePosition;
     }
     
