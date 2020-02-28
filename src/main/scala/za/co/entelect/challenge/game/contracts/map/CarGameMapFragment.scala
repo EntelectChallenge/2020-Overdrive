@@ -14,26 +14,26 @@ class CarGameMapFragment(currentRound: Int, player: MapFragmentPlayer, lanes: Ar
     }
     
     override def toString() : String = { 
-        var lanesAsString = "LANE 1: ";
+        var lanesAsString = "[";
         for(x <- lanes.filter(x => x.getPosition().getLane() == 1)) {
             lanesAsString += x.toString();
         }
-        lanesAsString += "\r\nLANE 2: ";
+        lanesAsString += "]\r\n[";
         for(x <- lanes.filter(x => x.getPosition().getLane() == 2)) {
             lanesAsString += x.toString();
         }
-        lanesAsString += "\r\nLANE 3: ";
+        lanesAsString += "]\r\n[";
         for(x <- lanes.filter(x => x.getPosition().getLane() == 3)) {
             lanesAsString += x.toString();
         }
-        lanesAsString += "\r\nLANE 4: ";
+        lanesAsString += "]\r\n[";
         for(x <- lanes.filter(x => x.getPosition().getLane() == 4)) {
             lanesAsString += x.toString();
         }
+        lanesAsString += "]"
 
         val stringRepresentation = 
             "======================================================================================================" + "\r\n" +
-            "MAP FRAGMENT: " + "\r\n" + 
             "PLAYER INFO: " +
             "current round: " + currentRound + 
             " player: { " + player.toString() + " }" + "\r\n" +

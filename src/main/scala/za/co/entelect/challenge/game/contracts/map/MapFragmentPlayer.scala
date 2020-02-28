@@ -30,12 +30,25 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
     }
     
     override def toString() : String = { 
+        var powerupAsString = "[";
+        for (i <- 0 to (powerups.size - 1)) {
+            if(i == 0)
+            {
+                powerupAsString = powerupAsString + powerups(i);
+            }
+            else
+            {
+                "," + powerups(i);
+            }
+        }
+        powerupAsString += "]" 
         val stringRepresentation = 
             "id: " + id + 
             " position: { " + position.toString() + " }" +
             " speed: " + speed + 
             " state: " + state + 
-            " powerups: " + powerups + 
+            " powerups: " + powerupAsString + 
+            " boosting: " + boosting + 
             " boost-counter: " + boostCounter; 
         return stringRepresentation;
     } 

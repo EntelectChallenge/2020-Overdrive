@@ -5,11 +5,13 @@ import za.co.entelect.challenge.game.contracts.Config.Config
 class Block(position: BlockPosition, mapObject: Int, var occupiedByPlayerWithId: Int) {
 
     override def toString() : String = { 
-        val stringRepresentation = "Block: {" +
-            " position: { " + position.toString() + " }" +
-            " object: " + mapObject + 
-            " occupiedByPlayerWithId: " + occupiedByPlayerWithId +
-            " } ";
+        val stringRepresentation = 
+            if(occupiedByPlayerWithId != Config.EMPTY_PLAYER) occupiedByPlayerWithId.toString()
+            else if(mapObject == Config.EMPTY_MAP_OBJECT) "o"
+            else if(mapObject == Config.MUD_MAP_OBJECT) "m"
+            else if (mapObject == Config.BOOST_MAP_OBJECT) "b"
+            else if (mapObject == Config.FINISH_LINE_MAP_OBJECT) "f" 
+            else throw new Exception("Unknown block content encountered when rendering");
         return stringRepresentation;
     } 
 
