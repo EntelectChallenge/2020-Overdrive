@@ -14,6 +14,8 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
 
   private var state: String = "";
   private val powerups: mutable.ListBuffer[String] = mutable.ListBuffer[String]();
+
+  private var boosting: Boolean = false;
   private var boostCounter = 0;
 
   override def getHealth: Int = {
@@ -76,25 +78,23 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
   def useBoost() = {
     powerups.subtractOne(Config.BOOST_POWERUP_ITEM);
     speed = BOOST_SPEED;
+    boosting = true;
     boostCounter = Config.BOOST_DURATION;
     setState(Config.USED_POWERUP_BOOST_PLAYER_STATE);
     updateScore(Config.USE_POWERUP_BONUS);
   }
 
-  def boosting() = {
-    if(state == Config.USED_POWERUP_BOOST_PLAYER_STATE) {
-      setState(Config.BOOSTING_PLAYER_STATE)
-    } 
-    else
-    {
-      boostCounter -= 1;
-      val boostOver = boostCounter == 0;
-      if (boostOver) {
-        speed = MAXIMUM_SPEED;
-        setState(Config.NOTHING_PLAYER_STATE);
-      }
+  def isBoosting(): Boolean = {
+    return boosting;
+  }
+
+  def tickBoost() = {
+    boostCounter -= 1;
+    val boostOver = boostCounter == 0;
+    if (boostOver) {
+      speed = MAXIMUM_SPEED;
+      setState(Config.NOTHING_PLAYER_STATE);
     }
-    
   }
 
   def decelerate() = {
@@ -104,7 +104,11 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
   }
 
   private def reduceSpeed(allowStop: Boolean) = {
-    boostCounter = 0; //any form of deceleration cancels the boost (player command/ obstacle)
+    //any form of deceleration cancels the boost (player command/ obstacle)
+    if(boosting) {
+      boosting = false;
+      boostCounter = 0; 
+    }
 
     speed match {
       case MINIMUM_SPEED => speed = MINIMUM_SPEED

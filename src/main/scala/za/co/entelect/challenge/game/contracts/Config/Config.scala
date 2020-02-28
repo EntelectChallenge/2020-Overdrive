@@ -23,7 +23,6 @@ object Config {
     def HIT_MUD_PLAYER_STATE: String = "HIT_MUD";
     def HIT_OIL_PLAYER_STAE: String = "HIT_OIL";
     def FINISHED_PLAYER_STATE: String = "FINISHED";
-    def BOOSTING_PLAYER_STATE: String = "BOOSTING";
 
     def MINIMUM_SPEED: Int = 0;
     def SPEED_STATE_1: Int = 3;

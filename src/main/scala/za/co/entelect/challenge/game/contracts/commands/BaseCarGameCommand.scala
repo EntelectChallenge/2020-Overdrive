@@ -15,9 +15,9 @@ abstract class BaseCarGameCommand extends RawCommand {
         var carGamePlayer = player.asInstanceOf[CarGamePlayer];
 
         //handle ticking powerups
-        if (carGamePlayer.getState() == Config.USED_POWERUP_BOOST_PLAYER_STATE || carGamePlayer.getState() == Config.BOOSTING_PLAYER_STATE) 
+        if (carGamePlayer.isBoosting()) 
         {
-            carGamePlayer.boosting();
+            carGamePlayer.tickBoost();
         }
 
         val carGamePlayerId = carGamePlayer.getGamePlayerId();
