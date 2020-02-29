@@ -32,7 +32,6 @@ public class Bot {
 
     public Command run() {
         List blocks = getBlocksInFront(myCar.position.lane, myCar.position.block, maxSpeed);
-        System.out.println(blocks);
         if (blocks.contains(Object.MUD)) {
             int i = random.nextInt(directionList.size());
             if (i == 0) {
