@@ -36,7 +36,7 @@ object Config {
     def PLAYER_ONE_START_LANE: Int = 1;
     def PLAYER_ONE_START_BLOCK: Int = 1;
     def PLAYER_TWO_START_LANE: Int = 3;
-    def PLAYER_TWO_START_BLOCK: Int = 3;
+    def PLAYER_TWO_START_BLOCK: Int = 1;
     
     def EMPTY_MAP_OBJECT: Int = 0;
 
