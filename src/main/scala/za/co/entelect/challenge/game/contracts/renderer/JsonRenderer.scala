@@ -28,7 +28,7 @@ class JsonRenderer extends BaseMapRenderer {
                 ("state" -> mapFragmentPlayer.getState()) ~
                 ("powerups" -> mapFragmentPlayer.getPowerups().toList) ~
                 ("boosting" -> mapFragmentPlayer.isBoosting()) ~
-                ("boost-counter" -> mapFragmentPlayer.getBoostCounter())
+                ("boostCounter" -> mapFragmentPlayer.getBoostCounter())
             ) ~
             ("lanes" -> 
                 mapFragment.getLanes().toList.map 
@@ -38,7 +38,7 @@ class JsonRenderer extends BaseMapRenderer {
                         ("lane" -> l.getPosition().getLane()) ~
                         ("blockNumber" -> l.getPosition().getBlockNumber())
                     ) ~
-                    ("object" -> l.getMapObject()) ~
+                    ("surfaceObject" -> l.getMapObject()) ~
                     ("occupiedByPlayerWithId" -> l.getOccupiedByPlayerWithId())
                 }
             );
@@ -58,11 +58,11 @@ class JsonRenderer extends BaseMapRenderer {
                         ("lane" -> gameMap.getPlayerBlockPosition(x.getGamePlayerId()).getLane()) ~
                         ("blockNumber" -> gameMap.getPlayerBlockPosition(x.getGamePlayerId()).getBlockNumber())
                     ) ~
-                    ("blockrate" -> x.getSpeed()) ~
+                    ("speed" -> x.getSpeed()) ~
                     ("state" -> x.getState()) ~
                     ("powerups" -> x.getPowerups().toList) ~
                     ("boosting" -> x.isBoosting()) ~
-                    ("boost-counter" -> x.getBoostCounter())
+                    ("boostCounter" -> x.getBoostCounter())
                 }
             ) ~
             ("blocks" -> 
@@ -73,8 +73,8 @@ class JsonRenderer extends BaseMapRenderer {
                         ("lane" -> l.getPosition().getLane()) ~
                         ("blockNumber" -> l.getPosition().getBlockNumber())
                     ) ~
-                    ("object" -> l.getMapObject()) ~
-                    ("occupied-by-player-with-id" -> l.getOccupiedByPlayerWithId())
+                    ("surfaceObject" -> l.getMapObject()) ~
+                    ("occupiedByPlayerWithId" -> l.getOccupiedByPlayerWithId())
                 }
             );
         val jsonString = prettyRender(globalMapJsonStructure);
