@@ -19,6 +19,7 @@ build:
   artifacts:
     paths:
       - "target/*.jar"
+      - "starter-pack-runner-config.json"
     expire_in: 1h
 
 publish:
@@ -32,7 +33,9 @@ publish:
     DOCKER_TAG: "latest"
   before_script:
     - docker login -u $temp_username -p $temp_password
-  script: docker push entelectchallenge2020/game-runner-qa:latest
+  script:
+    - docker build . -t entelectchallenge2020/game-runner-qa
+    - docker push entelectchallenge2020/game-runner-qa
   only:
     - master
 
