@@ -116,20 +116,29 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     return pathIncludesMud;
   }
 
+  def pathIncludesOilSpill(startPosition: BlockPosition, endPosition: BlockPosition): Boolean =
+    pathIncludesMapObject(startPosition, endPosition, Config.OIL_SPILL_MAP_OBJECT)
+
+  def pathIncludesOilItem(startPosition: BlockPosition, endPosition: BlockPosition): Boolean =
+    pathIncludesMapObject(startPosition, endPosition, Config.OIL_ITEM_MAP_OBJECT)
+
   def pathIncludesBoost(startPosition: BlockPosition, endPosition: BlockPosition): Boolean = {
     val pathIncludesBoost = pathIncludesMapObject(startPosition, endPosition, Config.BOOST_MAP_OBJECT);
     return pathIncludesBoost;
   }
+
+  def applyOilToBlock(position: BlockPosition) =
+    getBlock(position).setMapObject(Config.OIL_SPILL_MAP_OBJECT)
 
   private def pathIncludesMapObject(startPosition: BlockPosition, endPosition: BlockPosition, mapObject: Int): Boolean = {
     val startLane = startPosition.getLane();
     val startBlockNumber = startPosition.getBlockNumber();
     val endLane = endPosition.getLane();
     val endBlockNumber = endPosition.getBlockNumber();
-    val blocksWithObject = 
-      blocks.find(x => 
+    val blocksWithObject =
+      blocks.find(x =>
         (x.getPosition().getLane() == endLane && x.getPosition().getBlockNumber() >= startBlockNumber && x.getPosition().getBlockNumber() <= endBlockNumber) &&
-        x.getMapObject() == mapObject
+          x.getMapObject() == mapObject
       );
     val pathIncludesObject = blocksWithObject.isDefined;
     return pathIncludesObject;
