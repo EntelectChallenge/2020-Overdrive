@@ -26,7 +26,7 @@ class JsonRenderer extends BaseMapRenderer {
                 ) ~
                 ("speed" -> mapFragmentPlayer.getSpeed()) ~
                 ("state" -> mapFragmentPlayer.getState()) ~
-                ("power-ups" -> mapFragmentPlayer.getPowerups().toList) ~
+                ("powerups" -> mapFragmentPlayer.getPowerups().toList) ~
                 ("boosting" -> mapFragmentPlayer.isBoosting()) ~
                 ("boost-counter" -> mapFragmentPlayer.getBoostCounter())
             ) ~
@@ -60,7 +60,7 @@ class JsonRenderer extends BaseMapRenderer {
                     ) ~
                     ("blockrate" -> x.getSpeed()) ~
                     ("state" -> x.getState()) ~
-                    ("power-ups" -> x.getPowerups().toList) ~
+                    ("powerups" -> x.getPowerups().toList) ~
                     ("boosting" -> x.isBoosting()) ~
                     ("boost-counter" -> x.getBoostCounter())
                 }
