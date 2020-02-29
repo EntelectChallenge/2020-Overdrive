@@ -76,10 +76,11 @@ public class RunnerReferee implements GameReferee {
         }
 
         RefereeMessage gameEngineCheck = gameEngineReferee.isMatchValid(gameMap);
-        gameEngineCheck.isValid = gameEngineCheck.isValid && errorList.isEmpty();
-        gameEngineCheck.reasons.addAll(errorList);
+        final boolean isValidOverall = gameEngineCheck.isValid && errorList.isEmpty();
+        List<String> overallErrorList = new ArrayList<>(gameEngineCheck.reasons);
+        overallErrorList.addAll(errorList);
 
-        return gameEngineCheck;
+        return new RefereeMessage(isValidOverall, overallErrorList);
     }
 
     void trackExecution(Player player, BotExecutionContext botExecutionContext) {
