@@ -1,7 +1,13 @@
 image: maven:latest
 
+stages:
+  - build
+  - publish
+
 build:
   stage: build
+  tags:
+    - docker
   only:
     - master
     - develop
@@ -10,3 +16,25 @@ build:
     - /^feature\/.+$/
   script:
     - mvn clean compile
+  artifacts:
+    paths:
+      - "*/target/*.jar"
+    expire_in: 1h
+
+publish:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:dind
+  tags:
+    - docker
+  variables:
+    DOCKER_TAG: "latest"
+  before_script:
+    - docker login -u $temp_username -p $temp_password
+  script: docker push entelectchallenge2020/game-runner-qa
+  only:
+    - master
+
+
+
