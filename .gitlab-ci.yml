@@ -18,7 +18,7 @@ build:
     - mvn clean compile verify
   artifacts:
     paths:
-      - "*/target/*.jar"
+      - "target/*.jar"
     expire_in: 1h
 
 publish:
