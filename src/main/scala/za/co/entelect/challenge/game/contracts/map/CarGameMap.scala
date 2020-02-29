@@ -98,6 +98,14 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     blockToVacate.vacate();
   }
 
+  def blockIsOccupied(position: BlockPosition): Boolean = {
+    val laneOfInterest = position.getLane();
+    val blockNumberOfInterest = position.getLane();
+    val blockOfInterest = blocks.find(x => x.getPosition().getLane() == laneOfInterest && x.getPosition().getBlockNumber() == blockNumberOfInterest);
+    val hasPlayer = blockOfInterest.isDefined && (blockOfInterest.get.getOccupiedByPlayerWithId() != Config.EMPTY_PLAYER);
+    return hasPlayer;
+  }
+
   def occupyBlock(position: BlockPosition, gamePlayerId: Int) = {
     val blockToOccupy = getBlock(position);
     blockToOccupy.occupy(gamePlayerId);

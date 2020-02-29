@@ -49,8 +49,18 @@ abstract class BaseCarGameCommand extends RawCommand {
             carGamePlayer.pickupBoost();
         }
 
-        //place player in new position
-        carGameMap.occupyBlock(futurePositionWithingAllBounds, carGamePlayerId);
+        //place player in new position (or reset if collision would occur)
+        if(carGameMap.blockIsOccupied(futurePositionWithingAllBounds))
+        {
+            val previousLane = currentBlockThatHasBeenVacated.getLane();
+            val previousBlockNumber = currentBlockThatHasBeenVacated.getBlockNumber();
+            val oldPosition = new BlockPosition(previousLane, previousBlockNumber);
+            carGameMap.occupyBlock(oldPosition, carGamePlayerId);
+        }
+        else
+        {
+            carGameMap.occupyBlock(futurePositionWithingAllBounds, carGamePlayerId);
+        }
 
         //check win condition
         if (futurePositionWithingAllBounds.getBlockNumber() == Config.TRACK_LENGTH) {
