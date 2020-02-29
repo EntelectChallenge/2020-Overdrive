@@ -94,8 +94,7 @@ public class GameBootstrapper {
             }
 
         } catch (Exception e) {
-            LOGGER.error(e);
-            e.printStackTrace();
+            LOGGER.error("Exception during match execution", e);
             notifyMatchFailure(gameRunnerConfig);
         } finally {
             if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
@@ -179,7 +178,7 @@ public class GameBootstrapper {
                 TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
                 tournamentApi.updateMatchStatus(gameRunnerConfig.tournamentConfig.functionKey, gameResult).execute();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Error notifying failure", e);
             }
         }
     }

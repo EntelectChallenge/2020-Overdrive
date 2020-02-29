@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class GameEngineRunner implements LifecycleEngineRunner {
 
-    private static final Logger log = LogManager.getLogger(GameEngineRunner.class);
+    private static final Logger LOGGER = LogManager.getLogger(GameEngineRunner.class);
     private static final String COMMAND_DELIMITER = ";";
 
     private GameRunnerConfig gameRunnerConfig;
@@ -87,7 +87,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         s.append("Starting game\n");
         s.append("=======================================\n");
 
-        log.info(s);
+        LOGGER.info(s);
 
         gameResult = new GameResult();
         gameResult.isComplete = false;
@@ -97,7 +97,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         botExecutionContexts = Collections.synchronizedList(new ArrayList<>());
 
         if (gameRunnerConfig.isTournamentMode) {
-            log.info("Delaying match start for bots to warm up");
+            LOGGER.info("Delaying match start for bots to warm up");
             Thread.sleep(5000);
         }
     }
@@ -111,7 +111,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         s.append(String.format("Starting round: %d \n", gameMap.getCurrentRound()));
         s.append("=======================================\n");
 
-        log.info(s);
+        LOGGER.info(s);
 
         roundProcessor = new RunnerRoundProcessor(gameMap, gameRoundProcessor);
 
@@ -121,7 +121,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     @Override
     public void onProcessRound() throws Exception {
         GameMapRenderer renderer = rendererResolver.resolve(RendererType.CONSOLE);
-        log.info(renderer.render(gameMap, players.get(0).getGamePlayer()));
+        LOGGER.info(renderer.render(gameMap, players.get(0).getGamePlayer()));
 
         for (Player player : players) {
 
@@ -155,13 +155,13 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         s.append(String.format("Completed round: %d \n", gameMap.getCurrentRound()));
         s.append("=======================================\n");
 
-        log.info(s);
+        LOGGER.info(s);
 
         for (BotExecutionContext botExecutionContext : botExecutionContexts) {
             try {
                 botExecutionContext.saveRoundStateData(gameRunnerConfig.gameName);
             } catch (Exception e) {
-                log.error("Failed to write round information", e);
+                LOGGER.error("Failed to write round information", e);
             }
         }
 
@@ -173,7 +173,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             String globalStateRender = rendererResolver.resolve(RendererType.JSON).render(gameMap, null);
             FileUtils.writeToFile(globalStateFile, globalStateRender);
         } catch (Exception e) {
-            log.error("Failed to write global round information", e);
+            LOGGER.error("Failed to write global round information", e);
         }
     }
 
@@ -231,11 +231,11 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                     + "\n");
         }
 
-        log.info("=======================================");
-        log.info((winner == null)
+        LOGGER.info("=======================================");
+        LOGGER.info((winner == null)
                 ? "The game ended in a tie"
                 : "The winner is: " + winner.getName());
-        log.info("=======================================");
+        LOGGER.info("=======================================");
 
         try {
             String roundLocation = String.format("%s/%s/endGameState.txt", gameRunnerConfig.gameName, FileUtils.getRoundDirectory(gameMap.getCurrentRound()));
@@ -275,7 +275,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             bufferedWriter.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error writing end game file", e);
         }
     }
 
