@@ -7,7 +7,10 @@ import scala.collection.JavaConverters._
 
 class CarReferee extends GameReferee {
   override def isMatchValid(gameMap: GameMap): RefereeMessage = {
-    val refereeMessageList = List("", "", "").asJava
-    return new RefereeMessage(true, refereeMessageList)
+    //TODO: determine what would invalidate a match
+    val matchIsValid = true;
+    val reasonsForDecision = new Array[String](0).toList.asJava;
+    val refereeMessage = new RefereeMessage(matchIsValid, reasonsForDecision)
+    return refereeMessage;
   }
 }
