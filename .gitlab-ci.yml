@@ -31,7 +31,7 @@ publish:
   variables:
     DOCKER_TAG: "latest"
   before_script:
-    - docker login -u $temp_username -p $temp_password
+    - docker login -u entelectchallenge2020 -p $temp_password
   script: docker push entelectchallenge2020/game-runner-qa
   only:
     - master
