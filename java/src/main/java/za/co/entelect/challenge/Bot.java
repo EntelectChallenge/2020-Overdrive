@@ -22,7 +22,6 @@ public class Bot {
         this.myCar = getMyCar(gameState);
 
         directionList.add(-1);
-        directionList.add(0);
         directionList.add(1);
     }
 
@@ -31,30 +30,27 @@ public class Bot {
     }
 
     public Command run() {
-        List blocks = getBlocksInFront(myCar.position.lane, myCar.position.block, maxSpeed);
+        List<Object> blocks = getBlocksInFront(myCar.position.lane, myCar.position.block);
         if (blocks.contains(Object.MUD)) {
             int i = random.nextInt(directionList.size());
-            if (i == 0) {
-                return new AccelerateCommand();
-            }
-            return new ChangeLaneCommand(directionList.get(random.nextInt(directionList.size())));
+            return new ChangeLaneCommand(directionList.get(i));
         }
         return new AccelerateCommand();
     }
 
     private HashMap<Integer, Lane[]> getListMapStructure() {
-        Integer mapWidth = Arrays.stream(gameState.map)
+        int mapWidth = Arrays.stream(gameState.map)
                 .map(b -> b.position.block)
                 .mapToInt(v -> v)
                 .max().orElse(0);
-        Integer mapHeight = Arrays.stream(gameState.map)
+        int mapHeight = Arrays.stream(gameState.map)
                 .map(b -> b.position.lane)
                 .mapToInt(v -> v)
                 .max().orElse(0);
 
         mapWidth = mapWidth - gameState.map[0].position.block;
 
-        HashMap<Integer, Lane[]> map = new HashMap<Integer, Lane[]>();
+        HashMap<Integer, Lane[]> map = new HashMap<>();
 
         for (int lane = 1; lane <= mapHeight; lane++) {
             Lane[] blocks = new Lane[mapWidth +2];
@@ -71,13 +67,13 @@ public class Bot {
      * Returns map of blocks and the objects in the for the current lanes, returns the amount of blocks that can be
      * traversed at max speed.
      **/
-    private List getBlocksInFront(int lane, int block, int maxSpeed) {
+    private List<Object> getBlocksInFront(int lane, int block) {
         HashMap<Integer, Lane[]> map = getListMapStructure();
-        List blocks = new ArrayList();
-        Integer startBlock = gameState.map[0].position.block;
+        List<Object> blocks = new ArrayList<> ();
+        int startBlock = gameState.map[0].position.block;
 
         Lane[] laneList = map.get(lane);
-        for (int i = block - startBlock; i <= block - startBlock + maxSpeed; i++) {
+        for (int i = block - startBlock; i <= block - startBlock + Bot.maxSpeed; i++) {
             if (laneList[i] == null) {
                 break;
             }
