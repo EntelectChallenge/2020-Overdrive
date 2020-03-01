@@ -5,6 +5,13 @@ namespace StarterBot.Enums
     public enum CellType
     {
         EMPTY,
-        MUD
+        MUD, 
+        OIL_SPILL,
+        OIL_POWER,
+        FINISH,
+        BOOST
+
     }
+
+
 }

@@ -9,8 +9,8 @@ namespace StarterBot.Entities
         public int MapSize { get; set; }
         public int ConsecutiveDoNothingCount { get; set; }
 
-        public Player MyPlayer { get; set; }
+        public Player Player { get; set; }
 
-        public Lane[][] Lanes { get; set; }
+        public Lane[] Lanes { get; set; }
     }
 }

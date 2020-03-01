@@ -7,6 +7,12 @@ namespace StarterBot.Enums
 {
     public enum State
     {
-        READY
+        READY,
+        ACCELERATING,
+        NOTHING,
+        TURNING_RIGHT,
+        TURNING_LEFT,
+        HIT_MUD,
+        HIT_OIL
     }
 }

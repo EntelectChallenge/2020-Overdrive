@@ -9,18 +9,18 @@ namespace StarterBot.Entities.Commands
        public ChangeLaneCommand(int laneIndicator) {
             if (laneIndicator == 1)
             {
-                this.direction ="Right";
+                this.direction ="RIGHT";
             }
             else
             {
-                this.direction = "Left";
+                this.direction = "LEFT";
             }
         }
 
 
         public string RenderCommand()
         {
-            return $"Change Lane:{direction}";
+            return $"TURN_{direction}";
         }
     }
 }
