@@ -2,10 +2,10 @@ package za.co.entelect.challenge.enums;
 
 public enum Direction {
 
-    Forward(0, 1, "Forward"),
-    Backward(0, -1, "Backward"),
-    Left(-1, 0, "Left"),
-    Right(1, 0, "Right");
+    FORWARD(0, 1, "FORWARD"),
+    BACKWARD(0, -1, "BACKWARD"),
+    LEFT(-1, 0, "LEFT"),
+    RIGHT(1, 0, "RIGHT");
 
     public final int lane;
     public final int block;

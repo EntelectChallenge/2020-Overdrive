@@ -3,8 +3,8 @@ package za.co.entelect.challenge.enums;
 import com.google.gson.annotations.SerializedName;
 
 public enum State {
-    @SerializedName("accelerating")
+    @SerializedName("ACCELERATING")
     ACCELERATING,
-    @SerializedName("ready")
+    @SerializedName("READY")
     READY
 }

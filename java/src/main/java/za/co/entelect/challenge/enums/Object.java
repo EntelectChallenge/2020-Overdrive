@@ -6,5 +6,13 @@ public enum Object {
     @SerializedName("0")
     EMPTY,
     @SerializedName("1")
-    MUD;
+    MUD,
+    @SerializedName("2")
+    OIL_SPILL,
+    @SerializedName("3")
+    OIL_POWER,
+    @SerializedName("4")
+    FINISH,
+    @SerializedName("5")
+    BOOST
 }
