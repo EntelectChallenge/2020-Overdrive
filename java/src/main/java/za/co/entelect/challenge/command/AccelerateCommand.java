@@ -4,7 +4,7 @@ public class AccelerateCommand implements Command {
 
     @Override
     public String render() {
-        return String.format("Accelerate");
+        return String.format("ACCELERATE");
     }
 
 }
