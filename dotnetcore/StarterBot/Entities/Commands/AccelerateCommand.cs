@@ -4,7 +4,7 @@ namespace StarterBot.Entities.Commands
     {
         public string RenderCommand()
         {
-            return "Accelerate";
+            return "ACCELERATE";
         }
     }
 }

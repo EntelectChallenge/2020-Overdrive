@@ -1,10 +1,10 @@
 namespace StarterBot.Entities.Commands
 {
-    public class DoNothingCommand: ICommand
+    public class BoostCommand: ICommand
     {
         public string RenderCommand()
         {
-            return "NOTHING";
+            return "USE_BOOST";
         }
     }
 }
