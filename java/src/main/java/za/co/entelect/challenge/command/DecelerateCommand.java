@@ -4,6 +4,6 @@ public class DecelerateCommand implements Command {
 
     @Override
     public String render() {
-        return String.format("Decelerate");
+        return String.format("DECELERATE");
     }
 }

@@ -1,8 +1,9 @@
 package za.co.entelect.challenge.command;
 
-public class DoNothingCommand implements Command {
+public class BoostCommand implements Command {
+
     @Override
     public String render() {
-        return "NOTHING";
+        return String.format("USE_BOOST");
     }
 }
