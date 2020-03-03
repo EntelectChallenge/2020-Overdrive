@@ -141,7 +141,7 @@ class StarterBot:
         if BlockObject.MUD in nextBlocks:
             self.command = 'TURN_' + self.changeLaneCommand(random.choice(self.random_list))
         else:
-            self.command = 'Accelerate'
+            self.command = 'ACCELERATE'
 
         return None
 
