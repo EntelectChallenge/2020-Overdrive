@@ -1,9 +1,8 @@
 import enum
 import DirectionChange
 
-
 class Direction(enum.Enum):
-    front = DirectionChange(0, 1)
-    back = DirectionChange(0, -1)
-    left = DirectionChange(-1, 0)
-    right = DirectionChange(1, 0)
+    FRONT = DirectionChange(0, 1)
+    BACK = DirectionChange(0, -1)
+    LEFT = DirectionChange(-1, 0)
+    RIGHT = DirectionChange(1, 0)

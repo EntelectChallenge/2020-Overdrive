@@ -1,6 +1,10 @@
 import enum
 
-
 class State(enum.Enum):
-    accelerating = 1
-    ready = 2
+    ACCELERATING = "ACCELERATING"
+    READY = "READY"
+    NOTHING = "NOTHING"
+    TURNING_RIGHT = "TURNING_RIGHT"
+    TURNING_LEFT = "TURNING_LEFT"
+    HIT_MUD = "HIT_MUD"
+

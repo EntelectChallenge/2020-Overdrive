@@ -6,12 +6,11 @@ import json
 import os
 import logging
 import numpy as np
-from scipy.spatial import distance
+import random
 
 from Lane import Lane
 from BlockObject import BlockObject
 from Player import Player
-from DirectionChange import DirectionChange
 from Position import Position
 from State import State
 
@@ -25,6 +24,8 @@ class StarterBot:
         """
         Initialize Bot .
         """
+        self.max_speed = 9
+        self.random_list = [-1,1]
 
         self.current_round = None
         self.max_rounds = None
@@ -32,8 +33,9 @@ class StarterBot:
         self.map = None  # Array of lanes
         self.player_info = None  # Player object
         self.game_state = None
-        self.raw_lanes = None
+        self.raw_lanes = []
         self.raw_player = None
+
 
     def get_current_round_details(self):
         """
@@ -52,7 +54,7 @@ class StarterBot:
         self.player_info = self.get_player()
 
         self.current_round = self.game_state['currentRound']
-        # self.max_rounds = self.game_state['maxRounds']
+        self.max_rounds = self.game_state['maxRounds']
 
         return None
 
@@ -61,17 +63,16 @@ class StarterBot:
 
         player.id = self.raw_player['id']
         player.speed = self.raw_player['speed']
-        player.state = self.get_player_state()
+        player.state = State[self.raw_player['state']]
         player.position = Position(
-                        self.raw_player['lane'],
-                        self.raw_player['blockNumber'])
+                        self.raw_player['position']['lane'],
+                        self.raw_player['position']['blockNumber'])
+        player.power_ups = self.raw_player['powerups']
+        player.boosting = self.raw_player['boosting']
+        player.boost_counter = self.raw_player['boost-counter']
+
         return player
 
-    def get_player_state(self, state):
-        if state == 'ready':
-            return State.ready
-        else:
-            return State.accelerating
 
     def get_lanes(self):
         lanes = []
@@ -83,28 +84,64 @@ class StarterBot:
                         raw_position['lane'],
                         raw_position['blockNumber']
                     ),
-                    self.get_object(lane['object']),
-                    lane['occupied-by-player-with-id']
+                    BlockObject(lane['object']),
+                    lane['occupiedByPlayerWithId']
                 )
             )
 
         return lanes
+    
+    def getListMapStructure(self):
+        map = {}
 
-    def get_object(self, raw_object):
-        if raw_object == 'MUD':
-            return BlockObject.Mud
-        else:
-            return BlockObject.Nothing
+        totalLanes = len(self.map)
+        lastLane = self.map[totalLanes - 1]
+
+        mapHeight = lastLane.position.lane
+        mapWidth = int(totalLanes/mapHeight)
+
+        for lane in range(1, mapHeight+1):
+            blocks = []
+            for block in range(0, mapWidth):
+                blocks.append(self.map[((lane - 1) * mapWidth) + block])
+
+            map[lane] = blocks
+
+        return map
+    
+    def getNextBlocks(self, lane, block, maxSpeed):
+        map = self.getListMapStructure()
+        blockTypes = []
+
+        startBlock = self.map[0].position.block
+
+        laneList = map[lane]
+
+        for block in range(block - startBlock, np.minimum(block - startBlock + maxSpeed, len(laneList))):
+            if (laneList[block] == None):
+                break
+            
+            blockTypes.append(laneList[block].object)
+
+        return blockTypes
+    
+    def changeLaneCommand(self, laneIndicator):
+        direction = "LEFT"
+
+        if (laneIndicator == 1):
+            direction ="RIGHT"
+
+        return direction
+
 
     def starter_bot_logic(self):
-        """
-        Do nothing .....
+        
+        nextBlocks = self.getNextBlocks(self.player_info.position.lane, self.player_info.position.block, 9)
 
-
-        ****THIS IS WHERE YOU CAN ADD OR CHANGE THE LOGIC OF THE BOT****
-        """
-
-        self.command = 'No Command'
+        if BlockObject.MUD in nextBlocks:
+            self.command = 'TURN_' + self.changeLaneCommand(random.choice(self.random_list))
+        else:
+            self.command = 'Accelerate'
 
         return None
 
@@ -113,8 +150,8 @@ class StarterBot:
         command in form : C;<round number>;<command>
         """
 
-        print(f'C;{self.current_tick};{self.command}')
-        logger.info(f'Writing command : C;{self.current_tick};{self.command};')
+        print(f'C;{self.current_round};{self.command}')
+        logger.info(f'Writing command : C;{self.current_round};{self.command};')
 
         return None
 
@@ -124,7 +161,7 @@ class StarterBot:
         """
         json_map = ''
         try:
-            json_map = json.load(open(state_location, 'r'))
+            json_map = json.load(open(state_location, 'rt'))
         except IOError:
             logger.error("Cannot load Game State")
         return json_map
