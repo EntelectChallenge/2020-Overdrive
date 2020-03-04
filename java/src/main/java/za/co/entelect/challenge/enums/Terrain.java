@@ -2,7 +2,7 @@ package za.co.entelect.challenge.enums;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum Object {
+public enum Terrain {
     @SerializedName("0")
     EMPTY,
     @SerializedName("1")
