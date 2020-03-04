@@ -13,6 +13,7 @@ from BlockObject import BlockObject
 from Player import Player
 from Position import Position
 from State import State
+from Commands import Commands
 
 logging.basicConfig(filename='sample_python_bot.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -139,11 +140,11 @@ class StarterBot:
         nextBlocks = self.getNextBlocks(self.player_info.position.lane, self.player_info.position.block, 9)
 
         if BlockObject.MUD in nextBlocks:
-            self.command = 'TURN_' + self.changeLaneCommand(random.choice(self.random_list))
+            self.command = Commands.TURN.value + self.changeLaneCommand(random.choice(self.random_list))
         else:
-            self.command = 'ACCELERATE'
+            self.command = Commands.ACCELERATE
 
-        return None
+        return Commands.NOTHING
 
     def write_action(self):
         """

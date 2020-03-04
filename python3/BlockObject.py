@@ -1,6 +1,5 @@
 import enum
 
-
 class BlockObject(enum.Enum):
     EMPTY = 0
     MUD = 1
