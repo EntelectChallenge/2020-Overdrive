@@ -16,5 +16,18 @@ public enum State {
     @SerializedName("HIT_MUD")
     HIT_MUD,
     @SerializedName("HIT_OIL")
-    HIT_OIL
+    HIT_OIL,
+    @SerializedName("DECELERATING")
+    DECELERATING,
+    @SerializedName("PICKED_UP_POWERUP")
+    PICKED_UP_POWERUP,
+    @SerializedName("USED_BOOST")
+    USED_BOOST,
+    @SerializedName("USED_OIL")
+    USED_OIL,
+    @SerializedName("FINISHED")
+    FINISHED
 }
+
+
+

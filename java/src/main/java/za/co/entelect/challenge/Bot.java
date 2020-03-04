@@ -2,7 +2,7 @@ package za.co.entelect.challenge;
 
 import za.co.entelect.challenge.command.*;
 import za.co.entelect.challenge.entities.*;
-import za.co.entelect.challenge.enums.Object;
+import za.co.entelect.challenge.enums.Terrain;
 
 import java.util.*;
 
@@ -31,7 +31,7 @@ public class Bot {
 
     public Command run() {
         List<Object> blocks = getBlocksInFront(myCar.position.lane, myCar.position.block);
-        if (blocks.contains(Object.MUD)) {
+        if (blocks.contains(Terrain.MUD)) {
             int i = random.nextInt(directionList.size());
             return new ChangeLaneCommand(directionList.get(i));
         }
@@ -77,7 +77,7 @@ public class Bot {
             if (laneList[i] == null) {
                 break;
             }
-            blocks.add(laneList[i].object);
+            blocks.add(laneList[i].terrain);
 
         }
         return blocks;
