@@ -5,7 +5,6 @@ Entelect StarterBot for Python3
 import json
 import os
 import logging
-import numpy as np
 import random
 
 from Lane import Lane
@@ -14,6 +13,7 @@ from Player import Player
 from Position import Position
 from State import State
 from Commands import Commands
+from Direction import Direction
 
 logging.basicConfig(filename='sample_python_bot.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -127,17 +127,17 @@ class StarterBot:
         return blockTypes
     
     def changeLaneCommand(self, laneIndicator):
-        direction = "LEFT"
+        direction = Direction.LEFT.value
 
         if (laneIndicator == 1):
-            direction ="RIGHT"
+            direction = Direction.RIGHT.value
 
         return direction
 
 
     def starter_bot_logic(self):
         
-        nextBlocks = self.getNextBlocks(self.player_info.position.lane, self.player_info.position.block, 9)
+        nextBlocks = self.getNextBlocks(self.player_info.position.lane, self.player_info.position.block, self.max_speed)
 
         if BlockObject.MUD in nextBlocks:
             self.command = Commands.TURN.value + self.changeLaneCommand(random.choice(self.random_list))
