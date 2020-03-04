@@ -13,6 +13,11 @@ namespace StarterBot.Enums
         TURNING_RIGHT,
         TURNING_LEFT,
         HIT_MUD,
-        HIT_OIL
+        HIT_OIL,
+        DECELERATING,
+        PICKED_UP_POWERUP,
+        USED_BOOST,
+        USED_OIL,
+        FINISHED
     }
 }
