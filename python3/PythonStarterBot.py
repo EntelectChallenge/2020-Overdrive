@@ -98,7 +98,7 @@ class StarterBot:
         start_block = self.map[0].position.block
         lane_list = game_map[lane]
 
-        for block in range(block - start_block, np.minimum(block - start_block + max_speed, len(lane-list))):
+        for block in range(block - start_block, np.minimum(block - start_block + max_speed, len(lane_list))):
             if lane_list[block] is None:
                 break
             block_types.append(lane_list[block].object)
