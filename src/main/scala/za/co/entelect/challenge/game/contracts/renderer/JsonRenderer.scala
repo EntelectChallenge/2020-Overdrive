@@ -12,8 +12,8 @@ class JsonRenderer extends BaseMapRenderer {
     val mapFragment = gameMap.getMapFragment(gamePlayer)
     val player = mapFragment.getPlayer()
     val opponent = gameMap.getCarGamePlayers()
-      .find(p => p.getGamePlayerId() != player.getId()).get
-    val opponentBlock = mapFragment.getBlocks()
+      .find(p => p.getGamePlayerId() != gamePlayer.getGamePlayerId()).get
+    val opponentBlock = gameMap.getBlocks()
       .find(b => b.occupiedByPlayerWithId == opponent.getGamePlayerId()).get
     val mapFragmentJsonStructure =
       ("currentRound" -> mapFragment.getCurrentRound()) ~
