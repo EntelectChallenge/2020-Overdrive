@@ -39,8 +39,8 @@ class JsonRenderer extends BaseMapRenderer {
             ("speed" -> player.getSpeed())
           ) ~
         ("worldMap" -> mapFragment.getBlocks()
-          .groupBy { b => b.getPosition().getLane() }.toList
-          .map { kv =>
+          .groupBy { b => b.getPosition().getLane() }
+          .flatMap { kv =>
             List(kv._2
               .sortBy(b => b.getPosition().getBlockNumber())
               .map { b =>
@@ -51,7 +51,7 @@ class JsonRenderer extends BaseMapRenderer {
                   ("surfaceObject" -> b.getMapObject()) ~
                   ("occupiedByPlayerId" -> b.getOccupiedByPlayerWithId())
               }.toSet)
-          })
+          }.toSet)
 
     prettyRender(mapFragmentJsonStructure)
   }
