@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.contracts.map
 
-class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: String, powerups: Array[String], boosting: Boolean, boostCounter: Int) {
+class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: String, powerups: Array[String],
+                        boosting: Boolean, boostCounter: Int) {
     def getId(): Int = {
         return id;
     }
@@ -28,28 +29,20 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
     def getBoostCounter(): Int = {
         return boostCounter;
     }
-    
-    override def toString() : String = { 
-        var powerupAsString = "[";
-        for (i <- 0 to (powerups.size - 1)) {
-            if(i == 0)
-            {
-                powerupAsString = powerupAsString + powerups(i);
-            }
-            else
-            {
-                powerupAsString = powerupAsString + "," + powerups(i);
-            }
-        }
-        powerupAsString += "]" 
-        val stringRepresentation = 
-            "id: " + id + 
-            " position: { " + position.toString() + " }" +
-            " speed: " + speed + 
-            " state: " + state + 
-            " powerups: " + powerupAsString + 
-            " boosting: " + boosting + 
-            " boost-counter: " + boostCounter; 
-        return stringRepresentation;
-    } 
+
+    override def toString(): String = {
+        val stringRepresentation =
+            "id:" + id +
+              " position:" + position.toString() +
+              " speed:" + speed +
+              " state:" + state +
+              "\n" +
+              " boosting:" + boosting +
+              " boost-counter:" + boostCounter +
+              " powerups: " + powerups.groupBy(p => p)
+              .map(kv => s"${kv._1}:${kv._2.length}")
+              .mkString(", ")
+
+        stringRepresentation
+    }
 }
