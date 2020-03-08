@@ -11,7 +11,7 @@ class Command_Turn_Right_Tests extends FunSuite{
   private val commandFactory = new CommandFactory;
   private val turnRightCommand = commandFactory.makeCommand(commandText);
 
-  test("Given start of race when turn right command then player turns right and incurs change lane penalty") {
+  test("Given start of race when TURN_RIGHT command then player turns right and incurs change lane penalty") {
     val gameMap = TestHelper.initialiseGame();
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
@@ -23,7 +23,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     assert((player1Position.getLane() == Config.PLAYER_ONE_START_LANE+1) && (player1Position.getBlockNumber() == Config.PLAYER_ONE_START_BLOCK + Config.INITIAL_SPEED-1));
   }
 
-  test("Given player in lane 4 when turn right command player stays in lane 4 and incurs change lane penalty") {
+  test("Given player in lane 4 when TURN_RIGHT command player stays in lane 4 and incurs change lane penalty") {
     val gameMap = TestHelper.initialiseGame();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -41,7 +41,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     assert((newPlayer1PositionAfterCommand.getLane() == maxLane) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand - 1));
   }
 
-  test("Given player during a race when turn right then player turns right and incurs change lane penalty") {
+  test("Given player during a race when TURN_RIGHT then player turns right and incurs change lane penalty") {
     val gameMap = TestHelper.initialiseGame();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -59,7 +59,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace+1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand - 1));
   }
 
-  test("Given player near finish line when turn right then player turns right and incurs change lane penalty") {
+  test("Given player near finish line when TURN_RIGHT then player stops at finish line") {
     val gameMap = TestHelper.initialiseGame();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];

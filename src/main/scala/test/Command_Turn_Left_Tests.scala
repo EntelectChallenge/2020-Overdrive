@@ -11,7 +11,7 @@ class Command_Turn_Left_Tests extends FunSuite{
   private val commandFactory = new CommandFactory;
   private val turnLeftCommand = commandFactory.makeCommand(commandText);
 
-  test("Given start of race when turn left command then player turns left and incurs change lane penalty") {
+  test("Given start of race when TURN_LEFT command then player turns left and incurs change lane penalty") {
     val gameMap = TestHelper.initialiseGame();
 
     val testGamePlayer2 = TestHelper.getTestGamePlayer2();
@@ -23,7 +23,7 @@ class Command_Turn_Left_Tests extends FunSuite{
     assert((player2Position.getLane() == Config.PLAYER_TWO_START_LANE-1) && (player2Position.getBlockNumber() == Config.PLAYER_TWO_START_BLOCK + Config.INITIAL_SPEED-1));
   }
 
-  test("Given player in lane 1 when turn left command player stays in lane 1 and incurs change lane penalty") {
+  test("Given player in lane 1 when TURN_LEFT command player stays in lane 1 and incurs change lane penalty") {
     val gameMap = TestHelper.initialiseGame();
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
@@ -35,7 +35,7 @@ class Command_Turn_Left_Tests extends FunSuite{
     assert((player1Position.getLane() == Config.PLAYER_ONE_START_LANE) && (player1Position.getBlockNumber() == Config.PLAYER_ONE_START_BLOCK + Config.INITIAL_SPEED-1));
   }
 
-  test("Given player during a race when turn left then player turns left and incurs change lane penalty") {
+  test("Given player during a race when TURN_LEFT then player turns left and incurs change lane penalty") {
     val gameMap = TestHelper.initialiseGame();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -53,7 +53,7 @@ class Command_Turn_Left_Tests extends FunSuite{
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace-1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand - 1));
   }
 
-  test ("Given player near finish line when turn left then player stops at finish line") {
+  test ("Given player near finish line when TURN_LEFT then player stops at finish line") {
     val gameMap = TestHelper.initialiseGame();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
