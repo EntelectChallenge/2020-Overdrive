@@ -112,6 +112,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     boostCounter -= 1;
     val boostOver = boostCounter == 0;
     if (boostOver) {
+      boosting = false;
       speed = MAXIMUM_SPEED;
       setState(Config.NOTHING_PLAYER_STATE);
     }
