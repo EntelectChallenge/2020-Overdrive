@@ -39,4 +39,15 @@ object TestHelper {
 
     return gameMap;
   }
+
+  def initaliseGameWithMudMapObjectAt(laneForMud: Int, blockNumberForMud: Int): GameMap = {
+    val testPlayers = new Array[Player](2);
+    testPlayers(0) = testPlayer1;
+    testPlayers(1) = testPlayer2;
+    val testPlayersJava = testPlayers.toList.asJava;
+    val gameMap = carMapGenerator.generateGameMap(testPlayersJava);
+    gameMap.asInstanceOf[CarGameMap].placeMudAt(laneForMud, blockNumberForMud);
+
+    return gameMap;
+  }
 }

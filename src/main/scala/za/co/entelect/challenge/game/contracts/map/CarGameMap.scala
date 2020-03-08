@@ -165,4 +165,8 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     });
     blocks = newBlocks;
   }
+
+  def placeMudAt(laneForMud: Int, blockNumberForMud: Int) = {
+    blocks.find(x => x.getPosition().getLane() == laneForMud && x.getPosition().getBlockNumber() == blockNumberForMud).get.mapObject = Config.MUD_MAP_OBJECT;
+  }
 }
