@@ -15,7 +15,7 @@ class CsvRenderer extends BaseMapRenderer {
         val player = mapFragment.getPlayer();
         val playerInfoString = "current round: " + currentRound + " player: { " + player.toString() + " },";
 
-        val lanes = mapFragment.getLanes();
+        val lanes = mapFragment.getBlocks();
         var lanesAsString = "";
         for(x <- lanes.filter(x => x.getPosition().getLane() == 1)) {
             lanesAsString += x.toString();

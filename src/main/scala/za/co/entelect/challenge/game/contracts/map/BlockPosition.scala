@@ -11,8 +11,8 @@ class BlockPosition(lane: Int, blockNumber: Int) {
 
     override def toString() : String = { 
         val stringRepresentation = 
-            "lane: " + lane + 
-            " blockNumber: " + blockNumber; 
+            "y:" + lane +
+            " x:" + blockNumber;
         return stringRepresentation;
     }
 }

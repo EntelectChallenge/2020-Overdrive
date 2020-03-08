@@ -9,36 +9,22 @@ class CarGameMapFragment(currentRound: Int, player: MapFragmentPlayer, lanes: Ar
         return player;
     }
 
-    def getLanes(): Array[Block] = {
+    def getBlocks(): Array[Block] = {
         return lanes;
     }
-    
-    override def toString() : String = { 
-        var lanesAsString = "[";
-        for(x <- lanes.filter(x => x.getPosition().getLane() == 1)) {
-            lanesAsString += x.toString();
-        }
-        lanesAsString += "]\r\n[";
-        for(x <- lanes.filter(x => x.getPosition().getLane() == 2)) {
-            lanesAsString += x.toString();
-        }
-        lanesAsString += "]\r\n[";
-        for(x <- lanes.filter(x => x.getPosition().getLane() == 3)) {
-            lanesAsString += x.toString();
-        }
-        lanesAsString += "]\r\n[";
-        for(x <- lanes.filter(x => x.getPosition().getLane() == 4)) {
-            lanesAsString += x.toString();
-        }
-        lanesAsString += "]"
 
-        val stringRepresentation = 
-            "======================================================================================================" + "\r\n" +
-            "PLAYER INFO: " +
-            "current round: " + currentRound + 
-            " player: { " + player.toString() + " }" + "\r\n" +
-            lanesAsString + "\r\n" +
-            "======================================================================================================"; 
-        return stringRepresentation;
-    } 
+    override def toString(): String = {
+        val lanesAsString = lanes.groupBy { b => b.getPosition().getLane() }
+          .map { kv =>
+              kv._2.sortBy(b => b.getPosition().getBlockNumber())
+                .map { b => b.toString() }
+                .mkString("[", "", "]")
+          }
+          .mkString("\r\n")
+
+        "======================================================================================================" + "\r\n" +
+          "round:" + currentRound + " player:" + player.toString + "" + "\r\n" +
+          lanesAsString + "\r\n" +
+          "======================================================================================================"
+    }
 }
