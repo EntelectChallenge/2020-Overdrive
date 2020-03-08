@@ -1,8 +1,9 @@
-package test
+package test;
 
 import za.co.entelect.challenge.game.contracts.game.{CarMapGenerator, GamePlayer}
 import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap, GameMap}
 import za.co.entelect.challenge.game.contracts.player.Player
+
 import scala.collection.JavaConverters._
 
 object TestHelper {
