@@ -70,4 +70,22 @@ class Command_Turn_Left_Tests extends FunSuite{
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace-1) && (newPlayer1PositionAfterCommand.getBlockNumber() == Config.TRACK_LENGTH));
   }
+
+  test("Given player that is stopped when TURN_LEFT then player does not move") {
+    val gameMap = TestHelper.initialiseGame();
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    val carGameMap = gameMap.asInstanceOf[CarGameMap];
+
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId();
+    val newLaneMidRace = 2;
+    val newBlockNumberMidRace = 56;
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
+
+    testCarGamePlayer1.speed = 0; //stop player
+    turnLeftCommand.performCommand(gameMap, testGamePlayer1);
+
+    val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
+    assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace));
+  }
 }
