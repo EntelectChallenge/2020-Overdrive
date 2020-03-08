@@ -50,6 +50,23 @@ class Command_Nothing_Tests extends FunSuite{
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand);
   }
 
+  test("Given player less than <speed> blocks away from end of track when NOTHING command then player stops at finish line") {
+    val gameMap = initialiseGame();
+    val testGamePlayer1 = testPlayer1.getGamePlayer();
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    val carGameMap = gameMap.asInstanceOf[CarGameMap];
+
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId();
+    val newLaneEndOfRace = 2;
+    val newBlockNumberEndOfRace = Config.TRACK_LENGTH - 4;
+    putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneEndOfRace, newBlockNumberEndOfRace);
+
+    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
+    assert(newPlayer1PositionAfterCommand.getLane() == newLaneEndOfRace && newPlayer1PositionAfterCommand.getBlockNumber() == Config.TRACK_LENGTH);
+  }
+
   def putPlayerSomewhereOnTheTrack(carGameMap: CarGameMap, testCarGamePlayerId: Int, newLane: Int, newBlockNumber:Int) = {
     val player1Position = carGameMap.getPlayerBlockPosition(testCarGamePlayerId);
     carGameMap.vacateBlock(player1Position);
