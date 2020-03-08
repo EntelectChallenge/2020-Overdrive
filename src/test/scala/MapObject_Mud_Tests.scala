@@ -3,7 +3,6 @@ import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
-import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class MapObject_Mud_Tests extends FunSuite{
   private val commandText = "NOTHING";
@@ -11,7 +10,7 @@ class MapObject_Mud_Tests extends FunSuite{
   private val nothingCommand = commandFactory.makeCommand(commandText);
 
   test("Given players during race when player hits mud then speed is reduced") {
-    val gameMap = TestHelper.initaliseGameWithMudMapObjectAt(1, 3);
+    val gameMap = TestHelper.initaliseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -22,7 +21,7 @@ class MapObject_Mud_Tests extends FunSuite{
   }
 
   test("Given player that is boosting during race when player hits mud then speed is reduced and player is no longer boosting") {
-    val gameMap = TestHelper.initaliseGameWithMudMapObjectAt(1, 3);
+    val gameMap = TestHelper.initaliseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -35,7 +34,7 @@ class MapObject_Mud_Tests extends FunSuite{
   }
 
   test("Given player that is going slowest speed when player hits mud then player continues going slowest speed") {
-    val gameMap = TestHelper.initaliseGameWithMudMapObjectAt(1, 3);
+    val gameMap = TestHelper.initaliseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
