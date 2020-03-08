@@ -41,7 +41,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     assert((newPlayer1PositionAfterCommand.getLane() == maxLane) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand - 1));
   }
 
-  test("Given player during a race when turn left then player turns left and incurs change lane penalty") {
+  test("Given player during a race when turn right then player turns right and incurs change lane penalty") {
     val gameMap = TestHelper.initialiseGame();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -57,5 +57,23 @@ class Command_Turn_Right_Tests extends FunSuite{
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace+1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand - 1));
+  }
+
+  test("Given player near finish line when turn right then player turns right and incurs change lane penalty") {
+    val gameMap = TestHelper.initialiseGame();
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    val carGameMap = gameMap.asInstanceOf[CarGameMap];
+
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId();
+    val newLaneMidRace = 2;
+    val newBlockNumberMidRace = Config.TRACK_LENGTH - 4;
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
+
+    val speedBeforeProcessingCommand = testCarGamePlayer1.getSpeed();
+    turnRightCommand.performCommand(gameMap, testGamePlayer1);
+
+    val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
+    assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace+1) && (newPlayer1PositionAfterCommand.getBlockNumber() == Config.TRACK_LENGTH));
   }
 }
