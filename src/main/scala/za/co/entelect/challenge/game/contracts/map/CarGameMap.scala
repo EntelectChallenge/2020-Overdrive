@@ -59,8 +59,9 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val playerPowerups = gameplayer.getPowerups();
     val isBoosting = gameplayer.isBoosting();
     val playerBoostCounter = gameplayer.getBoostCounter();
+    val score = gameplayer.getScore();
     val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState, playerPowerups,
-      isBoosting, playerBoostCounter);
+      isBoosting, playerBoostCounter, score);
     val lanes = blocks.filter(block =>
       ((scala.math.abs(playerBlockPosition.getBlockNumber() - block.getPosition().getBlockNumber()) <= Config.BACKWARD_VISIBILITY)
         || (scala.math.abs(block.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber()) <= Config.FORWARD_VISIBILITY)));
