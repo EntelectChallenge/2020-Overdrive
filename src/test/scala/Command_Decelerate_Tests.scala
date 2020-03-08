@@ -11,7 +11,7 @@ class Command_Decelerate_Tests extends FunSuite{
   private val decelerateCommand = commandFactory.makeCommand(commandText);
 
   test("Given player at start of race when DECELERATE command that player moves at speed state 1") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     decelerateCommand.performCommand(gameMap, testGamePlayer1);
 
@@ -22,7 +22,7 @@ class Command_Decelerate_Tests extends FunSuite{
   }
 
   test("Given player that is stopped when DECELERATE command then player does not move") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -40,7 +40,7 @@ class Command_Decelerate_Tests extends FunSuite{
   }
 
   test("Given player that is boosting when DECELERATE command then player moves at maximum speed and is no longer boosting") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -60,7 +60,7 @@ class Command_Decelerate_Tests extends FunSuite{
   }
 
   test("Given player during the race when DECELERATE command then player moves at previous speed state") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -78,7 +78,7 @@ class Command_Decelerate_Tests extends FunSuite{
   }
 
   test("Given player moving at slowest speed when DECELERATE command then player stops") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];

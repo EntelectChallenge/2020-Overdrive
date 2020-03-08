@@ -29,7 +29,7 @@ object TestHelper {
     return testPlayer1.getGamePlayer();
   }
 
-   def initialiseGame(): GameMap = {
+   def initialiseGameWithNoMapObjects(): GameMap = {
     val testPlayers = new Array[Player](2);
     testPlayers(0) = testPlayer1;
     testPlayers(1) = testPlayer2;

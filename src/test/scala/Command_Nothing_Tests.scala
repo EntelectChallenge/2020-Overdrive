@@ -12,7 +12,7 @@ class Command_Nothing_Tests extends FunSuite{
   private val nothingCommand = commandFactory.makeCommand(commandText);
 
   test("Given players at start of race when NOTHING command then player moves forward at initial speed") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     nothingCommand.performCommand(gameMap, testGamePlayer1);
 
@@ -23,7 +23,7 @@ class Command_Nothing_Tests extends FunSuite{
   }
 
   test("Given player during the middle of a race when NOTHING command then player moves forward according to speed") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -41,7 +41,7 @@ class Command_Nothing_Tests extends FunSuite{
   }
 
   test("Given player near finish line when NOTHING command then player stops at finish line") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -58,7 +58,7 @@ class Command_Nothing_Tests extends FunSuite{
   }
 
   test("Given player that is stopped when NOTHING command then player does not move") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -76,7 +76,7 @@ class Command_Nothing_Tests extends FunSuite{
   }
 
   test("Given player that is boosting when NOTHING command then player moves at boost speed") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];

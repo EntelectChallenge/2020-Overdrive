@@ -11,7 +11,7 @@ class Command_Accelerate_Tests extends FunSuite{
   private val accelerateCommand = commandFactory.makeCommand(commandText);
 
   test("Given player at start of race when ACCELERATE command that player moves at speed state 2") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     accelerateCommand.performCommand(gameMap, testGamePlayer1);
 
@@ -22,7 +22,7 @@ class Command_Accelerate_Tests extends FunSuite{
   }
 
   test("Given player that is stopped when ACCELERATE command then player moves at speed state 1") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -40,7 +40,7 @@ class Command_Accelerate_Tests extends FunSuite{
   }
 
   test("Given player that is boosting when ACCELERATE command then player continues to move at boost speed") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -60,7 +60,7 @@ class Command_Accelerate_Tests extends FunSuite{
   }
 
   test("Given player during the race when ACCELERATE command then player moves at next speed state") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
@@ -78,7 +78,7 @@ class Command_Accelerate_Tests extends FunSuite{
   }
 
   test("Given player moving at max speed when ACCELERATE command then player continues to move at max speed") {
-    val gameMap = TestHelper.initialiseGame();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
