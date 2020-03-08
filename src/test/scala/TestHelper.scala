@@ -46,6 +46,7 @@ object TestHelper {
     testPlayers(1) = testPlayer2;
     val testPlayersJava = testPlayers.toList.asJava;
     val gameMap = carMapGenerator.generateGameMap(testPlayersJava);
+    gameMap.asInstanceOf[CarGameMap].makeAllBlocksEmpty();
     gameMap.asInstanceOf[CarGameMap].placeObjectAt(lane, blockNumber, mapObject);
 
     return gameMap;
