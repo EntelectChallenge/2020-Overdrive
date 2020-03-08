@@ -75,4 +75,23 @@ class Command_Nothing_Tests extends FunSuite{
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace);
   }
 
+  test("Given player that is boosting when NOTHING command then player moves at boost speed") {
+    val gameMap = TestHelper.initialiseGame();
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    val carGameMap = gameMap.asInstanceOf[CarGameMap];
+
+    testCarGamePlayer1.useBoost();
+
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId();
+    val newLaneMidRace = 2;
+    val newBlockNumberMidRace = 56;
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
+
+    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
+    assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + Config.BOOST_SPEED);
+  }
+
 }
