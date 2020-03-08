@@ -106,5 +106,6 @@ class Command_Turn_Left_Tests extends FunSuite{
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace-1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + Config.BOOST_SPEED - 1));
+    assert(testCarGamePlayer1.isBoosting() == true);
   }
 }

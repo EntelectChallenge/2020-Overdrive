@@ -1,5 +1,6 @@
 package test;
 
+import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.game.{CarMapGenerator, GamePlayer}
 import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap, GameMap}
 import za.co.entelect.challenge.game.contracts.player.Player
@@ -34,6 +35,8 @@ object TestHelper {
     testPlayers(1) = testPlayer2;
     val testPlayersJava = testPlayers.toList.asJava;
     val gameMap = carMapGenerator.generateGameMap(testPlayersJava);
+     gameMap.asInstanceOf[CarGameMap].makeAllBlocksEmpty();
+
     return gameMap;
   }
 }

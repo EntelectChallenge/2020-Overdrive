@@ -10,7 +10,7 @@ import scala.collection.JavaConverters._
 import za.co.entelect.challenge.game.contracts.Config.Config
 import scala.collection.mutable
 
-class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, blocks: Array[Block], var round: Int) extends GameMap {
+class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, var blocks: Array[Block], var round: Int) extends GameMap {
 
   override def getCurrentRound: Int = {
     return round;
@@ -157,5 +157,12 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def getBlocks(): Array[Block] = {
     return blocks;
+  }
+
+  def makeAllBlocksEmpty() = {
+    val newBlocks = blocks.map(x => {
+      new Block(new BlockPosition(x.getPosition().getLane(), x.getPosition().getBlockNumber()), Config.EMPTY_MAP_OBJECT, x.occupiedByPlayerWithId)
+    });
+    blocks = newBlocks;
   }
 }

@@ -92,6 +92,7 @@ class Command_Nothing_Tests extends FunSuite{
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + Config.BOOST_SPEED);
+    assert(testCarGamePlayer1.isBoosting() == true);
   }
 
 }
