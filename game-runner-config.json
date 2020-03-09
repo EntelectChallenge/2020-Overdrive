@@ -8,7 +8,7 @@
   "player-b": "../reference-bot/javascript",
   "max-request-retries": 10,
   "request-timeout-ms": 5000,
-  "is-tournament-mode": false,
+  "is-tournament-mode": true,
   "tournament": {
     "connection-string": "",
     "bots-container": "",
