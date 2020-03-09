@@ -173,6 +173,11 @@ public class GameBootstrapper {
             gameResult.tournamentId = gameRunnerConfig.tournamentConfig.tournamentId;
             gameResult.playerAId = gameRunnerConfig.playerAId;
             gameResult.playerBId = gameRunnerConfig.playerBId;
+            gameResult.playerOnePoints = 0;
+            gameResult.playerTwoPoints = 0;
+            gameResult.roundsPlayed = 0;
+            gameResult.winner = "";
+            gameResult.playerAEntryId = System.getenv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name());
 
             try {
                 TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
