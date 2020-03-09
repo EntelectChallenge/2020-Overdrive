@@ -1,16 +1,24 @@
 import org.scalatest.FunSuite
 import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config
+import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Accelerate_Tests extends FunSuite{
   private val commandText = "ACCELERATE";
-  private val commandFactory = new CommandFactory;
-  private val accelerateCommand = commandFactory.makeCommand(commandText);
+  private var commandFactory: CommandFactory = null
+  private var accelerateCommand: RawCommand = null
+
+  def initialise() = {
+    Config.loadDefault();
+    commandFactory = new CommandFactory;
+    accelerateCommand = commandFactory.makeCommand(commandText)
+  }
 
   test("Given player at start of race when ACCELERATE command that player moves at speed state 2") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     accelerateCommand.performCommand(gameMap, testGamePlayer1);
@@ -22,6 +30,7 @@ class Command_Accelerate_Tests extends FunSuite{
   }
 
   test("Given player that is stopped when ACCELERATE command then player moves at speed state 1") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -40,6 +49,7 @@ class Command_Accelerate_Tests extends FunSuite{
   }
 
   test("Given player that is boosting when ACCELERATE command then player continues to move at boost speed") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -60,6 +70,7 @@ class Command_Accelerate_Tests extends FunSuite{
   }
 
   test("Given player during the race when ACCELERATE command then player moves at next speed state") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -78,6 +89,7 @@ class Command_Accelerate_Tests extends FunSuite{
   }
 
   test("Given player moving at max speed when ACCELERATE command then player continues to move at max speed") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
