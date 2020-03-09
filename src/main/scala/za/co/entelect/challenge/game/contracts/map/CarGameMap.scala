@@ -10,7 +10,7 @@ import scala.collection.JavaConverters._
 import za.co.entelect.challenge.game.contracts.Config.Config
 import scala.collection.mutable
 
-class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, blocks: Array[Block], var round: Int) extends GameMap {
+class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, var blocks: Array[Block], var round: Int) extends GameMap {
 
   override def getCurrentRound: Int = {
     return round;
@@ -59,8 +59,9 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val playerPowerups = gameplayer.getPowerups();
     val isBoosting = gameplayer.isBoosting();
     val playerBoostCounter = gameplayer.getBoostCounter();
+    val score = gameplayer.getScore();
     val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState, playerPowerups,
-      isBoosting, playerBoostCounter);
+      isBoosting, playerBoostCounter, score);
     val lanes = blocks.filter(block =>
       ((scala.math.abs(playerBlockPosition.getBlockNumber() - block.getPosition().getBlockNumber()) <= Config.BACKWARD_VISIBILITY)
         || (scala.math.abs(block.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber()) <= Config.FORWARD_VISIBILITY)));
@@ -157,5 +158,16 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def getBlocks(): Array[Block] = {
     return blocks;
+  }
+
+  def makeAllBlocksEmpty() = {
+    val newBlocks = blocks.map(x => {
+      new Block(new BlockPosition(x.getPosition().getLane(), x.getPosition().getBlockNumber()), Config.EMPTY_MAP_OBJECT, x.occupiedByPlayerWithId)
+    });
+    blocks = newBlocks;
+  }
+
+  def placeObjectAt(lane: Int, blockNumber: Int, mapObject: Int) = {
+    blocks.find(x => x.getPosition().getLane() == lane && x.getPosition().getBlockNumber() == blockNumber).get.mapObject = mapObject;
   }
 }

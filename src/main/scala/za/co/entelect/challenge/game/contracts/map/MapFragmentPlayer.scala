@@ -1,7 +1,7 @@
 package za.co.entelect.challenge.game.contracts.map
 
 class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: String, powerups: Array[String],
-                        boosting: Boolean, boostCounter: Int) {
+                        boosting: Boolean, boostCounter: Int, score: Int) {
     def getId(): Int = {
         return id;
     }
@@ -28,6 +28,10 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
 
     def getBoostCounter(): Int = {
         return boostCounter;
+    }
+
+    def getScore(): Int = {
+        return score;
     }
 
     override def toString(): String = {
