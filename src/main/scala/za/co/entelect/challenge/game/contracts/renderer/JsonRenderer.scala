@@ -50,8 +50,8 @@ class JsonRenderer extends BaseMapRenderer {
                   ) ~
                   ("surfaceObject" -> b.getMapObject()) ~
                   ("occupiedByPlayerId" -> b.getOccupiedByPlayerWithId())
-              }.toSet)
-          }.toSet)
+              }.toList)
+          }.toList)
 
     prettyRender(mapFragmentJsonStructure)
   }
