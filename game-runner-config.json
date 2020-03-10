@@ -11,9 +11,9 @@
   "is-tournament-mode": true,
   "tournament": {
     "connection-string": "",
-    "bots-container": "",
-    "match-logs-container": "",
-    "game-engine-container": "",
+    "bots-container": "bot-source-code-container-qa",
+    "match-logs-container": "match-logs-container-qa",
+    "game-engine-container": "game-engine-container-qa",
     "api-endpoint": "http://localhost"
   }
 }

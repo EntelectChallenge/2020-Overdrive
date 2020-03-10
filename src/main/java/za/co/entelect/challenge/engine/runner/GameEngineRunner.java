@@ -69,7 +69,6 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     @Override
     public void onGameStarting() throws Exception {
-        GameBootstrapper.logToAzure("GameEngineRunner.java @ Line 72 -> On Game Starting");
         this.unsubscribe = BehaviorSubject.create();
         this.addToConsoleOutput = BehaviorSubject.create();
         this.addToConsoleOutput
@@ -105,7 +104,6 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     @Override
     public void onRoundStarting() {
-        GameBootstrapper.logToAzure("GameEngineRunner.java @ Line 108 -> On Round Starting");
         gameMap.setCurrentRound(gameMap.getCurrentRound() + 1);
 
         StringBuilder s = new StringBuilder();
@@ -152,7 +150,6 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     @Override
     public void onRoundComplete() {
-        GameBootstrapper.logToAzure(String.format("GameEngineRunner.java @ Line 155 -> On Round Complete. Round: %d" + gameMap.getCurrentRound()));
         StringBuilder s = new StringBuilder();
         s.append("=======================================\n");
         s.append(String.format("Completed round: %d \n", gameMap.getCurrentRound()));

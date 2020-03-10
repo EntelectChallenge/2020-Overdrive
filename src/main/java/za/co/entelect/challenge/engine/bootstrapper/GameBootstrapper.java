@@ -34,6 +34,8 @@ import za.co.entelect.challenge.utils.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -69,8 +71,6 @@ public class GameBootstrapper {
                 downloadGameEngine(gameRunnerConfig);
             }
 
-            GameBootstrapper.logToAzure("GameBootstrapper.java @ Line 72 -> Ready for playerBootstrapper");
-
             PlayerBootstrapper playerBootstrapper = new PlayerBootstrapper();
             List<Player> players = playerBootstrapper.loadPlayers(gameRunnerConfig);
 
@@ -81,7 +81,6 @@ public class GameBootstrapper {
             gameEngineBootstrapper.setSeed(gameRunnerConfig.seed);
 
             RendererResolver rendererResolver = new RendererResolver(gameEngineBootstrapper);
-            GameBootstrapper.logToAzure("GameBootstrapper.java @ Line 84 -> Completed renderResolver");
 
             GameEngineRunner engineRunner = new GameEngineRunner.Builder()
                     .setGameRunnerConfig(gameRunnerConfig)
@@ -92,8 +91,6 @@ public class GameBootstrapper {
                     .setRendererResolver(rendererResolver)
                     .setPlayers(players)
                     .build();
-
-            GameBootstrapper.logToAzure("GameBootstrapper.java @ Line 95 -> Ready to runMatch()");
 
             GameResult gameResult = engineRunner.runMatch();
 
@@ -189,8 +186,12 @@ public class GameBootstrapper {
 
             try {
                 TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
+
+                StringWriter sw = new StringWriter();
+                ex.printStackTrace(new PrintWriter(sw));
+                String exceptionAsString = sw.toString();
                 ExceptionSendDto exceptionSendDto = new ExceptionSendDto(
-                        ex.getMessage(),
+                        exceptionAsString,
                         System.getenv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name())
                 );
                 tournamentApi.addExceptionForTracing(exceptionSendDto).execute();
@@ -199,22 +200,6 @@ public class GameBootstrapper {
                 LOGGER.error("Error notifying failure", e);
             }
         }
-    }
-
-    public static void logToAzure(String message) {
-        try {
-            Retrofit retrofit = new Retrofit.Builder().baseUrl("https://challenge-api-function-app.azurewebsites.net/api/")
-                    .addConverterFactory(GsonConverterFactory.create()).build();
-            TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
-            ExceptionSendDto exceptionSendDto = new ExceptionSendDto(
-                    message,
-                    System.getenv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name())
-            );
-            tournamentApi.addExceptionForTracing(exceptionSendDto).execute();
-        } catch (IOException e) {
-            LOGGER.error("Error notifying failure", e);
-        }
-
     }
 
     private static void setupSystemClassloader() throws Exception {
