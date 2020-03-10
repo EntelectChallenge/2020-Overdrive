@@ -9,6 +9,7 @@ import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.appender.HttpAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.LoggerConfig;
@@ -33,6 +34,7 @@ import za.co.entelect.challenge.utils.ZipUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -95,7 +97,7 @@ public class GameBootstrapper {
 
         } catch (Exception e) {
             LOGGER.error("Exception during match execution", e);
-            notifyMatchFailure(gameRunnerConfig);
+            notifyMatchFailure(gameRunnerConfig, e);
         } finally {
             if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
                 File zippedLogs = ZipUtils.createZip(gameRunnerConfig.matchId, gameRunnerConfig.roundStateOutputLocation);
@@ -162,7 +164,7 @@ public class GameBootstrapper {
         }
     }
 
-    private void notifyMatchFailure(GameRunnerConfig gameRunnerConfig) {
+    private void notifyMatchFailure(GameRunnerConfig gameRunnerConfig, Exception ex) {
         if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
             LOGGER.info("Notifying of match failure");
 
@@ -182,6 +184,7 @@ public class GameBootstrapper {
             try {
                 TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
                 tournamentApi.updateMatchStatus(gameRunnerConfig.tournamentConfig.functionKey, gameResult).execute();
+                tournamentApi.addExceptionForTracing(ex.getMessage(), System.getenv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name())).execute();
             } catch (IOException e) {
                 LOGGER.error("Error notifying failure", e);
             }
