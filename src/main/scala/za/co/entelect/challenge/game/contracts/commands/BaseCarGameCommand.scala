@@ -26,31 +26,32 @@ abstract class BaseCarGameCommand extends RawCommand {
         val futurePosition = getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap, carGamePlayer, currentBlockThatHasBeenVacated); //Override this method to process particular command
 
         val futurePositionWithLaneBounds = getFutuerPositionWithinBoundsOfLanes(futurePosition)
-        val futurePositionWithingAllBounds = getFuturePositionWithinBlockNumberBounds(futurePositionWithLaneBounds);
+        val futurePositionWithinAllBounds = getFuturePositionWithinBlockNumberBounds(futurePositionWithLaneBounds);
 
         //handle collisions with map objects (obstacles => pickups)
-        val playerHitMud = carGameMap.pathIncludesMud(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds);
+        val playerHitMud = carGameMap.pathIncludesMud(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
         if(playerHitMud) {
             carGamePlayer.hitMud();
         }
 
-        val playerHitOil = carGameMap.pathIncludesOilSpill(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds)
+        val playerHitOil = carGameMap.pathIncludesOilSpill(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds)
         if (playerHitOil) {
             carGamePlayer.hitOil()
         }
 
-        val playerPickedUpOilItem = carGameMap.pathIncludesOilItem(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds);
+        val playerPickedUpOilItem = carGameMap.pathIncludesOilItem(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
         if(playerPickedUpOilItem) {
             carGamePlayer.pickupOilItem()
         }
 
-        val playerPickedUpBoost = carGameMap.pathIncludesBoost(currentBlockThatHasBeenVacated, futurePositionWithingAllBounds);
+        val playerPickedUpBoost = carGameMap.pathIncludesBoost(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
         if(playerPickedUpBoost) {
             carGamePlayer.pickupBoost();
         }
 
         //place player in new position (or reset if collision would occur)
-        if(carGameMap.blockIsOccupied(futurePositionWithingAllBounds))
+        val playerIsInFutureBlock = carGameMap.blockIsOccupied(futurePositionWithinAllBounds);
+        if(playerIsInFutureBlock)
         {
             val previousLane = currentBlockThatHasBeenVacated.getLane();
             val previousBlockNumber = currentBlockThatHasBeenVacated.getBlockNumber();
@@ -59,11 +60,11 @@ abstract class BaseCarGameCommand extends RawCommand {
         }
         else
         {
-            carGameMap.occupyBlock(futurePositionWithingAllBounds, carGamePlayerId);
+            carGameMap.occupyBlock(futurePositionWithinAllBounds, carGamePlayerId);
         }
 
         //check win condition
-        if (futurePositionWithingAllBounds.getBlockNumber() == Config.TRACK_LENGTH) {
+        if (futurePositionWithinAllBounds.getBlockNumber() == Config.TRACK_LENGTH) {
             carGamePlayer.finish();
         }
     }

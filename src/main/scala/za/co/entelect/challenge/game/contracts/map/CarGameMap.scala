@@ -104,7 +104,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def blockIsOccupied(position: BlockPosition): Boolean = {
     val laneOfInterest = position.getLane();
-    val blockNumberOfInterest = position.getLane();
+    val blockNumberOfInterest = position.getBlockNumber();
     val blockOfInterest = blocks.find(x => x.getPosition().getLane() == laneOfInterest && x.getPosition().getBlockNumber() == blockNumberOfInterest);
     val hasPlayer = blockOfInterest.isDefined && (blockOfInterest.get.getOccupiedByPlayerWithId() != Config.EMPTY_PLAYER);
     return hasPlayer;
