@@ -2,16 +2,24 @@ package test
 
 import org.scalatest.FunSuite
 import za.co.entelect.challenge.game.contracts.Config.Config
+import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Turn_Right_Tests extends FunSuite{
   private val commandText = "TURN_RIGHT";
-  private val commandFactory = new CommandFactory;
-  private val turnRightCommand = commandFactory.makeCommand(commandText);
+  private var commandFactory: CommandFactory = null
+  private var turnRightCommand: RawCommand = null
+
+  def initialise() = {
+    Config.loadDefault();
+    commandFactory = new CommandFactory;
+    turnRightCommand = commandFactory.makeCommand(commandText)
+  }
 
   test("Given start of race when TURN_RIGHT command then player turns right and incurs change lane penalty") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
@@ -24,6 +32,7 @@ class Command_Turn_Right_Tests extends FunSuite{
   }
 
   test("Given player in lane 4 when TURN_RIGHT command player stays in lane 4 and incurs change lane penalty") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -42,6 +51,7 @@ class Command_Turn_Right_Tests extends FunSuite{
   }
 
   test("Given player during a race when TURN_RIGHT then player turns right and incurs change lane penalty") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -60,6 +70,7 @@ class Command_Turn_Right_Tests extends FunSuite{
   }
 
   test("Given player near finish line when TURN_RIGHT then player stops at finish line") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -78,6 +89,7 @@ class Command_Turn_Right_Tests extends FunSuite{
   }
 
   test("Given player that is stopped when TURN_RIGHT then player does not move") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -96,6 +108,7 @@ class Command_Turn_Right_Tests extends FunSuite{
   }
 
   test("Given player that is boosting when TURN_RIGHT then player turns right, incurs change lane penalty and moves at boost speed") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];

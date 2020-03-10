@@ -1,10 +1,13 @@
 package za.co.entelect.challenge.game.contracts.bootstrapper
 
+import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper
+import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.{CarGameEngine, CarGameRoundProcessor, CarMapGenerator, CarReferee, GameEngine, GameMapGenerator, GameReferee, GameRoundProcessor}
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer
 import za.co.entelect.challenge.game.contracts.renderer.RendererType
 import za.co.entelect.challenge.game.contracts.renderer.CarGameRendererFactory
+
 import scala.annotation.switch
 
 class CarGameBootstrapper extends GameEngineBootstrapper {
@@ -17,6 +20,7 @@ class CarGameBootstrapper extends GameEngineBootstrapper {
 
   override def setConfigPath(configPath: String): Unit = {
     carGameConfigPath = configPath;
+    Config.load(configPath);
   }
 
   override def getGameEngine: GameEngine = {

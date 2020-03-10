@@ -1,15 +1,23 @@
 import org.scalatest.FunSuite
 import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config
+import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 
 class MapObject_Boost_Tests extends FunSuite{
   private val commandText = "NOTHING";
-  private val commandFactory = new CommandFactory;
-  private val nothingCommand = commandFactory.makeCommand(commandText);
+  private var commandFactory: CommandFactory = null;
+  private var nothingCommand: RawCommand = null;
+
+  def initialise() = {
+    Config.loadDefault();
+    commandFactory = new CommandFactory;
+    nothingCommand = commandFactory.makeCommand(commandText)
+  }
 
   test("Given players during race when player hits boost then player gains 1 boost powerup") {
+    initialise()
     val gameMap = TestHelper.initaliseGameWithMapObjectAt(1, 3, Config.BOOST_MAP_OBJECT);
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 

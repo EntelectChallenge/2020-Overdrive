@@ -1,15 +1,23 @@
 import org.scalatest.FunSuite
 import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config
+import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 
 class Command_Use_Boost_Tests extends FunSuite{
   private val commandText = "USE_BOOST";
-  private val commandFactory = new CommandFactory;
-  private val useBoostCommand = commandFactory.makeCommand(commandText);
+  private var commandFactory: CommandFactory = null
+  private var useBoostCommand: RawCommand = null
+
+  def initialise() = {
+    Config.loadDefault();
+    commandFactory = new CommandFactory;
+    useBoostCommand = commandFactory.makeCommand(commandText)
+  }
 
   test("Given player with no boost when USE_BOOST command then nothing happens") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -21,6 +29,7 @@ class Command_Use_Boost_Tests extends FunSuite{
   }
 
   test("Given player with 3 boosts when USE_BOOST command then player has 2 boosts left") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -35,6 +44,7 @@ class Command_Use_Boost_Tests extends FunSuite{
   }
 
   test("Given player with a boost when USE_BOOST command then player moves at boost speed") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -47,6 +57,7 @@ class Command_Use_Boost_Tests extends FunSuite{
   }
 
   test("Given player with a boost when USE_BOOST command then boost counter ticks down after each command") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -59,6 +70,7 @@ class Command_Use_Boost_Tests extends FunSuite{
   }
 
   test("Given player that is boosting when boost counter reaches 0 then player is no longer boosting and speed is at most maximum speed") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];

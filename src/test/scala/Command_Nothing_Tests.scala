@@ -2,16 +2,24 @@ package test
 
 import org.scalatest.FunSuite
 import za.co.entelect.challenge.game.contracts.Config.Config
+import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Nothing_Tests extends FunSuite{
   private val commandText = "NOTHING";
-  private val commandFactory = new CommandFactory;
-  private val nothingCommand = commandFactory.makeCommand(commandText);
+  private var commandFactory: CommandFactory = null
+  private var nothingCommand: RawCommand = null
+
+  def initialise() = {
+    Config.loadDefault();
+    commandFactory = new CommandFactory;
+    nothingCommand = commandFactory.makeCommand(commandText)
+  }
 
   test("Given players at start of race when NOTHING command then player moves forward at initial speed") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     nothingCommand.performCommand(gameMap, testGamePlayer1);
@@ -23,6 +31,7 @@ class Command_Nothing_Tests extends FunSuite{
   }
 
   test("Given player during the middle of a race when NOTHING command then player moves forward according to speed") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -41,6 +50,7 @@ class Command_Nothing_Tests extends FunSuite{
   }
 
   test("Given player near finish line when NOTHING command then player stops at finish line") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -58,6 +68,7 @@ class Command_Nothing_Tests extends FunSuite{
   }
 
   test("Given player that is stopped when NOTHING command then player does not move") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -76,6 +87,7 @@ class Command_Nothing_Tests extends FunSuite{
   }
 
   test("Given player that is boosting when NOTHING command then player moves at boost speed") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];

@@ -1,16 +1,24 @@
 import org.scalatest.FunSuite
 import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config
+import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Use_Oil_Tests extends FunSuite{
   private val commandText = "USE_OIL";
-  private val commandFactory = new CommandFactory;
-  private val useOilCommand = commandFactory.makeCommand(commandText);
+  private var commandFactory: CommandFactory = null
+  private var useOilCommand: RawCommand = null
+
+  def initialise() = {
+    Config.loadDefault();
+    commandFactory = new CommandFactory;
+    useOilCommand = commandFactory.makeCommand(commandText)
+  }
 
   test("Given player with no oil when USE_OIL command then nothing happens") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -24,6 +32,7 @@ class Command_Use_Oil_Tests extends FunSuite{
   }
 
   test("Given player with oil when USE_OIL command then number of held oil powerups is reduced by 1") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -37,6 +46,7 @@ class Command_Use_Oil_Tests extends FunSuite{
   }
 
   test("Given player with oil when USE_OIL command then oil spill is left where player was") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];

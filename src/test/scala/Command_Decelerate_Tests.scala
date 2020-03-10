@@ -1,16 +1,24 @@
 import org.scalatest.FunSuite
 import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config
+import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Decelerate_Tests extends FunSuite{
   private val commandText = "DECELERATE";
-  private val commandFactory = new CommandFactory;
-  private val decelerateCommand = commandFactory.makeCommand(commandText);
+  private var commandFactory: CommandFactory = null;
+  private var decelerateCommand: RawCommand = null
+
+  def initialise() = {
+    Config.loadDefault();
+    commandFactory = new CommandFactory;
+    decelerateCommand = commandFactory.makeCommand(commandText)
+  }
 
   test("Given player at start of race when DECELERATE command that player moves at speed state 1") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     decelerateCommand.performCommand(gameMap, testGamePlayer1);
@@ -22,6 +30,7 @@ class Command_Decelerate_Tests extends FunSuite{
   }
 
   test("Given player that is stopped when DECELERATE command then player does not move") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -40,6 +49,7 @@ class Command_Decelerate_Tests extends FunSuite{
   }
 
   test("Given player that is boosting when DECELERATE command then player moves at maximum speed and is no longer boosting") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -60,6 +70,7 @@ class Command_Decelerate_Tests extends FunSuite{
   }
 
   test("Given player during the race when DECELERATE command then player moves at previous speed state") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -78,6 +89,7 @@ class Command_Decelerate_Tests extends FunSuite{
   }
 
   test("Given player moving at slowest speed when DECELERATE command then player stops") {
+    initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
