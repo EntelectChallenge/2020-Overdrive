@@ -7,7 +7,7 @@ public class Lane {
     @SerializedName("position")
     public Position position;
 
-    @SerializedName("object")
+    @SerializedName("surfaceObject")
     public Terrain terrain;
 
     @SerializedName("occupied-by-player-with-id")
