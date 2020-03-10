@@ -25,6 +25,7 @@ import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper;
 import za.co.entelect.challenge.game.contracts.game.GameResult;
 import za.co.entelect.challenge.game.contracts.player.Player;
+import za.co.entelect.challenge.network.Dto.ExceptionSendDto;
 import za.co.entelect.challenge.network.TournamentApi;
 import za.co.entelect.challenge.player.bootstrapper.PlayerBootstrapper;
 import za.co.entelect.challenge.renderer.RendererResolver;
@@ -183,7 +184,11 @@ public class GameBootstrapper {
 
             try {
                 TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
-                tournamentApi.addExceptionForTracing(ex.getMessage(), System.getenv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name())).execute();
+                ExceptionSendDto exceptionSendDto = new ExceptionSendDto(
+                        ex.getMessage(),
+                        System.getenv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name())
+                );
+                tournamentApi.addExceptionForTracing(exceptionSendDto).execute();
                 tournamentApi.updateMatchStatus(gameRunnerConfig.tournamentConfig.functionKey, gameResult).execute();
             } catch (IOException e) {
                 LOGGER.error("Error notifying failure", e);
