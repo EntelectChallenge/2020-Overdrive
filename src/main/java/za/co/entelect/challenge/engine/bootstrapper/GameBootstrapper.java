@@ -183,8 +183,8 @@ public class GameBootstrapper {
 
             try {
                 TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
-                tournamentApi.updateMatchStatus(gameRunnerConfig.tournamentConfig.functionKey, gameResult).execute();
                 tournamentApi.addExceptionForTracing(ex.getMessage(), System.getenv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name())).execute();
+                tournamentApi.updateMatchStatus(gameRunnerConfig.tournamentConfig.functionKey, gameResult).execute();
             } catch (IOException e) {
                 LOGGER.error("Error notifying failure", e);
             }
