@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using StarterBot.Enums;
 
 namespace StarterBot.Entities
 {
@@ -11,6 +12,14 @@ namespace StarterBot.Entities
 
         public Player Player { get; set; }
 
-        public Lane[] Lanes { get; set; }
+        public Player Opponent { get; set; }
+
+        public List<Lane[]> WorldMap { get; set; }
+
+        public PowerUp[] powerups;
+
+        public bool boosting;
+
+        public int boostCounter;
     }
 }

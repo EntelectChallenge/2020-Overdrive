@@ -19,10 +19,9 @@ namespace StarterBot
 
         public string Run()
         {
-            ICommand command;
             MapPosition playerPosition = gameState.Player.Position;
 
-            List<CellType> nextCells = getNextBlocks(playerPosition.Lane, playerPosition.BlockNumber, maxSpeed);
+            List<CellType> nextCells = getNextBlocks(playerPosition.Y, playerPosition.X, maxSpeed);
 
             if (nextCells.Contains(CellType.MUD))
             {
@@ -34,49 +33,26 @@ namespace StarterBot
 
         private List<CellType> getNextBlocks(int lane, int block, int maxSpeed)
         {
-            Dictionary<int, List<Lane>> map = getListMapStructure();
+            List<Lane[]> map = gameState.WorldMap;
             List<CellType> blockTypes = new List<CellType>();
 
-            int startBlock = gameState.Lanes[0].Position.BlockNumber;
+            int startBlock = gameState.WorldMap[0][0].Position.X;
 
-            List<Lane> laneList = map[lane];
+            Lane[] laneList = map[lane-1];
 
-            for (int i = block - startBlock; i < Math.Min(block - startBlock + maxSpeed, laneList.Count); i++)
+            for (int i = block - startBlock; i < Math.Min(block - startBlock + maxSpeed, laneList.Length); i++)
             {
                 if (laneList[i] == null)
                 {
                     break;
                 }
-                blockTypes.Add(laneList[i].Object);
+                blockTypes.Add(laneList[i].SurfaceObject);
 
             }
 
             return blockTypes;
         }
 
-        private Dictionary<int, List<Lane>> getListMapStructure()
-        {
-            Dictionary<int, List<Lane>> map = new Dictionary<int, List<Lane>>();
-
-            int totalLanes = gameState.Lanes.Length;
-            Lane lastLane = gameState.Lanes[totalLanes - 1];
-
-            int mapHeight = lastLane.Position.Lane;
-            int mapWidth = totalLanes / mapHeight;
-
-            for (int lane = 1; lane <= mapHeight; lane++)
-            {
-                List<Lane> blocks = new List<Lane>();
-                for (int block = 0; block < mapWidth; block++)
-                {
-                    blocks.Add(gameState.Lanes[((lane - 1) * mapWidth) + block]);
-                }
-
-                map.Add(lane, blocks);
-            }
-
-            return map;
-        }
 
         private ICommand GetRandomCommand()
         {
