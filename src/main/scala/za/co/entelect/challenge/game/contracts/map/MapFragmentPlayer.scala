@@ -34,18 +34,25 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
         return score;
     }
 
-    override def toString(): String = {
-        val stringRepresentation =
+    def toString(limited: Boolean): String = {
+        var stringRepresentation =
             "id:" + id +
-              " position:" + position.toString() +
-              " speed:" + speed +
+              " position: " + position.toString() +
+              " speed:" + speed;
+        if(!limited)
+        {
+            stringRepresentation +=
               " state:" + state +
-              "\n" +
-              " boosting:" + boosting +
-              " boost-counter:" + boostCounter +
-              " powerups: " + powerups.groupBy(p => p)
-              .map(kv => s"${kv._1}:${kv._2.length}")
-              .mkString(", ")
+                " boosting:" + boosting +
+                " boost-counter:" + boostCounter +
+                " powerups: " + powerups.groupBy(p => p)
+                .map(kv => s"${kv._1}:${kv._2.length}")
+                .mkString(", ")
+        }
+        else
+        {
+            stringRepresentation += "\n";
+        }
 
         stringRepresentation
     }

@@ -36,7 +36,7 @@ class JsonRenderer extends BaseMapRenderer {
               ("y" -> opponentBlock.getPosition().getLane()) ~
                 ("x" -> opponentBlock.getPosition().getBlockNumber())
               ) ~
-            ("speed" -> player.getSpeed())
+            ("speed" -> opponent.getSpeed())
           ) ~
         ("worldMap" -> mapFragment.getBlocks()
           .groupBy { b => b.getPosition().getLane() }
