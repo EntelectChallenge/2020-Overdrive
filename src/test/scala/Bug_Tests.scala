@@ -45,4 +45,19 @@ class Bug_Tests extends FunSuite{
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newP1LaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newP1BlockNumberMidRace);
   }
+
+  test("Given player during race when creating map fragment player must be visible in their own map fragment")
+  {
+    initialise();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
+    val carGameMap = gameMap.asInstanceOf[CarGameMap];
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+
+    val mapFragment = carGameMap.getMapFragment(testCarGamePlayer1);
+
+    assert(mapFragment.getBlocks().find(x => x.occupiedByPlayerWithId == testCarGamePlayer1.getGamePlayerId()).isDefined);
+
+  }
 }
