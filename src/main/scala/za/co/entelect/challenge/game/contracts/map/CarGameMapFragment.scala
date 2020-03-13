@@ -1,12 +1,16 @@
 package za.co.entelect.challenge.game.contracts.map
 
-class CarGameMapFragment(currentRound: Int, player: MapFragmentPlayer, lanes: Array[Block]) {
+class CarGameMapFragment(currentRound: Int, player: MapFragmentPlayer, opponent: MapFragmentPlayer, lanes: Array[Block]) {
     def getCurrentRound(): Int = {
         return currentRound;
     }
 
     def getPlayer(): MapFragmentPlayer = {
         return player;
+    }
+
+    def getOpponent(): MapFragmentPlayer = {
+        return opponent;
     }
 
     def getBlocks(): Array[Block] = {
@@ -23,7 +27,7 @@ class CarGameMapFragment(currentRound: Int, player: MapFragmentPlayer, lanes: Ar
           .mkString("\r\n")
 
         "======================================================================================================" + "\r\n" +
-          "round:" + currentRound + " player:" + player.toString + "" + "\r\n" +
+          "round:" + currentRound + "\r\n" + "player: " + player.toString(false) + "" + "\r\n" + "opponent: " + opponent.toString(true) + "\r\n" +
           lanesAsString + "\r\n" +
           "======================================================================================================"
     }

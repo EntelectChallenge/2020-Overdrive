@@ -60,4 +60,18 @@ class Bug_Tests extends FunSuite{
     assert(mapFragment.getBlocks().find(x => x.occupiedByPlayerWithId == testCarGamePlayer1.getGamePlayerId()).isDefined);
 
   }
+
+  test("Given player during race, when creating map fragment, minimal opponent information should be available")
+  {
+    initialise();
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
+    val carGameMap = gameMap.asInstanceOf[CarGameMap];
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+
+    val mapFragment = carGameMap.getMapFragment(testCarGamePlayer1);
+
+    assert(mapFragment.getOpponent() != null);
+  }
 }

@@ -62,10 +62,19 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val score = gameplayer.getScore();
     val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState, playerPowerups,
       isBoosting, playerBoostCounter, score);
+
     val lanes = blocks.filter(block =>
       (((playerBlockPosition.getBlockNumber() >= block.getPosition().getBlockNumber()) && (scala.math.abs(playerBlockPosition.getBlockNumber() - block.getPosition().getBlockNumber()) <= Config.BACKWARD_VISIBILITY))
         || ((playerBlockPosition.getBlockNumber() <= block.getPosition().getBlockNumber()) && (scala.math.abs(block.getPosition().getBlockNumber() - playerBlockPosition.getBlockNumber()) <= Config.FORWARD_VISIBILITY))));
-    val carGameMapFragment = new CarGameMapFragment(round, player, lanes);
+
+    val opponentGamePlayer = getCarGamePlayers().find(p => p.getGamePlayerId() != gameplayer.getGamePlayerId()).get
+    val opponentGamePlayerId = opponentGamePlayer.getGamePlayerId();
+    val opponentBlock = getPlayerBlockPosition(opponentGamePlayerId);
+
+    val opponent = new MapFragmentPlayer(opponentGamePlayerId, opponentBlock, opponentGamePlayer.getSpeed(), opponentGamePlayer.getState(),
+      opponentGamePlayer.getPowerups(), opponentGamePlayer.isBoosting(), opponentGamePlayer.getBoostCounter(), opponentGamePlayer.getScore);
+
+    val carGameMapFragment = new CarGameMapFragment(round, player, opponent, lanes);
     return carGameMapFragment;
   }
 
