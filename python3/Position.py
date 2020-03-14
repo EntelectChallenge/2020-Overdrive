@@ -1,4 +1,4 @@
 class Position:
-    def __init__(self, lane, block):
-        self.lane = lane
-        self.block = block
+    def __init__(self, y, x):
+        self.y = y
+        self.x = x

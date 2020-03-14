@@ -44,7 +44,7 @@ class StarterBot:
 
         self.command = ''
 
-        self.raw_lanes = self.game_state['lanes']
+        self.raw_lanes = self.game_state['worldMap']
         self.map = self.get_lanes()
 
         self.raw_player = self.game_state['player']
@@ -59,20 +59,22 @@ class StarterBot:
         player = Player(pid=self.raw_player['id'],
                         speed=self.raw_player['speed'],
                         state=State[self.raw_player['state']],
-                        position=Position(self.raw_player['position']['lane'], self.raw_player['position']['blockNumber']),
+                        position=Position(self.raw_player['position']['y'],
+                                          self.raw_player['position']['x']),
                         power_ups=self.raw_player['powerups'],
                         boosting=self.raw_player['boosting'],
-                        boost_counter=self.raw_player['boost-counter'])
+                        boost_counter=self.raw_player['boostCounter'])
         return player
 
     def get_lanes(self):
         lanes = []
         for lane in self.raw_lanes:
-            raw_position = lane['position']
-            lanes.append(Lane(Position(raw_position['lane'],
-                                       raw_position['blockNumber']),
-                              BlockObject(lane['object']),
-                              lane['occupiedByPlayerWithId']))
+            for cell in lane:
+                raw_position = cell['position']
+                lanes.append(Lane(Position(raw_position['y'],
+                                           raw_position['x']),
+                                  BlockObject(cell['surfaceObject']),
+                                  cell['occupiedByPlayerId']))
         return lanes
     
     def get_list_map_structure(self):
