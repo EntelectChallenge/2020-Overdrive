@@ -6,6 +6,8 @@ import za.co.entelect.challenge.enums.Terrain;
 
 import java.util.*;
 
+import static java.lang.Math.max;
+
 public class Bot {
 
     private static final int maxSpeed = 9;
@@ -41,14 +43,15 @@ public class Bot {
      **/
     private List<Object> getBlocksInFront(int lane, int block) {
         List<Lane[]> map = gameState.lanes;
-        List<Object> blocks = new ArrayList<> ();
+        List<Object> blocks = new ArrayList<>();
         int startBlock = map.get(0)[0].position.block;
 
-        Lane[] laneList = map.get(lane-1);
-        for (int i = block - startBlock; i <= block - startBlock + Bot.maxSpeed; i++) {
-            if (laneList[i] == null) {
+        Lane[] laneList = map.get(lane - 1);
+        for (int i = max(block - startBlock, 0); i <= block - startBlock + Bot.maxSpeed; i++) {
+            if (laneList[i] == null || laneList[i].terrain == Terrain.FINISH) {
                 break;
             }
+
             blocks.add(laneList[i].terrain);
 
         }
