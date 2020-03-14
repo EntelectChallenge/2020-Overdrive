@@ -1,3 +1,4 @@
+
 [← back to game rules](game-rules.md "The readme file that explain the game rules")
 
 ### Json File [*example*](./example-assets/state.json "An example of the JSON state file")
@@ -49,10 +50,10 @@ The effects of these are defined in the game rules.
 * player → *All the information about the given player. The data is the same as in the JSON file.*
 * opponent → *Limited info opponent your opponent (position and speed). The data is the same as in the JSON file.*
 * *A map drawn characters per map cell, to describe where entities are*:
-**1 or 2 if block is occupied by player 1 or 2
-**░ block is empty
-**▓ block has mud
-**» block contains a boost powerup
-**║ block is the finish line
-** block contains an oil barral power up Φ
-**█ block contains an oil spill obstacle
+-- 1 or 2 if block is occupied by player 1 or 2
+-- ░ block is empty
+-- ▓ block has mud
+-- » block contains a boost powerup
+-- ║ block is the finish line
+--  block contains an oil barral power up Φ
+-- █ block contains an oil spill obstacle
