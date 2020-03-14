@@ -40,9 +40,9 @@ namespace StarterBot
 
             Lane[] laneList = map[lane-1];
 
-            for (int i = block - startBlock; i < Math.Min(block - startBlock + maxSpeed, laneList.Length); i++)
+            for (int i = Math.Max(block - startBlock,0); i < Math.Min(block - startBlock + maxSpeed, laneList.Length); i++)
             {
-                if (laneList[i] == null)
+                if (laneList[i] == null || laneList[i].SurfaceObject == CellType.FINISH)
                 {
                     break;
                 }
