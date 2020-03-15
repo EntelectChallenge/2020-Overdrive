@@ -10,6 +10,6 @@ public class Lane {
     @SerializedName("surfaceObject")
     public Terrain terrain;
 
-    @SerializedName("occupied-by-player-with-id")
+    @SerializedName("occupiedByPlayerId")
     public int occupiedByPlayerId;
 }
