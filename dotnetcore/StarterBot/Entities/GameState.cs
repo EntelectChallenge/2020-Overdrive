@@ -16,10 +16,5 @@ namespace StarterBot.Entities
 
         public List<Lane[]> WorldMap { get; set; }
 
-        public PowerUp[] powerups;
-
-        public bool boosting;
-
-        public int boostCounter;
     }
 }
