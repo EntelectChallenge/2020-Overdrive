@@ -2,7 +2,7 @@
 
 The Entelect Challenge is an annual coding competition where students, professional developers, and enthusiasts develop an intelligent bot to play a game.
 
-This year, the game is Worms. We have made it as simple as possible to get started. Just follow the steps below.
+This year, the game is Overdrive. We have made it as simple as possible to get started. Just follow the steps below.
 
 ## Step 1 - Download
 Download the starter pack zip file and extract it to the folder you want to work in.
@@ -42,7 +42,7 @@ The starter pack will provide you with everything that you'll need to run your f
 
 A more in-depth explanation of the concepts below can be found [here](./game-runner/README.md).
 
-Before you run your first match you need ensure your environment is correct. The game-runner was built in Java, therefore, please ensure you have [Java installed](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). By default, the starter-pack runs Javascript bots, please make sure you have [Nodejs installed](https://nodejs.org/en/download/).
+Before you run your first match you need ensure your environment is correct. The game-runner was built in Java, therefore, please ensure you have [Java installed](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). By default, the starter-pack runs  Python bots, please make sure you have Python installed.
 
 ### Step 1
 Let's start off by running your very first match:
