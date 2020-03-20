@@ -38,9 +38,9 @@ Improvements and enhancements will be made to the game engine code over time.  T
 The game engine has been made available to the community for peer review and bug fixes, so if you find any bugs or have any concerns, please [e-mail us](mailto:challenge@entelect.co.za) or discuss it with us on the [Challenge forum](http://forum.entelect.co.za/), alternatively submit a pull request on Github and we will review it.
 
 ## Starter Pack
-The starter pack will provide you with everything that you'll need to run your first bot and compete in this year's challenge. To get the starter pack, simply download the latest release found [here](https://github.com/EntelectChallenge/2019-Worms/releases/latest).
+The starter pack will provide you with everything that you'll need to run your first bot and compete in this year's challenge. To get the starter pack, simply download the latest release found [here](https://github.com/EntelectChallenge/2020-Overdrive/releases/latest).
 
-A more in-depth explaination of the concepts below can be found [here](./game-runner/README.md).
+A more in-depth explanation of the concepts below can be found [here](./game-runner/README.md).
 
 Before you run your first match you need ensure your environment is correct. The game-runner was built in Java, therefore, please ensure you have [Java installed](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). By default, the starter-pack runs Javascript bots, please make sure you have [Nodejs installed](https://nodejs.org/en/download/).
 
@@ -113,9 +113,9 @@ Here is a brief explanation of how a bot should work:
 
         Finally, output your move to Standard out (stdout). 
 
-The `state.json` simply keeps track of everything on the map, the worm's health, position and scores. For an example of a state file, see `/examples/example-state.json`.
+The `state.json` simply keeps track of everything on the map, player scores and other relevant attributes. For an example of a state file, see `/examples/example-state.json`.
 
-The output will have the structure `C;<round_number>;<command>`, due to the fact that the bot is continously running this will allow the game runner to determine for which round certain commands are for. The starter bots already have this output format.
+The output will have the structure `C;<round_number>;<command>`, due to the fact that the bot is continuously running this will allow the game runner to determine for which round certain commands are for. The starter bots already have this output format.
 
 ## Bot upload archive structure
 
