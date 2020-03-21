@@ -124,7 +124,7 @@ class StarterBot:
         if BlockObject.MUD in next_blocks:
             self.command = Commands.TURN.value + self.change_lane_command(random.choice(self.random_list))
         else:
-            self.command = Commands.ACCELERATE
+            self.command = Commands.ACCELERATE.value
 
         return self.command
 
