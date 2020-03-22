@@ -13,4 +13,8 @@
   :license "BSD"
   :description "Entellect challenge bot"
   :long-description "Bot for the Entellect Challenge"
-  :components ((:file "bot")))
+  :depends-on (:yason :cl-ppcre)
+  :components ((:file "bot" :depends-on ("state" "package"))
+               (:file "state" :depends-on ("parsing" "package"))
+               (:file "parsing" :depends-on ("package"))
+               (:file "package")))
