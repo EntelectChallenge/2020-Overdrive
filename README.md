@@ -136,11 +136,21 @@ For example the Java sample bot has the following structure:
          |--- Bot.java
          |--- Main.java
          |--- entities
-            |--- Worm.java
-            |--- Player.java
-            |--- Cell.java
-            |--- GameMap.java
-         |--- enum
-            |--- CellType.java
+            |--- Car.java
+            |--- GameState.java
+            |--- Lane.java
+            |--- Position.java
+         |--- enums
+            |--- Powerups.java
             |--- Direction.java
+			|--- State.java
+			|--- Terrain.java
+		|--- command
+			|--- AccelerateCommand.java
+			|--- BoostCommand.java
+			|--- ChangeLaneCommand.java
+			|--- Command.java
+			|--- DecelerateCommand.java
+			|--- DoNothingCommand.java
+			|--- OilCommand.java
 ```
