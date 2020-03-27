@@ -18,12 +18,23 @@ class MapObject_Oil_Item_Tests extends FunSuite{
 
   test("Given players during race when player hits oil powerup then player gains 1 oil powerup") {
     initialise()
-    val gameMap = TestHelper.initaliseGameWithMapObjectAt(1, 3, Config.OIL_ITEM_MAP_OBJECT);
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.OIL_ITEM_MAP_OBJECT);
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
     nothingCommand.performCommand(gameMap, testGamePlayer1);
 
     assert(testCarGamePlayer.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) == 1);
+  }
+
+  test("Given players during race when player hits 2 oil power ups then player gains 2 oil powerup") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(3,4), Config.OIL_ITEM_MAP_OBJECT);
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+
+    val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    assert(testCarGamePlayer.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) == 2);
   }
 }
