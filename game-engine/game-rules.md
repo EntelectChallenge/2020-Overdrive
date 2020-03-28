@@ -134,7 +134,7 @@ Your current speed does not change. To be clear this means the total forward mov
 
 ### Command: TURN_RIGHT
 
-This command changes your car's lane to the next lane on the right. This is equivalent to down on the visualisation in the console. The first block the bot moves will be directly to the left, and then the rest of the blocks directly forward in the new lane.
+This command changes your car's lane to the next lane on the right. This is equivalent to down on the visualisation in the console. The first block the bot moves will be directly to the right, and then the rest of the blocks directly forward in the new lane.
 Your current speed does not change. To be clear this means the total forward movement of your car will be speed - 1.
 
 * attempting to turn outside of the track will keep your car in the current lane, you will still incur the speed -1 penalty AND this will negatively impact your score
