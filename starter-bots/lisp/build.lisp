@@ -8,5 +8,5 @@
 (format t "SBCL version ~a~%" (software-version))
 (format t "~a~%" *FEATURES*)
 
-(save-lisp-and-die "bot.exe" :toplevel #'bot:main :executable t)
+(save-lisp-and-die "bot" :toplevel #'bot:main :executable t)
 
