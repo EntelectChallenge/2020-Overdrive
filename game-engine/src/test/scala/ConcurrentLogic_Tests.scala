@@ -72,7 +72,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
@@ -117,7 +117,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
@@ -161,7 +161,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
@@ -206,7 +206,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
@@ -250,7 +250,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
@@ -295,7 +295,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
@@ -340,7 +340,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
@@ -385,7 +385,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
@@ -427,7 +427,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     var player2Commands = List[RawCommand]()
     player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
 
     val javaCommandsToProcess = commandsToProcess.asJava;
 
