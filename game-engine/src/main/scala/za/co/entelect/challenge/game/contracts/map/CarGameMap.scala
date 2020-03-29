@@ -167,11 +167,10 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val startBlockNumber = startPosition.getBlockNumber();
     val endLane = endPosition.getLane();
     val endBlockNumber = endPosition.getBlockNumber();
-    val blocksWithObject =
-      blocks.count(x =>
-        (x.getPosition().getLane() == endLane && x.getPosition().getBlockNumber() >= startBlockNumber && x.getPosition().getBlockNumber() <= endBlockNumber)
-            &&
-            x.getMapObject() == mapObject
+    val blocksWithObject = blocks.count(b => (b.getPosition().getLane() == endLane 
+                                               && b.getPosition().getBlockNumber() >= startBlockNumber 
+                                               && b.getPosition().getBlockNumber() <= endBlockNumber)
+                                           && b.getMapObject() == mapObject
       );
     return blocksWithObject;
   }
