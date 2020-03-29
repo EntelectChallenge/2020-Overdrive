@@ -1,5 +1,3 @@
-import java.util
-
 import org.scalatest.FunSuite
 import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config

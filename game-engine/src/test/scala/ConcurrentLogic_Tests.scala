@@ -3,14 +3,10 @@ import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
-import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer, CarGameRoundProcessor, GamePlayer}
+import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer}
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
-import scala.collection.JavaConverters._
-import java.util
 
 class ConcurrentLogic_Tests extends FunSuite{
-  private var carGameRoundProcessor: CarGameRoundProcessor = null
-
   private var nothingCommandText: String = null;
   private var turnLeftCommandText: String = null;
   private var turnRightCommandText: String = null;
@@ -24,8 +20,6 @@ class ConcurrentLogic_Tests extends FunSuite{
 
   def initialise() = {
     Config.loadDefault();
-
-    carGameRoundProcessor = new CarGameRoundProcessor
 
     nothingCommandText = Config.NOTHING_COMMAND
     turnLeftCommandText = Config.TURN_LEFT_COMMAND
@@ -64,19 +58,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnRightCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnRightCommand, nothingCommand)
 
     //Assert: player positions have been corrected to resolve the collision
     val expectedPlayer1Lane = 2
@@ -109,19 +91,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnRightCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnRightCommand, nothingCommand)
 
     val expectedPlayer2Lane = 3
     val expectedPlayer2BlockNumber = 39
@@ -153,19 +123,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnLeftCommand, nothingCommand)
 
     //Assert: player positions have been corrected to resolve the collision
     val expectedPlayer1Lane = 4
@@ -198,19 +156,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnLeftCommand, nothingCommand)
 
     val expectedPlayer2Lane = 3
     val expectedPlayer2BlockNumber = 39
@@ -242,19 +188,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnRightCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnRightCommand, turnLeftCommand)
 
     //Assert: player positions have been corrected to resolve the collision
     val expectedPlayer1Lane = 2
@@ -287,19 +221,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnRightCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnRightCommand, turnLeftCommand)
 
     //Assert: player positions have been corrected to resolve the collision
     val expectedPlayer1Lane = 4
@@ -332,19 +254,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     //Assert: player positions have been corrected to resolve the collision
     val expectedPlayer1Lane = 3
@@ -377,19 +287,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(nothingCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     //Assert: staged future positions have been reset to empty
     assert(carGameMap.stagedFuturePositions.length == 0, "Stages positions are not being cleared after being committed")
@@ -419,19 +317,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
     //Act: process commands that would cause a collision
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnRightCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnRightCommand, turnLeftCommand)
 
     //Assert: player positions have been corrected to resolve the collision
     assert(testCarGamePlayer1.speed == Config.SPEED_STATE_1, "Player did not interact with map object on corrected path")

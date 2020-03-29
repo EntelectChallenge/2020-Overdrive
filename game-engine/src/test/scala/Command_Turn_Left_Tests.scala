@@ -1,26 +1,19 @@
 package test
 
-import java.util
-import scala.collection.JavaConverters._
 import org.scalatest.FunSuite
 import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
-import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer, CarGameRoundProcessor, CarMapGenerator, GamePlayer}
+import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer}
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Turn_Left_Tests extends FunSuite{
-  private var carGameRoundProcessor: CarGameRoundProcessor = null
-
   private val commandText = "TURN_LEFT";
   private var commandFactory: CommandFactory = null
   private var turnLeftCommand: RawCommand = null
 
   def initialise() = {
     Config.loadDefault();
-
-    carGameRoundProcessor = new CarGameRoundProcessor
-
     commandFactory = new CommandFactory;
     turnLeftCommand = commandFactory.makeCommand(commandText)
     turnLeftCommand.setCommand(commandText)
@@ -32,19 +25,7 @@ class Command_Turn_Left_Tests extends FunSuite{
 
     val testGamePlayer2 = TestHelper.getTestGamePlayer2();
 
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(TestHelper.getTestGamePlayer1(), player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer2, player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnLeftCommand, turnLeftCommand)
 
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
     val player2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2.asInstanceOf[CarGamePlayer].getGamePlayerId());
@@ -58,19 +39,7 @@ class Command_Turn_Left_Tests extends FunSuite{
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnLeftCommand, turnLeftCommand)
 
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
     val player1Position = carGameMap.getPlayerBlockPosition(testGamePlayer1.asInstanceOf[CarGamePlayer].getGamePlayerId());
@@ -92,19 +61,7 @@ class Command_Turn_Left_Tests extends FunSuite{
 
     val speedBeforeProcessingCommand = testCarGamePlayer1.getSpeed();
 
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnLeftCommand, turnLeftCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace-1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand - 1));
@@ -124,19 +81,7 @@ class Command_Turn_Left_Tests extends FunSuite{
 
     val speedBeforeProcessingCommand = testCarGamePlayer1.getSpeed();
 
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnLeftCommand, turnLeftCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace-1) && (newPlayer1PositionAfterCommand.getBlockNumber() == Config.TRACK_LENGTH));
@@ -156,19 +101,7 @@ class Command_Turn_Left_Tests extends FunSuite{
 
     testCarGamePlayer1.speed = 0; //stop player
 
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnLeftCommand, turnLeftCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace));
@@ -188,19 +121,7 @@ class Command_Turn_Left_Tests extends FunSuite{
     val newBlockNumberMidRace = 56;
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
-    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
-
-    var player1Commands = List[RawCommand]()
-    player1Commands = player1Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
-
-    var player2Commands = List[RawCommand]()
-    player2Commands = player2Commands.appended(turnLeftCommand)
-    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
-
-    val javaCommandsToProcess = commandsToProcess.asJava;
-
-    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+    TestHelper.processRound(gameMap, turnLeftCommand, turnLeftCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace-1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + Config.BOOST_SPEED - 1));
