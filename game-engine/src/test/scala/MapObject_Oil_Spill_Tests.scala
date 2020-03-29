@@ -14,6 +14,7 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
     Config.loadDefault();
     commandFactory = new CommandFactory;
     nothingCommand = commandFactory.makeCommand(commandText)
+    nothingCommand.setCommand(commandText)
   }
 
   test("Given players during race when player hits oil then speed is reduced") {
@@ -23,7 +24,8 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
     testCarGamePlayer.speed = Config.SPEED_STATE_2;
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_1);
   }
@@ -35,7 +37,8 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
     testCarGamePlayer.speed = Config.SPEED_STATE_3;
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_1);
   }
@@ -48,7 +51,8 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
     testCarGamePlayer.pickupBoost();
     testCarGamePlayer.useBoost();
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.speed == Config.MAXIMUM_SPEED);
     assert(testCarGamePlayer.isBoosting() == false);
@@ -61,7 +65,8 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
     testCarGamePlayer.speed = Config.SPEED_STATE_1;
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_1);
   }
