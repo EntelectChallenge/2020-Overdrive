@@ -1,28 +1,49 @@
 package test
 
+import java.util
+import scala.collection.JavaConverters._
 import org.scalatest.FunSuite
 import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
-import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
+import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer, CarGameRoundProcessor, GamePlayer}
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Nothing_Tests extends FunSuite{
+  private var carGameRoundProcessor: CarGameRoundProcessor = null
+
   private val commandText = "NOTHING";
   private var commandFactory: CommandFactory = null
   private var nothingCommand: RawCommand = null
 
   def initialise() = {
     Config.loadDefault();
+
+    carGameRoundProcessor = new CarGameRoundProcessor
+
     commandFactory = new CommandFactory;
     nothingCommand = commandFactory.makeCommand(commandText)
+    nothingCommand.setCommand(commandText)
   }
 
   test("Given players at start of race when NOTHING command then player moves forward at initial speed") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
+
+    var player1Commands = List[RawCommand]()
+    player1Commands = player1Commands.appended(nothingCommand)
+    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
+
+    var player2Commands = List[RawCommand]()
+    player2Commands = player2Commands.appended(nothingCommand)
+    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
+
+    val javaCommandsToProcess = commandsToProcess.asJava;
+
+    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
 
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
     val player1Position = carGameMap.getPlayerBlockPosition(testGamePlayer1.asInstanceOf[CarGamePlayer].getGamePlayerId());
@@ -43,7 +64,20 @@ class Command_Nothing_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
     val speedBeforeProcessingCommand = testCarGamePlayer1.getSpeed();
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
+
+    var player1Commands = List[RawCommand]()
+    player1Commands = player1Commands.appended(nothingCommand)
+    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
+
+    var player2Commands = List[RawCommand]()
+    player2Commands = player2Commands.appended(nothingCommand)
+    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
+
+    val javaCommandsToProcess = commandsToProcess.asJava;
+
+    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand);
@@ -61,7 +95,19 @@ class Command_Nothing_Tests extends FunSuite{
     val newBlockNumberEndOfRace = Config.TRACK_LENGTH - 4;
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneEndOfRace, newBlockNumberEndOfRace);
 
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
+
+    var player1Commands = List[RawCommand]()
+    player1Commands = player1Commands.appended(nothingCommand)
+    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
+
+    var player2Commands = List[RawCommand]()
+    player2Commands = player2Commands.appended(nothingCommand)
+    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
+
+    val javaCommandsToProcess = commandsToProcess.asJava;
+
+    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneEndOfRace && newPlayer1PositionAfterCommand.getBlockNumber() == Config.TRACK_LENGTH);
@@ -80,7 +126,20 @@ class Command_Nothing_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
     testCarGamePlayer1.speed = 0; //stop player
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
+
+    var player1Commands = List[RawCommand]()
+    player1Commands = player1Commands.appended(nothingCommand)
+    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
+
+    var player2Commands = List[RawCommand]()
+    player2Commands = player2Commands.appended(nothingCommand)
+    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
+
+    val javaCommandsToProcess = commandsToProcess.asJava;
+
+    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace);
@@ -100,7 +159,19 @@ class Command_Nothing_Tests extends FunSuite{
     val newBlockNumberMidRace = 56;
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
+
+    var player1Commands = List[RawCommand]()
+    player1Commands = player1Commands.appended(nothingCommand)
+    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
+
+    var player2Commands = List[RawCommand]()
+    player2Commands = player2Commands.appended(nothingCommand)
+    commandsToProcess.addOne(TestHelper.getTestGamePlayer2(), player2Commands.asJava)
+
+    val javaCommandsToProcess = commandsToProcess.asJava;
+
+    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + Config.BOOST_SPEED);
