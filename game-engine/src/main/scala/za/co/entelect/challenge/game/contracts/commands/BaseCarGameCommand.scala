@@ -24,37 +24,11 @@ abstract class BaseCarGameCommand extends RawCommand {
         val futurePosition = getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap, carGamePlayer, currentBlockThatHasBeenVacated); //Override this method to process particular command
 
         val futurePositionWithLaneBounds = getFutuerPositionWithinBoundsOfLanes(futurePosition)
-        val futurePositionWithinAllBounds = getFuturePositionWithinBlockNumberBounds(futurePositionWithLaneBounds);
-
-        //handle collisions with map objects (obstacles => pickups)
-        val playerHitMudCount = carGameMap.mudCountInPath(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
-        for(a <- 0 until playerHitMudCount) {
-            carGamePlayer.hitMud();
-        }
-
-        val playerHitOilCount = carGameMap.oilSpillCountInPath(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds)
-        for (a <- 0 until playerHitOilCount) {
-            carGamePlayer.hitOil()
-        }
-
-        val playerPickedUpOilItemCount = carGameMap.oilItemCountInPath(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
-        for (a <- 0 until playerPickedUpOilItemCount) {
-            carGamePlayer.pickupOilItem()
-        }
-
-        val playerPickedUpBoostCount = carGameMap.boostCountInPath(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
-        for (a <- 0 until playerPickedUpBoostCount) {
-            carGamePlayer.pickupBoost();
-        }
+        val futurePositionWithinAllBounds = getFuturePositionWithinBlockNumberBounds(futurePositionWithLaneBounds)
 
         //stage player future position => concurrent logic resolver will update future position if necessary before committing it
         val stagedPosition = new StagedPosition(carGamePlayer, futurePositionWithinAllBounds, currentBlockThatHasBeenVacated)
         carGameMap.stageFuturePosition(stagedPosition);
-
-        //check win condition
-        if (futurePositionWithinAllBounds.getBlockNumber() == Config.TRACK_LENGTH) {
-            carGamePlayer.finish();
-        }
     }
 
     def getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap: CarGameMap, carGamePlayer: CarGamePlayer, currentPlayerPosition: BlockPosition): BlockPosition

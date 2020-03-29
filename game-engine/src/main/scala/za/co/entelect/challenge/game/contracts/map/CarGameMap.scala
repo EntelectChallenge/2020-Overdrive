@@ -253,15 +253,41 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
       return true
     }
 
-
-
-
-
     throw new Exception("A collision occurred that was not from the side or from behind. This should not be possible since cars cannot travel in reverse");
   }
 
   def commitStagedPositions() = {
-    stagedFuturePositions.foreach(x => this.occupyBlock(x.getNewPosition(), x.getPlayer().getGamePlayerId()))
+    stagedFuturePositions.foreach(x => handlePostCommandLogic(x.getPlayer(), x.getNewPosition(), x.getOldPosition()))
     stagedFuturePositions = List[StagedPosition]()
+  }
+
+  def handlePostCommandLogic(carGamePlayer: CarGamePlayer, newPosition: BlockPosition, oldPosition: BlockPosition) = {
+    //handle collisions with map objects (obstacles => pickups)
+    val playerHitMudCount = mudCountInPath(oldPosition, newPosition);
+    for(a <- 0 until playerHitMudCount) {
+      carGamePlayer.hitMud();
+    }
+
+    val playerHitOilCount = oilSpillCountInPath(oldPosition, newPosition)
+    for (a <- 0 until playerHitOilCount) {
+      carGamePlayer.hitOil()
+    }
+
+    val playerPickedUpOilItemCount = oilItemCountInPath(oldPosition, newPosition);
+    for (a <- 0 until playerPickedUpOilItemCount) {
+      carGamePlayer.pickupOilItem()
+    }
+
+    val playerPickedUpBoostCount = boostCountInPath(oldPosition, newPosition);
+    for (a <- 0 until playerPickedUpBoostCount) {
+      carGamePlayer.pickupBoost();
+    }
+
+    occupyBlock(newPosition, carGamePlayer.getGamePlayerId())
+
+    //check win condition
+    if (newPosition.getBlockNumber() == Config.TRACK_LENGTH) {
+      carGamePlayer.finish();
+    }
   }
 }
