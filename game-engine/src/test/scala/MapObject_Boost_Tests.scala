@@ -14,6 +14,7 @@ class MapObject_Boost_Tests extends FunSuite{
     Config.loadDefault();
     commandFactory = new CommandFactory;
     nothingCommand = commandFactory.makeCommand(commandText)
+    nothingCommand.setCommand(commandText)
   }
 
   test("Given players during race when player hits boost then player gains 1 boost powerup") {
@@ -22,7 +23,7 @@ class MapObject_Boost_Tests extends FunSuite{
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.getPowerups().count(x => x == Config.BOOST_POWERUP_ITEM) == 1);
   }
@@ -33,7 +34,7 @@ class MapObject_Boost_Tests extends FunSuite{
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.getPowerups().count(x => x == Config.BOOST_POWERUP_ITEM) == 2);
   }
