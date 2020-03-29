@@ -203,29 +203,65 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val player2StagedPosition = stagedFuturePositions.find(x => x.getPlayer().getGamePlayerId() == 2).get
     val player2FuturePosition = player2StagedPosition.getNewPosition()
 
-    val isCollision = (player1FuturePosition.getLane() == player2FuturePosition.getLane()) && (player1FuturePosition.getBlockNumber() == player2FuturePosition.getBlockNumber());
+    val playersFuturePositionsAreSame = (player1FuturePosition.getLane() == player2FuturePosition.getLane()) && (player1FuturePosition.getBlockNumber() == player2FuturePosition.getBlockNumber())
+
+    val player1DroveIntoPlayer2 = (player1StagedPosition.getOldPosition().getLane() == player2StagedPosition.getOldPosition().getLane()) && //started off in the same lane
+      (player1StagedPosition.getOldPosition().getBlockNumber() < player2StagedPosition.getOldPosition().getBlockNumber()) && //player 1 was behind
+      (player1FuturePosition.getBlockNumber() >= player2FuturePosition.getBlockNumber()) && //player 1 ended up in front
+      (player1FuturePosition.getLane() == player2FuturePosition.getLane()) //in the same lane => player 2 got ridden over
+
+    val player2DroveIntoPlayer1 = (player2StagedPosition.getOldPosition().getLane() == player1StagedPosition.getOldPosition().getLane()) && //started off in the same lane
+      (player2StagedPosition.getOldPosition().getBlockNumber() < player1StagedPosition.getOldPosition().getBlockNumber()) && //player 2 was behind
+      (player2FuturePosition.getBlockNumber() >= player1FuturePosition.getBlockNumber()) && //player 2 ended up in front
+      (player2FuturePosition.getLane() == player1FuturePosition.getLane()) //in the same lane => player 1 got ridden over
+
+    val isCollisionFromBehind = player1DroveIntoPlayer2 || player2DroveIntoPlayer1
+
+    val isCollision = playersFuturePositionsAreSame || isCollisionFromBehind
+
     if(!isCollision)
     {
-      return false;
+      return false
     }
 
-    val isCollisionFromBehind = (player1FuturePosition
+    if(isCollisionFromBehind)
+    {
+      val stagedPositionOfPlayerInFront = if(player1DroveIntoPlayer2) player2StagedPosition
+      else player1StagedPosition
 
-    val correctedPlayer1Lane = player1StagedPosition.getOldPosition().getLane()
-    val correctedPlayer1BlockNumber = player1FuturePosition.getBlockNumber() - 1
-    val correctedPlayer1FuturePosition = new BlockPosition(correctedPlayer1Lane, correctedPlayer1BlockNumber);
-    player1StagedPosition.setNewPosition(correctedPlayer1FuturePosition)
+      val stagedPositionOfPlayerCollidingFromBehind = stagedFuturePositions.find(x => x != stagedPositionOfPlayerInFront).get
+      val correctedBlockNumber = stagedPositionOfPlayerInFront.getNewPosition().getBlockNumber() - 1;
+      val correctedLane = stagedPositionOfPlayerCollidingFromBehind.getNewPosition().getLane();
+      val correctedPositionOfPlayerCollidingFromBehind = new BlockPosition(correctedLane, correctedBlockNumber);
+      stagedPositionOfPlayerCollidingFromBehind.setNewPosition(correctedPositionOfPlayerCollidingFromBehind)
 
-    val correctedPlayer2Lane = player2StagedPosition.getOldPosition().getLane()
-    val correctedPlayer2BlockNumber = player2FuturePosition.getBlockNumber() - 1
-    val correctedPlayer2FuturePosition = new BlockPosition(correctedPlayer2Lane, correctedPlayer2BlockNumber)
-    player2StagedPosition.setNewPosition(correctedPlayer2FuturePosition)
+      return true
+    }
 
-    return true;
+    val collisionFromTheSide = playersFuturePositionsAreSame
+    if(collisionFromTheSide)
+    {
+      val correctedPlayer1Lane = player1StagedPosition.getOldPosition().getLane()
+      val correctedPlayer1BlockNumber = player1FuturePosition.getBlockNumber() - 1
+      val correctedPlayer1FuturePosition = new BlockPosition(correctedPlayer1Lane, correctedPlayer1BlockNumber)
+      player1StagedPosition.setNewPosition(correctedPlayer1FuturePosition)
+
+      val correctedPlayer2Lane = player2StagedPosition.getOldPosition().getLane()
+      val correctedPlayer2BlockNumber = player2FuturePosition.getBlockNumber() - 1
+      val correctedPlayer2FuturePosition = new BlockPosition(correctedPlayer2Lane, correctedPlayer2BlockNumber)
+      player2StagedPosition.setNewPosition(correctedPlayer2FuturePosition)
+      return true
+    }
+
+
+
+
+
+    throw new Exception("A collision occurred that was not from the side or from behind. This should not be possible since cars cannot travel in reverse");
   }
 
   def commitStagedPositions() = {
     stagedFuturePositions.foreach(x => this.occupyBlock(x.getNewPosition(), x.getPlayer().getGamePlayerId()))
-    stagedFuturePositions = List[StagedPosition]();
+    stagedFuturePositions = List[StagedPosition]()
   }
 }
