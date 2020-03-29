@@ -352,4 +352,88 @@ class ConcurrentLogic_Tests extends FunSuite{
     val actualPlayer1Position = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
     assert((actualPlayer1Position.getLane() == expectedPlayer1Lane) && (actualPlayer1Position.getBlockNumber() == expectedPlayer1BlockNumber), "Collision initiator (from left) final position not correct")
   }
+
+  test ("Given a race when stages positions are committed then the history of staged positions is cleared so as not to influence future rounds")
+  {
+    //Arrange: setup players for a collision
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2 //should be 6
+    val newLaneMidRacePlayer1 = 3
+    val newBlockNumberMidRacePlayer1 = 38
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_1 //should be 3
+    val newLaneMidRacePlayer2 = 3
+    val newBlockNumberMidRacePlayer2 = 40
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    //Act: process commands that would cause a collision
+    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
+
+    var player1Commands = List[RawCommand]()
+    player1Commands = player1Commands.appended(nothingCommand)
+    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
+
+    var player2Commands = List[RawCommand]()
+    player2Commands = player2Commands.appended(nothingCommand)
+    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+
+    val javaCommandsToProcess = commandsToProcess.asJava;
+
+    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+
+    //Assert: staged future positions have been reset to empty
+    assert(carGameMap.stagedFuturePositions.length == 0, "Stages positions are not being cleared after being committed")
+  }
+
+  test("Given a race when a collision occurs then player interactions should be considered with collision corrected path")
+  {
+    //Arrange: setup players for a collision
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(2, 38, Config.MUD_MAP_OBJECT)
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2 //should be 6
+    val newLaneMidRacePlayer1 = 2
+    val newBlockNumberMidRacePlayer1 = 35
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_2 //should be 6
+    val newLaneMidRacePlayer2 = 4
+    val newBlockNumberMidRacePlayer2 = 35
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    //Act: process commands that would cause a collision
+    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
+
+    var player1Commands = List[RawCommand]()
+    player1Commands = player1Commands.appended(turnRightCommand)
+    commandsToProcess.addOne(testGamePlayer1, player1Commands.asJava)
+
+    var player2Commands = List[RawCommand]()
+    player2Commands = player2Commands.appended(turnLeftCommand)
+    commandsToProcess.addOne(testCarGamePlayer2, player2Commands.asJava)
+
+    val javaCommandsToProcess = commandsToProcess.asJava;
+
+    carGameRoundProcessor.processRound(gameMap, javaCommandsToProcess)
+
+    //Assert: player positions have been corrected to resolve the collision
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_1, "Player did not interact with map object on corrected path")
+  }
 }
