@@ -18,7 +18,7 @@ class MapObject_Mud_Tests extends FunSuite{
 
   test("Given players during race when player hits mud then speed is reduced") {
     initialise()
-    val gameMap = TestHelper.initaliseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -28,9 +28,21 @@ class MapObject_Mud_Tests extends FunSuite{
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_1);
   }
 
+  test("Given players during race when player hits mud twice then speed is reduced twice") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(3,4), Config.MUD_MAP_OBJECT);
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+
+    val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    testCarGamePlayer.speed = Config.SPEED_STATE_3;
+    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    assert(testCarGamePlayer.speed == Config.SPEED_STATE_1);
+  }
+
   test("Given player that is boosting during race when player hits mud then speed is reduced and player is no longer boosting") {
     initialise()
-    val gameMap = TestHelper.initaliseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
@@ -44,7 +56,7 @@ class MapObject_Mud_Tests extends FunSuite{
 
   test("Given player that is going slowest speed when player hits mud then player continues going slowest speed") {
     initialise()
-    val gameMap = TestHelper.initaliseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT);
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
 
     val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer];
