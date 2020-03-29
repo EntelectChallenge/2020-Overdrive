@@ -12,6 +12,8 @@ import scala.collection.mutable
 
 class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, var blocks: Array[Block], var round: Int) extends GameMap {
 
+  var stagedFuturePositions: List[StagedPosition] = List[StagedPosition]()
+
   override def getCurrentRound: Int = {
     return round;
   }
@@ -188,5 +190,42 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def placeObjectAt(lane: Int, blockNumber: Int, mapObject: Int) = {
     blocks.find(x => x.getPosition().getLane() == lane && x.getPosition().getBlockNumber() == blockNumber).get.mapObject = mapObject;
+  }
+
+  def stageFuturePosition(stagedPosition: StagedPosition) ={
+    stagedFuturePositions = stagedFuturePositions.appended(stagedPosition);
+  }
+
+  def resolvePlayerCollisions(): Boolean = {
+    val player1StagedPosition = stagedFuturePositions.find(x => x.getPlayer().getGamePlayerId() == 1).get
+    val player1FuturePosition = player1StagedPosition.getNewPosition()
+
+    val player2StagedPosition = stagedFuturePositions.find(x => x.getPlayer().getGamePlayerId() == 2).get
+    val player2FuturePosition = player2StagedPosition.getNewPosition()
+
+    val isCollision = (player1FuturePosition.getLane() == player2FuturePosition.getLane()) && (player1FuturePosition.getBlockNumber() == player2FuturePosition.getBlockNumber());
+    if(!isCollision)
+    {
+      return false;
+    }
+
+    val isCollisionFromBehind = (player1FuturePosition
+
+    val correctedPlayer1Lane = player1StagedPosition.getOldPosition().getLane()
+    val correctedPlayer1BlockNumber = player1FuturePosition.getBlockNumber() - 1
+    val correctedPlayer1FuturePosition = new BlockPosition(correctedPlayer1Lane, correctedPlayer1BlockNumber);
+    player1StagedPosition.setNewPosition(correctedPlayer1FuturePosition)
+
+    val correctedPlayer2Lane = player2StagedPosition.getOldPosition().getLane()
+    val correctedPlayer2BlockNumber = player2FuturePosition.getBlockNumber() - 1
+    val correctedPlayer2FuturePosition = new BlockPosition(correctedPlayer2Lane, correctedPlayer2BlockNumber)
+    player2StagedPosition.setNewPosition(correctedPlayer2FuturePosition)
+
+    return true;
+  }
+
+  def commitStagedPositions() = {
+    stagedFuturePositions.foreach(x => this.occupyBlock(x.getNewPosition(), x.getPlayer().getGamePlayerId()))
+    stagedFuturePositions = List[StagedPosition]();
   }
 }

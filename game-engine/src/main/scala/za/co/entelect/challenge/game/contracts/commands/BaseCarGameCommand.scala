@@ -1,11 +1,9 @@
 package za.co.entelect.challenge.game.contracts.commands
 
 import za.co.entelect.challenge.game.contracts.command.RawCommand
-import za.co.entelect.challenge.game.contracts.map.GameMap
+import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap, GameMap, StagedPosition}
 import za.co.entelect.challenge.game.contracts.game.GamePlayer
-import za.co.entelect.challenge.game.contracts.map.CarGameMap
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
-import za.co.entelect.challenge.game.contracts.map.BlockPosition
 import za.co.entelect.challenge.game.contracts.Config.Config
 
 abstract class BaseCarGameCommand extends RawCommand {
@@ -49,19 +47,9 @@ abstract class BaseCarGameCommand extends RawCommand {
             carGamePlayer.pickupBoost();
         }
 
-        //place player in new position (or reset if collision would occur)
-        val playerIsInFutureBlock = carGameMap.blockIsOccupied(futurePositionWithinAllBounds);
-        if(playerIsInFutureBlock)
-        {
-            val previousLane = currentBlockThatHasBeenVacated.getLane();
-            val previousBlockNumber = currentBlockThatHasBeenVacated.getBlockNumber();
-            val oldPosition = new BlockPosition(previousLane, previousBlockNumber);
-            carGameMap.occupyBlock(oldPosition, carGamePlayerId);
-        }
-        else
-        {
-            carGameMap.occupyBlock(futurePositionWithinAllBounds, carGamePlayerId);
-        }
+        //stage player future position => concurrent logic resolver will update future position if necessary before committing it
+        val stagedPosition = new StagedPosition(carGamePlayer, futurePositionWithinAllBounds, currentBlockThatHasBeenVacated)
+        carGameMap.stageFuturePosition(stagedPosition);
 
         //check win condition
         if (futurePositionWithinAllBounds.getBlockNumber() == Config.TRACK_LENGTH) {
