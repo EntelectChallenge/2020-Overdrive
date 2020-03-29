@@ -12,9 +12,9 @@ The reference bot on the other hand is capable of playing a game from start to f
 
 ## Additional languages
 
-For any additional languages apart from the initial 4 that have been provided we will be relying on the community to contribute. 
+For any additional languages (except C#, Java, Javascript and Python 3) we will be relying on the community to contribute. 
 
-To submt a new language for the tournament the following will need to be provided :
+To submit a new language for the tournament the following will need to be provided :
 
 1. Starter Bot for that language
 	* These will follow the same basic rules that all other starter bots use (listed below).
