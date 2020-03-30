@@ -29,23 +29,23 @@ abstract class BaseCarGameCommand extends RawCommand {
         val futurePositionWithinAllBounds = getFuturePositionWithinBlockNumberBounds(futurePositionWithLaneBounds);
 
         //handle collisions with map objects (obstacles => pickups)
-        val playerHitMud = carGameMap.pathIncludesMud(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
-        if(playerHitMud) {
+        val playerHitMudCount = carGameMap.mudCountInPath(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
+        for(a <- 0 until playerHitMudCount) {
             carGamePlayer.hitMud();
         }
 
-        val playerHitOil = carGameMap.pathIncludesOilSpill(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds)
-        if (playerHitOil) {
+        val playerHitOilCount = carGameMap.oilSpillCountInPath(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds)
+        for (a <- 0 until playerHitOilCount) {
             carGamePlayer.hitOil()
         }
 
-        val playerPickedUpOilItem = carGameMap.pathIncludesOilItem(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
-        if(playerPickedUpOilItem) {
+        val playerPickedUpOilItemCount = carGameMap.oilItemCountInPath(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
+        for (a <- 0 until playerPickedUpOilItemCount) {
             carGamePlayer.pickupOilItem()
         }
 
-        val playerPickedUpBoost = carGameMap.pathIncludesBoost(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
-        if(playerPickedUpBoost) {
+        val playerPickedUpBoostCount = carGameMap.boostCountInPath(currentBlockThatHasBeenVacated, futurePositionWithinAllBounds);
+        for (a <- 0 until playerPickedUpBoostCount) {
             carGamePlayer.pickupBoost();
         }
 

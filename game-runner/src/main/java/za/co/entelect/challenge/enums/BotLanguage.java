@@ -26,5 +26,8 @@ public enum BotLanguage {
     SCALA,
 
     @SerializedName("rust")
-    RUST
+    RUST,
+
+    @SerializedName("LISP")
+    LISP
 }
