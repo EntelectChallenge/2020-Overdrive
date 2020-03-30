@@ -16,23 +16,23 @@ public class Bot {
     private List<Command> directionList = new ArrayList<>();
 
     private final Random random;
-    
+
     private final static Command ACCELERATE = new AccelerateCommand();
-    
+
     private final static Command TURN_RIGHT = new ChangeLaneCommand(1);
     private final static Command TURN_LEFT = new ChangeLaneCommand(-1);
 
-    public Bot( ) {
+    public Bot() {
         this.random = new SecureRandom();
         directionList.add(TURN_LEFT);
         directionList.add(TURN_RIGHT);
     }
 
     public Command run(GameState gameState) {
-    	Car myCar = gameState.player;
+        Car myCar = gameState.player;
         Car opponent = gameState.opponent;
-        
-        List<Object> blocks = getBlocksInFront(myCar.position.lane, myCar.position.block,gameState);
+
+        List<Object> blocks = getBlocksInFront(myCar.position.lane, myCar.position.block, gameState);
         if (blocks.contains(Terrain.MUD)) {
             int i = random.nextInt(directionList.size());
             return directionList.get(i);
@@ -41,10 +41,10 @@ public class Bot {
     }
 
     /**
-     * Returns map of blocks and the objects in the for the current lanes, returns the amount of blocks that can be
-     * traversed at max speed.
+     * Returns map of blocks and the objects in the for the current lanes, returns
+     * the amount of blocks that can be traversed at max speed.
      **/
-    private List<Object> getBlocksInFront(int lane, int block,GameState gameState) {
+    private List<Object> getBlocksInFront(int lane, int block, GameState gameState) {
         List<Lane[]> map = gameState.lanes;
         List<Object> blocks = new ArrayList<>();
         int startBlock = map.get(0)[0].position.block;
