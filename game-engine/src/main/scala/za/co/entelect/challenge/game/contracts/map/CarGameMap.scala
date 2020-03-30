@@ -205,22 +205,23 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
     val playersFuturePositionsAreSame = (player1FuturePosition.getLane() == player2FuturePosition.getLane()) && (player1FuturePosition.getBlockNumber() == player2FuturePosition.getBlockNumber())
 
-    val player1DroveIntoPlayer2 = (player1StagedPosition.getOldPosition().getLane() == player2StagedPosition.getOldPosition().getLane()) && //started off in the same lane
-      (player1StagedPosition.getOldPosition().getBlockNumber() < player2StagedPosition.getOldPosition().getBlockNumber()) && //player 1 was behind
-      (player1FuturePosition.getBlockNumber() >= player2FuturePosition.getBlockNumber()) && //player 1 ended up in front
-      (player1FuturePosition.getLane() == player2FuturePosition.getLane()) //in the same lane => player 2 got ridden over
+    val player1WasInSameLaneAsPlayer2 = (player1StagedPosition.getOldPosition().getLane() == player2StagedPosition.getOldPosition().getLane())
+    val player1WasBehindPlayer2 = (player1StagedPosition.getOldPosition().getBlockNumber() < player2StagedPosition.getOldPosition().getBlockNumber())
+    val player1EndedUpInFrontOfPlayer2 = (player1FuturePosition.getBlockNumber() >= player2FuturePosition.getBlockNumber())
+    val player1EndedUpInSameLaneAsPlayer2 = (player1FuturePosition.getLane() == player2FuturePosition.getLane())
+    val player1DroveIntoPlayer2 = player1WasInSameLaneAsPlayer2 && player1WasBehindPlayer2 && player1EndedUpInFrontOfPlayer2 && player1EndedUpInSameLaneAsPlayer2
 
-    val player2DroveIntoPlayer1 = (player2StagedPosition.getOldPosition().getLane() == player1StagedPosition.getOldPosition().getLane()) && //started off in the same lane
-      (player2StagedPosition.getOldPosition().getBlockNumber() < player1StagedPosition.getOldPosition().getBlockNumber()) && //player 2 was behind
-      (player2FuturePosition.getBlockNumber() >= player1FuturePosition.getBlockNumber()) && //player 2 ended up in front
-      (player2FuturePosition.getLane() == player1FuturePosition.getLane()) //in the same lane => player 1 got ridden over
+    val player2WasInSameLaneAsPlayer1 = (player2StagedPosition.getOldPosition().getLane() == player1StagedPosition.getOldPosition().getLane())
+    val player2WasBehindPlayer1 = (player2StagedPosition.getOldPosition().getBlockNumber() < player1StagedPosition.getOldPosition().getBlockNumber())
+    val player2EndedUpInFrontOfPlayer1 = (player2FuturePosition.getBlockNumber() >= player1FuturePosition.getBlockNumber())
+    val player2EndedUpInSameLaneAsPlayer1 = (player2FuturePosition.getLane() == player1FuturePosition.getLane())
+    val player2DroveIntoPlayer1 = player2WasInSameLaneAsPlayer1 && player2WasBehindPlayer1 && player2EndedUpInFrontOfPlayer1 && player2EndedUpInSameLaneAsPlayer1
 
     val isCollisionFromBehind = player1DroveIntoPlayer2 || player2DroveIntoPlayer1
 
     val isCollision = playersFuturePositionsAreSame || isCollisionFromBehind
 
-    if(!isCollision)
-    {
+    if(!isCollision) {
       return false
     }
 
