@@ -16,6 +16,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     Config.loadDefault();
     commandFactory = new CommandFactory;
     turnRightCommand = commandFactory.makeCommand(commandText)
+    turnRightCommand.setCommand(commandText)
   }
 
   test("Given start of race when TURN_RIGHT command then player turns right and incurs change lane penalty") {
@@ -23,7 +24,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
-    turnRightCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, turnRightCommand, turnRightCommand)
 
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
     val player1Position = carGameMap.getPlayerBlockPosition(testGamePlayer1.asInstanceOf[CarGamePlayer].getGamePlayerId());
@@ -44,7 +45,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, maxLane, newBlockNumberMidRace);
 
     val speedBeforeProcessingCommand = testCarGamePlayer1.getSpeed();
-    turnRightCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, turnRightCommand, turnRightCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == maxLane) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand - 1));
@@ -63,7 +64,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
     val speedBeforeProcessingCommand = testCarGamePlayer1.getSpeed();
-    turnRightCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, turnRightCommand, turnRightCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace+1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand - 1));
@@ -81,8 +82,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     val newBlockNumberMidRace = Config.TRACK_LENGTH - 4;
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
-    val speedBeforeProcessingCommand = testCarGamePlayer1.getSpeed();
-    turnRightCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, turnRightCommand, turnRightCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace+1) && (newPlayer1PositionAfterCommand.getBlockNumber() == Config.TRACK_LENGTH));
@@ -101,7 +101,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
     testCarGamePlayer1.speed = 0; //stop player
-    turnRightCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, turnRightCommand, turnRightCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace));
@@ -121,7 +121,7 @@ class Command_Turn_Right_Tests extends FunSuite{
     val newBlockNumberMidRace = 56;
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
-    turnRightCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, turnRightCommand, turnRightCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace+1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + Config.BOOST_SPEED - 1));

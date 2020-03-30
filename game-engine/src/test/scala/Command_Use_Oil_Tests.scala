@@ -15,6 +15,7 @@ class Command_Use_Oil_Tests extends FunSuite{
     Config.loadDefault();
     commandFactory = new CommandFactory;
     useOilCommand = commandFactory.makeCommand(commandText)
+    useOilCommand.setCommand(commandText)
   }
 
   test("Given player with no oil when USE_OIL command then nothing happens") {
@@ -25,7 +26,8 @@ class Command_Use_Oil_Tests extends FunSuite{
 
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
     val playerPositionBeforeCommand = carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId());
-    useOilCommand.performCommand(gameMap, testGamePlayer1);
+
+    TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
 
     val blockWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber()).get;
     assert(blockWherePlayerUsedToBe.mapObject != Config.OIL_SPILL_MAP_OBJECT);
@@ -40,7 +42,7 @@ class Command_Use_Oil_Tests extends FunSuite{
     testCarGamePlayer1.pickupOilItem();
     testCarGamePlayer1.pickupOilItem();
     testCarGamePlayer1.pickupOilItem();
-    useOilCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
 
     assert(testCarGamePlayer1.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) == 2);
   }
@@ -54,7 +56,7 @@ class Command_Use_Oil_Tests extends FunSuite{
     testCarGamePlayer1.pickupOilItem();
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
     val playerPositionBeforeCommand = carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId());
-    useOilCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
 
     val blockWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber()).get;
     assert(blockWherePlayerUsedToBe.mapObject == Config.OIL_SPILL_MAP_OBJECT);

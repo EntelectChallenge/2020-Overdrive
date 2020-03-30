@@ -21,6 +21,9 @@ class CarGameRoundProcessor extends GameRoundProcessor{
       var playerCommand: RawCommand = commandFactory.makeCommand(commandText);
       playerCommand.performCommand(gameMap, gamePlayer);
     }
+
+    carGameMap.resolvePlayerCollisions();
+    carGameMap.commitStagedPositions();
     return true;
   }
 

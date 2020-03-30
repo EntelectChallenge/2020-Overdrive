@@ -1,6 +1,9 @@
 package test;
 
-import za.co.entelect.challenge.game.contracts.game.{CarMapGenerator, GamePlayer}
+import java.util
+
+import za.co.entelect.challenge.game.contracts.command.RawCommand
+import za.co.entelect.challenge.game.contracts.game.{CarGameRoundProcessor, CarMapGenerator, GamePlayer}
 import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap, GameMap}
 import za.co.entelect.challenge.game.contracts.player.Player
 
@@ -63,5 +66,23 @@ object TestHelper {
       }
 
       return gameMap;
+  }
+
+  def processRound(gameMap: GameMap, player1Command: RawCommand, player2Command: RawCommand) = {
+
+    var commandsToProcess = collection.mutable.Map[GamePlayer, util.List[RawCommand]]()
+
+    var player1Commands = List[RawCommand]()
+    player1Commands = player1Commands.appended(player1Command)
+    commandsToProcess.addOne(getTestGamePlayer1(), player1Commands.asJava)
+
+    var player2Commands = List[RawCommand]()
+    player2Commands = player2Commands.appended(player2Command)
+    commandsToProcess.addOne(getTestGamePlayer2(), player2Commands.asJava)
+
+    val javaCommandsToProcess = commandsToProcess.asJava;
+
+    val carGameRoundProccessor: CarGameRoundProcessor = new CarGameRoundProcessor
+    carGameRoundProccessor.processRound(gameMap, javaCommandsToProcess)
   }
 }
