@@ -45,7 +45,7 @@ The surface object is defined by an enumerator. The value will be an integer in 
 
 The effects of these are defined in the game rules.
 
-### Console [*example*](assets/example-state/console.txt "An example of the console file")
+### Console [*example*](example-assets/console.txt "An example of the console file")
 
 * round → *The current game round*
 * player → *All the information about the given player. The data is the same as in the JSON file.*
@@ -56,5 +56,5 @@ The effects of these are defined in the game rules.
     * ▓ block has mud
     * » block contains a boost powerup
     * ║ block is the finish line
-    *  block contains an oil barral power up Φ
+    *  block contains an oil barrel power up Φ
     * █ block contains an oil spill obstacle
