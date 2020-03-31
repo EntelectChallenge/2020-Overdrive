@@ -4,7 +4,7 @@ import org.scalatest.FunSuite
 import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
-import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
+import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer}
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Nothing_Tests extends FunSuite{
@@ -16,13 +16,15 @@ class Command_Nothing_Tests extends FunSuite{
     Config.loadDefault();
     commandFactory = new CommandFactory;
     nothingCommand = commandFactory.makeCommand(commandText)
+    nothingCommand.setCommand(commandText)
   }
 
   test("Given players at start of race when NOTHING command then player moves forward at initial speed") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
     val player1Position = carGameMap.getPlayerBlockPosition(testGamePlayer1.asInstanceOf[CarGamePlayer].getGamePlayerId());
@@ -43,7 +45,8 @@ class Command_Nothing_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
     val speedBeforeProcessingCommand = testCarGamePlayer1.getSpeed();
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + speedBeforeProcessingCommand);
@@ -61,7 +64,7 @@ class Command_Nothing_Tests extends FunSuite{
     val newBlockNumberEndOfRace = Config.TRACK_LENGTH - 4;
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneEndOfRace, newBlockNumberEndOfRace);
 
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneEndOfRace && newPlayer1PositionAfterCommand.getBlockNumber() == Config.TRACK_LENGTH);
@@ -80,7 +83,8 @@ class Command_Nothing_Tests extends FunSuite{
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
     testCarGamePlayer1.speed = 0; //stop player
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace);
@@ -100,7 +104,7 @@ class Command_Nothing_Tests extends FunSuite{
     val newBlockNumberMidRace = 56;
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRace, newBlockNumberMidRace);
 
-    nothingCommand.performCommand(gameMap, testGamePlayer1);
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id);
     assert(newPlayer1PositionAfterCommand.getLane() == newLaneMidRace && newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + Config.BOOST_SPEED);

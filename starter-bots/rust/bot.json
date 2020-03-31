@@ -1,0 +1,8 @@
+{
+	"author":"Your Name Here",
+	"email":"your.email@here",
+	"nickName" :"Rusty",
+	"botLocation": "/target/release/",
+	"botFileName": "rust-starter-bot",
+	"botLanguage": "rust"
+}
