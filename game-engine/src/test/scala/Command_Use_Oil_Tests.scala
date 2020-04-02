@@ -7,15 +7,19 @@ import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Use_Oil_Tests extends FunSuite{
-  private val commandText = "USE_OIL";
+  private val nothingCommandText = "NOTHING"
+  private val useOilCommandText = "USE_OIL"
   private var commandFactory: CommandFactory = null
+  private var nothingCommand: RawCommand = null
   private var useOilCommand: RawCommand = null
 
   def initialise() = {
     Config.loadDefault();
     commandFactory = new CommandFactory;
-    useOilCommand = commandFactory.makeCommand(commandText)
-    useOilCommand.setCommand(commandText)
+    nothingCommand = commandFactory.makeCommand(nothingCommandText)
+
+    useOilCommand = commandFactory.makeCommand(useOilCommandText)
+    useOilCommand.setCommand(useOilCommandText)
   }
 
   test("Given player with no oil when USE_OIL command then nothing happens") {
@@ -42,6 +46,7 @@ class Command_Use_Oil_Tests extends FunSuite{
     testCarGamePlayer1.pickupOilItem();
     testCarGamePlayer1.pickupOilItem();
     testCarGamePlayer1.pickupOilItem();
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
     TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
 
     assert(testCarGamePlayer1.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) == 2);
@@ -55,10 +60,11 @@ class Command_Use_Oil_Tests extends FunSuite{
 
     testCarGamePlayer1.pickupOilItem();
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
     val playerPositionBeforeCommand = carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId());
     TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
 
-    val blockWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber()).get;
+    val blockWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber() - 1).get;
     assert(blockWherePlayerUsedToBe.mapObject == Config.OIL_SPILL_MAP_OBJECT);
   }
 

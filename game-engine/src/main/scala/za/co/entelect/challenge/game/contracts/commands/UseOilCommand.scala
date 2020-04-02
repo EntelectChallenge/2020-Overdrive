@@ -10,10 +10,11 @@ class UseOilCommand extends BaseCarGameCommand {
                                                                    currentPlayerPosition: BlockPosition):
   BlockPosition = {
     val futurePosition: BlockPosition = CommandHelper.getFuturePosition(carGamePlayer, currentPlayerPosition)
+    val blockToPlaceOil: BlockPosition = CommandHelper.getBlockToPlacePowerUp(carGamePlayer, currentPlayerPosition)
 
     if (carGamePlayer.hasOilItem) {
       carGamePlayer.useOilItem()
-      carGameMap.applyOilToBlock(currentPlayerPosition)
+      carGameMap.applyOilToBlock(blockToPlaceOil)
     }
     else {
       //TODO: report match issues

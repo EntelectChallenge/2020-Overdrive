@@ -72,11 +72,14 @@ class Bug_Tests extends FunSuite{
 
     testCarGamePlayer1.pickupOilItem()
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
-    val playerPositionBeforeCommand = carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId())
+
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val playerPositionBeforeCommand = carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId())
+
     TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
 
-    val blockWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber()).get
-    assert(blockWherePlayerUsedToBe.mapObject == Config.OIL_SPILL_MAP_OBJECT)
+    val blockBehindWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber()-1).get
+    assert(blockBehindWherePlayerUsedToBe.mapObject == Config.OIL_SPILL_MAP_OBJECT)
   }
 }
