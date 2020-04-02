@@ -27,8 +27,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     for (i <- 0 to (players.size() - 1)) {
       val gamePlayer = players.get(i).getGamePlayer();
       val carGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer];
-      if (carGamePlayer.getState() == Config.FINISHED_PLAYER_STATE)
-      {
+      if (carGamePlayer.getState() == Config.FINISHED_PLAYER_STATE) {
         winningPlayers.addOne(gamePlayer);
       }
     }
@@ -40,8 +39,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
       val firstPlayerAcrossTheLine = winningPlayers(0);
       return firstPlayerAcrossTheLine;
     }
-    else
-    {
+    else {
       val winnersSortedBySpeed = winningPlayers.sortBy(x => x.asInstanceOf[CarGamePlayer].getSpeed());
       val winnersWithTheHighestSpeed = winnersSortedBySpeed.filter(x => x.asInstanceOf[CarGamePlayer].getSpeed() == winnersSortedBySpeed.last.asInstanceOf[CarGamePlayer].getSpeed());
       val fastestPlayerWithHighestScore = winnersWithTheHighestSpeed.sortBy(x => x.getScore()).last;
@@ -89,7 +87,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def getGamePlayers(): Array[GamePlayer] = {
     var gamePlayers = new Array[GamePlayer](players.size());
-    for ( i <- 0 to (players.size() - 1)) {
+    for (i <- 0 to (players.size() - 1)) {
       val player = players.get(i);
       val gamePlayer = player.getGamePlayer();
       gamePlayers(i) = gamePlayer;
@@ -99,7 +97,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def getCarGamePlayers(): Array[CarGamePlayer] = {
     var carGamePlayers = new Array[CarGamePlayer](players.size());
-    for ( i <- 0 to (players.size() - 1)) {
+    for (i <- 0 to (players.size() - 1)) {
       val player = players.get(i);
       val gamePlayer = player.getGamePlayer();
       val carGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer];
@@ -157,7 +155,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val blocksWithObject =
       blocks.find(x =>
         (x.getPosition().getLane() == endLane && x.getPosition().getBlockNumber() >= startBlockNumber && x.getPosition().getBlockNumber() <= endBlockNumber)
-            &&
+          &&
           x.getMapObject() == mapObject
       );
     val pathIncludesObject = blocksWithObject.isDefined;
@@ -169,11 +167,11 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     val startBlockNumber = startPosition.getBlockNumber();
     val endLane = endPosition.getLane();
     val endBlockNumber = endPosition.getBlockNumber();
-    val blocksWithObject = blocks.count(b => (b.getPosition().getLane() == endLane 
-                                               && b.getPosition().getBlockNumber() >= startBlockNumber 
-                                               && b.getPosition().getBlockNumber() <= endBlockNumber)
-                                           && b.getMapObject() == mapObject
-      );
+    val blocksWithObject = blocks.count(b => (b.getPosition().getLane() == endLane
+      && b.getPosition().getBlockNumber() >= startBlockNumber
+      && b.getPosition().getBlockNumber() <= endBlockNumber)
+      && b.getMapObject() == mapObject
+    );
     return blocksWithObject;
   }
 
@@ -192,7 +190,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     blocks.find(x => x.getPosition().getLane() == lane && x.getPosition().getBlockNumber() == blockNumber).get.mapObject = mapObject;
   }
 
-  def stageFuturePosition(stagedPosition: StagedPosition) ={
+  def stageFuturePosition(stagedPosition: StagedPosition) = {
     stagedFuturePositions = stagedFuturePositions.appended(stagedPosition);
   }
 
@@ -221,13 +219,12 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
     val isCollision = playersFuturePositionsAreSame || isCollisionFromBehind
 
-    if(!isCollision) {
+    if (!isCollision) {
       return false
     }
 
-    if(isCollisionFromBehind)
-    {
-      val stagedPositionOfPlayerInFront = if(player1DroveIntoPlayer2) player2StagedPosition
+    if (isCollisionFromBehind) {
+      val stagedPositionOfPlayerInFront = if (player1DroveIntoPlayer2) player2StagedPosition
       else player1StagedPosition
 
       val stagedPositionOfPlayerCollidingFromBehind = stagedFuturePositions.find(x => x != stagedPositionOfPlayerInFront).get
@@ -240,8 +237,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     }
 
     val collisionFromTheSide = playersFuturePositionsAreSame
-    if(collisionFromTheSide)
-    {
+    if (collisionFromTheSide) {
       val correctedPlayer1Lane = player1StagedPosition.getOldPosition().getLane()
       val correctedPlayer1BlockNumber = player1FuturePosition.getBlockNumber() - 1
       val correctedPlayer1FuturePosition = new BlockPosition(correctedPlayer1Lane, correctedPlayer1BlockNumber)
@@ -264,22 +260,24 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def handlePostCommandLogic(carGamePlayer: CarGamePlayer, newPosition: BlockPosition, oldPosition: BlockPosition) = {
     //handle collisions with map objects (obstacles => pickups)
-    val playerHitMudCount = mudCountInPath(oldPosition, newPosition);
-    for(a <- 0 until playerHitMudCount) {
+    val positionToStartCountingMud = findPositionToStartCountingColisionsFrom(oldPosition)
+    val playerHitMudCount = mudCountInPath(positionToStartCountingMud, newPosition)
+
+    for (a <- 0 until playerHitMudCount) {
       carGamePlayer.hitMud();
     }
 
-    val playerHitOilCount = oilSpillCountInPath(oldPosition, newPosition)
+    val playerHitOilCount = oilSpillCountInPath(positionToStartCountingMud, newPosition)
     for (a <- 0 until playerHitOilCount) {
       carGamePlayer.hitOil()
     }
 
-    val playerPickedUpOilItemCount = oilItemCountInPath(oldPosition, newPosition);
+    val playerPickedUpOilItemCount = oilItemCountInPath(positionToStartCountingMud, newPosition);
     for (a <- 0 until playerPickedUpOilItemCount) {
       carGamePlayer.pickupOilItem()
     }
 
-    val playerPickedUpBoostCount = boostCountInPath(oldPosition, newPosition);
+    val playerPickedUpBoostCount = boostCountInPath(positionToStartCountingMud, newPosition);
     for (a <- 0 until playerPickedUpBoostCount) {
       carGamePlayer.pickupBoost();
     }
@@ -290,5 +288,10 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     if (newPosition.getBlockNumber() == Config.TRACK_LENGTH) {
       carGamePlayer.finish();
     }
+  }
+
+  private def findPositionToStartCountingColisionsFrom(oldPosition: BlockPosition): BlockPosition = {
+    val positionToStartCountingMud: BlockPosition = new BlockPosition(oldPosition.getLane(), oldPosition.getBlockNumber() + 1)
+    positionToStartCountingMud
   }
 }
