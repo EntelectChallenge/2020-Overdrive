@@ -47,7 +47,7 @@ class Command_Use_Oil_Tests extends FunSuite{
     assert(testCarGamePlayer1.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) == 2);
   }
 
-  test("Given player with oil when USE_OIL command then oil spill is left where player was") {
+  test("Given player with oil when USE_OIL command then oil spill is left one block behind where the player was") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
