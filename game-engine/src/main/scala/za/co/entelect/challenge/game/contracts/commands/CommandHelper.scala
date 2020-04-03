@@ -10,4 +10,9 @@ object CommandHelper {
     new BlockPosition(currentPlayerPosition.getLane(), futureBlockNumber)
   }
 
+  def getBlockToPlacePowerUp(carGamePlayer: CarGamePlayer, currentPlayerPosition: BlockPosition): BlockPosition = {
+    val blockToPlacePowerup = currentPlayerPosition.getBlockNumber() - 1
+    new BlockPosition(currentPlayerPosition.getLane(), blockToPlacePowerup)
+  }
+
 }
