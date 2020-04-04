@@ -154,3 +154,21 @@ For example the Java sample bot has the following structure:
 			|--- DoNothingCommand.java
 			|--- OilCommand.java
 ```
+
+## Building
+For convenience a build file has been supplied which will compile the
+game engine and the game runner.  You can invoke this build with the
+following command (from the root of this project):
+
+```bash
+make
+```
+
+It also copies the jars to their correct locations so that you can run
+the game from the game runner directory with the following commands
+(remember to set `tournamentMode` to `false`.):
+
+```bash
+cd game-runner
+make run
+```

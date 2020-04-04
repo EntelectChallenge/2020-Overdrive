@@ -78,6 +78,12 @@
             <artifactId>azure-storage</artifactId>
             <version>${azure.storage.version}</version>
         </dependency>
+        <dependency>
+            <groupId>za.co.entelect</groupId>
+            <artifactId>game-engine_2.13</artifactId>
+            <version>0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
