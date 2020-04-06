@@ -11,12 +11,12 @@ import scala.collection.JavaConverters._
 
 object TestHelper {
   private val seed = 12;
-  private val carMapGenerator = new CarMapGenerator(seed);
+  private var carMapGenerator = new CarMapGenerator(seed);
 
   private val testPlayer1 = new TestPlayer("Test Player A");
   private val testPlayer2 = new TestPlayer("Test Player B");
 
-  def putPlayerSomewhereOnTheTrack(carGameMap: CarGameMap, testCarGamePlayerId: Int, newLane: Int, newBlockNumber:Int) = {
+  def putPlayerSomewhereOnTheTrack(carGameMap: CarGameMap, testCarGamePlayerId: Int, newLane: Int, newBlockNumber: Int) = {
     val player1Position = carGameMap.getPlayerBlockPosition(testCarGamePlayerId);
     carGameMap.vacateBlock(player1Position);
     val newPositionMidRace = new BlockPosition(newLane, newBlockNumber);
@@ -31,13 +31,13 @@ object TestHelper {
     return testPlayer1.getGamePlayer();
   }
 
-   def initialiseGameWithNoMapObjects(): GameMap = {
+  def initialiseGameWithNoMapObjects(): GameMap = {
     val testPlayers = new Array[Player](2);
     testPlayers(0) = testPlayer1;
     testPlayers(1) = testPlayer2;
     val testPlayersJava = testPlayers.toList.asJava;
     val gameMap = carMapGenerator.generateGameMap(testPlayersJava);
-     gameMap.asInstanceOf[CarGameMap].makeAllBlocksEmpty();
+    gameMap.asInstanceOf[CarGameMap].makeAllBlocksEmpty();
 
     return gameMap;
   }
@@ -55,17 +55,29 @@ object TestHelper {
   }
 
   def initialiseGameWithMultipleSameMapObjectsAt(lane: Int, blockNumbers: Array[Int], mapObject: Int): GameMap = {
-      val testPlayers = new Array[Player](2);
-      testPlayers(0) = testPlayer1;
-      testPlayers(1) = testPlayer2;
-      val testPlayersJava = testPlayers.toList.asJava;
-      val gameMap = carMapGenerator.generateGameMap(testPlayersJava);
-      gameMap.asInstanceOf[CarGameMap].makeAllBlocksEmpty();
-      for (blockNumber <- blockNumbers) {
-          gameMap.asInstanceOf[CarGameMap].placeObjectAt(lane, blockNumber, mapObject);
-      }
+    val testPlayers = new Array[Player](2);
+    testPlayers(0) = testPlayer1;
+    testPlayers(1) = testPlayer2;
+    val testPlayersJava = testPlayers.toList.asJava;
+    val gameMap = carMapGenerator.generateGameMap(testPlayersJava);
+    gameMap.asInstanceOf[CarGameMap].makeAllBlocksEmpty();
+    for (blockNumber <- blockNumbers) {
+      gameMap.asInstanceOf[CarGameMap].placeObjectAt(lane, blockNumber, mapObject);
+    }
 
-      return gameMap;
+    return gameMap;
+  }
+
+  def initialiseMapWithSeed(seed: Int): GameMap =
+  {
+    val testPlayers = new Array[Player](2);
+    testPlayers(0) = testPlayer1;
+    testPlayers(1) = testPlayer2;
+    val testPlayersJava = testPlayers.toList.asJava;
+    carMapGenerator = new CarMapGenerator(seed);
+    val gameMap = carMapGenerator.generateGameMap(testPlayersJava);
+
+    return gameMap.asInstanceOf[CarGameMap];
   }
 
   def processRound(gameMap: GameMap, player1Command: RawCommand, player2Command: RawCommand) = {

@@ -1,10 +1,13 @@
+import java.io.{BufferedWriter, File, FileWriter}
+
 import org.scalatest.FunSuite
 import test.TestHelper
 import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
-import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer}
+import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
+import za.co.entelect.challenge.game.contracts.renderer.CarGameRendererFactory
 
 class Bug_Tests extends FunSuite{
   private val nothingCommandText = "NOTHING"
@@ -81,5 +84,33 @@ class Bug_Tests extends FunSuite{
 
     val blockBehindWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber()-1).get
     assert(blockBehindWherePlayerUsedToBe.mapObject == Config.OIL_SPILL_MAP_OBJECT)
+  }
+
+  test("Given the same seed when generating the map then the same map is generated")
+  {
+    initialise()
+
+    val testSeed = 3045
+    val gameMap1 = TestHelper.initialiseMapWithSeed(testSeed)
+    val carGameMap1 = gameMap1.asInstanceOf[CarGameMap]
+    val carGameMap1Blocks = carGameMap1.getBlocks()
+
+    val gameMap2 = TestHelper.initialiseMapWithSeed(testSeed)
+    val carGameMap2 = gameMap2.asInstanceOf[CarGameMap]
+    val carGameMap2Blocks = carGameMap2.getBlocks()
+
+    val maxLane = 4;
+
+    val carGameRendererFactory = new CarGameRendererFactory;
+    val jsonRenderer = carGameRendererFactory.makeJsonRenderer();
+    val gameMap1Json = jsonRenderer.render(gameMap1, null);
+
+    for(blockNumber <- 0 until Config.TRACK_LENGTH-1) {
+        for(lane <- 0 until maxLane-1) {
+            val indexOfInterest = lane*Config.TRACK_LENGTH + blockNumber;
+            assert(carGameMap1Blocks(indexOfInterest).occupiedByPlayerWithId == carGameMap2Blocks(indexOfInterest).occupiedByPlayerWithId, "At: " + (lane+1) + " , " + (blockNumber+1) + " Blocks not occupied by same player")
+            assert(carGameMap1Blocks(indexOfInterest).mapObject == carGameMap2Blocks(indexOfInterest).mapObject, "At: " + (lane+1) + " , " + (blockNumber+1) + " Blocks don't have same map object")
+          }
+      }
   }
 }
