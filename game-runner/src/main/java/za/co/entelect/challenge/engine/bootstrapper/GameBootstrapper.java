@@ -19,6 +19,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.config.TournamentConfig;
+import za.co.entelect.challenge.engine.loader.GameEngineClassLoader;
 import za.co.entelect.challenge.engine.runner.GameEngineRunner;
 import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper;
@@ -30,7 +31,6 @@ import za.co.entelect.challenge.player.bootstrapper.PlayerBootstrapper;
 import za.co.entelect.challenge.renderer.RendererResolver;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
 import za.co.entelect.challenge.utils.ZipUtils;
-import za.co.entelect.challenge.game.contracts.bootstrapper.CarGameBootstrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +74,8 @@ public class GameBootstrapper {
             List<Player> players = playerBootstrapper.loadPlayers(gameRunnerConfig);
 
             // Class load the game engine bootstrapper. This is the entry point for the runner into the engine
-            GameEngineBootstrapper gameEngineBootstrapper = new CarGameBootstrapper();
+            GameEngineClassLoader gameEngineClassLoader = new GameEngineClassLoader();
+            GameEngineBootstrapper gameEngineBootstrapper = gameEngineClassLoader.loadEngineObject(GameEngineBootstrapper.class);
             gameEngineBootstrapper.setConfigPath(gameRunnerConfig.gameConfigFileLocation);
             gameEngineBootstrapper.setSeed(gameRunnerConfig.seed);
 
