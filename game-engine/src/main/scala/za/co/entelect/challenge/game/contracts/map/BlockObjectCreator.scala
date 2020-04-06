@@ -15,7 +15,7 @@ class BlockObjectCreator() {
     mapObjects.put(mapObjects.lastKey + (Config.OIL_ITEM_GENERATION_PERCENTAGE * 0.01), Config.OIL_ITEM_MAP_OBJECT)
     mapObjects.put(1.0, Config.EMPTY_MAP_OBJECT)
 
-    val (_, value) = mapObjects.minAfter(Math.random).get
+    val (_, value) = mapObjects.minAfter(randomNumberGenerator.nextDouble).get
     value
   }
 
