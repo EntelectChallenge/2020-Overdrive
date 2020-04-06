@@ -13,7 +13,7 @@ clean-runner:
 
 .POHNY: engine
 engine:
-	cd game-engine && sbt publishM2
+	cd game-engine && sbt assembly
 
 .PHONY: runner
 runner:
@@ -22,3 +22,7 @@ runner:
 .PHONY: copy-jar
 copy-jar:
 	cp game-engine/target/scala-2.13/game-engine-jar-with-dependencies-0.1.jar game-runner/game-engine.jar
+
+.PHONY: compile-and-run
+compile-and-run: default
+	cd game-runner && make run
