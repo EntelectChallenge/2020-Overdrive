@@ -30,7 +30,8 @@ To submit a new language for the tournament the following will need to be provid
 3. A Docker container with environment for the language setup
 	* Details on how to create the docker container will be added shortly.
 
-Submissions for additional languages will close on **TBH**, after which no more starter bot or language requests will be accepted.
+Submissions for additional languages will close on 18th of April (2 weeks before the first challenge to allow the new bot to be merged), 
+after which no more starter bot or language requests will be accepted.
 
 When submitting a new starter bot, a Pull Request to **this** repository needs to made. The Entelect Challenge team will then review the starter bot code as well as test the Docker container. Please ensure the `Dockerfile` is located in the **same** folder as the starter bot. In other words, the pull request will consist of the following files, in the **same** folder:
 - Starter bot source code
@@ -56,9 +57,9 @@ The bot itself needs to follow some basic rules:
 
 ## Building the Docker Containers
 
-This year all bots will run within their own docker containers. To faciliate this, the submission of a new language for the tournament will also require a docker container that will support the running and compiling of the language.
+This year all bots will run within their own docker containers. To facilitate this, the submission of a new language for the tournament will also require a docker container that will support the running and compiling of the language.
 		
-### More detailed information to follow shortly.
+### More detailed information to follow shortly. Currently refer to the 2019 readme for some general guidance.
 
 Once your starter bot and docker container has been created. Create a pull request on github with the starter bot as well as the relevant docker container.
-If you require any assistance building the continers please feel free to contact us at challenge@entelect.co.za.
+If you require any assistance building the containers please feel free to contact us at challenge@entelect.co.za.
