@@ -51,7 +51,6 @@ public class GameBootstrapper {
     private AzureBlobStorageService blobService;
 
     public static void main(String[] args) throws Exception {
-        setupSystemClassloader();
         new GameBootstrapper().run();
     }
 
@@ -75,7 +74,7 @@ public class GameBootstrapper {
             List<Player> players = playerBootstrapper.loadPlayers(gameRunnerConfig);
 
             // Class load the game engine bootstrapper. This is the entry point for the runner into the engine
-            GameEngineClassLoader gameEngineClassLoader = new GameEngineClassLoader(gameRunnerConfig.gameEngineJar);
+            GameEngineClassLoader gameEngineClassLoader = new GameEngineClassLoader();
             GameEngineBootstrapper gameEngineBootstrapper = gameEngineClassLoader.loadEngineObject(GameEngineBootstrapper.class);
             gameEngineBootstrapper.setConfigPath(gameRunnerConfig.gameConfigFileLocation);
             gameEngineBootstrapper.setSeed(gameRunnerConfig.seed);
@@ -200,12 +199,5 @@ public class GameBootstrapper {
                 LOGGER.error("Error notifying failure", e);
             }
         }
-    }
-
-    private static void setupSystemClassloader() throws Exception {
-        Field scl = ClassLoader.class.getDeclaredField("scl");
-        scl.setAccessible(true);
-        scl.set(null, new URLClassLoader(new URL[0]));
-        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0], ClassLoader.getSystemClassLoader()));
     }
 }
