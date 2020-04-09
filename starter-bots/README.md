@@ -81,8 +81,6 @@ This year all bots will run within their own docker containers. To facilitate th
 * Base : stretch
 * Contains :
 	* Python 3.7.1
-		
-### More detailed information to follow shortly. Currently refer to the 2019 readme for some general guidance.
 
 Once your starter bot and docker container has been created. Create a pull request on github with the starter bot as well as the relevant docker container.
 If you require any assistance building the containers please feel free to contact us at challenge@entelect.co.za.
