@@ -58,6 +58,29 @@ The bot itself needs to follow some basic rules:
 ## Building the Docker Containers
 
 This year all bots will run within their own docker containers. To facilitate this, the submission of a new language for the tournament will also require a docker container that will support the running and compiling of the language.
+
+### Creating the Docker Container:
+1. Install Docker Desktop CE
+2. Ensure your Docker Desktop is setup to run Linux Containers.
+	* https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers
+3. Pull the base container
+    * You will need to use entelectchallenge/base:2019 for the base of the container, for 2020 we are using the same base container as in 2019.
+        * So in the Dockerfile, the first line should be "ROM entelectchallenge/base:2019"
+4. Start with the example Dockerfile provided.
+5. Thereafter install the requirements for the language.
+6. Ensure the stater bot can run within the container.
+7. Ensure the docker contains all the commands necessary to install any dependencies the bot has and compile the bot.
+
+### Reference Material:
+1. Reference guide to building a docker container
+	* https://docs.docker.com/engine/reference/builder/
+2. Overall guide to Docker
+	* https://docker-curriculum.com/
+
+### Base Container Details :
+* Base : stretch
+* Contains :
+	* Python 3.7.1
 		
 ### More detailed information to follow shortly. Currently refer to the 2019 readme for some general guidance.
 
