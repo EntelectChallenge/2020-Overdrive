@@ -6,11 +6,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Appender;
-import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
-import org.apache.logging.log4j.core.appender.HttpAppender;
-import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import retrofit2.Call;
@@ -36,10 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,7 +44,6 @@ public class GameBootstrapper {
     private AzureBlobStorageService blobService;
 
     public static void main(String[] args) throws Exception {
-        setupSystemClassloader();
         new GameBootstrapper().run();
     }
 
@@ -200,12 +192,5 @@ public class GameBootstrapper {
                 LOGGER.error("Error notifying failure", e);
             }
         }
-    }
-
-    private static void setupSystemClassloader() throws Exception {
-        Field scl = ClassLoader.class.getDeclaredField("scl");
-        scl.setAccessible(true);
-        scl.set(null, new URLClassLoader(new URL[0]));
-        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0], ClassLoader.getSystemClassLoader()));
     }
 }
