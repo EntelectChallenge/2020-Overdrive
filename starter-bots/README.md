@@ -65,7 +65,7 @@ This year all bots will run within their own docker containers. To facilitate th
 	* https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers
 3. Pull the base container
     * You will need to use entelectchallenge/base:2019 for the base of the container, for 2020 we are using the same base container as in 2019.
-        * So in the Dockerfile, the first line should be "ROM entelectchallenge/base:2019"
+        * So in the Dockerfile, the first line should be "FROM entelectchallenge/base:2019"
 4. Start with the example Dockerfile provided.
 5. Thereafter install the requirements for the language.
 6. Ensure the stater bot can run within the container.
