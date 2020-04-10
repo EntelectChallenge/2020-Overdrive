@@ -5,7 +5,7 @@
   "verbose-mode": true,
   "max-runtime-ms": 1000,
   "player-a": "./starter-bots/javascript",
-  "player-b": "./reference-bot/javascript",
+  "player-b": "./reference-bot/java",
   "max-request-retries": 10,
   "request-timeout-ms": 5000,
   "is-tournament-mode": false,
