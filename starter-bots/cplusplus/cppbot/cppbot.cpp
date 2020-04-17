@@ -28,9 +28,7 @@ SurfaceObject GetObjectAt(rapidjson::Document& roundJSON, POINT point)
   for (rapidjson::Value::ConstValueIterator rowItr = roundJSON["worldMap"].Begin(); rowItr != roundJSON["worldMap"].End(); ++rowItr) {
     for (rapidjson::Value::ConstValueIterator colItr = (*rowItr).Begin(); colItr != (*rowItr).End(); ++colItr) {
 
-        POINT thisPos{(*colItr)["position"]["x"].GetInt(), (*colItr)["position"]["y"].GetInt()};
-
-        if(thisPos.x == point.x && thisPos.y == point.y) {
+        if ((*colItr)["position"]["x"].GetInt() == point.x && (*colItr)["position"]["y"].GetInt() == point.y) {
           int obj_int = (*colItr)["surfaceObject"].GetInt();
           SurfaceObject obj = static_cast<SurfaceObject>(obj_int);
           return obj;
