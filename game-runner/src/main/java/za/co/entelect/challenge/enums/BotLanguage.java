@@ -29,5 +29,8 @@ public enum BotLanguage {
     RUST,
 
     @SerializedName("LISP")
-    LISP
+    LISP,
+
+    @SerializedName("golang")
+    GOLANG
 }
