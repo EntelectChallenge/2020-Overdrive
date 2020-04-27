@@ -260,7 +260,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
   def handlePostCommandLogic(carGamePlayer: CarGamePlayer, newPosition: BlockPosition, oldPosition: BlockPosition) = {
     //handle collisions with map objects (obstacles => pickups)
-    val positionToStartCountingMud = findPositionToStartCountingColisionsFrom(oldPosition)
+    val positionToStartCountingMud = findPositionToStartCountingColisionsFrom(oldPosition, newPosition)
     val playerHitMudCount = mudCountInPath(positionToStartCountingMud, newPosition)
 
     for (a <- 0 until playerHitMudCount) {
@@ -290,8 +290,10 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     }
   }
 
-  private def findPositionToStartCountingColisionsFrom(oldPosition: BlockPosition): BlockPosition = {
-    val positionToStartCountingMud: BlockPosition = new BlockPosition(oldPosition.getLane(), oldPosition.getBlockNumber() + 1)
-    positionToStartCountingMud
+  private def findPositionToStartCountingColisionsFrom(oldPosition: BlockPosition, newPosition: BlockPosition): BlockPosition = {
+    if (oldPosition.getLane() == newPosition.getLane())
+      new BlockPosition(oldPosition.getLane(), oldPosition.getBlockNumber() + 1)
+    else
+      new BlockPosition(oldPosition.getLane(), oldPosition.getBlockNumber())
   }
 }
