@@ -74,5 +74,7 @@
     "PICKUP_POWERUP_BONUS": 4,
     "USE_POWERUP_BONUS": 4,
 	
-	"csvSeparator": ","
+	"csvSeparator": ",",
+
+    "RACER_PLACEMENT_SORTING": 1
 }

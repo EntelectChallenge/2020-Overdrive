@@ -81,7 +81,9 @@ case class GameEngineConfig
   PICKUP_POWERUP_BONUS: Int,
   USE_POWERUP_BONUS: Int,
 
-  csvSeparator: String
+  csvSeparator: String,
+
+  RACER_PLACEMENT_SORTING: Int
 )
 
 object Config {
@@ -177,4 +179,6 @@ object Config {
     def HIT_OIL_SCORE_PENALTY: Int = ConfigFileValues.HIT_OIL_SCORE_PENALTY
     def PICKUP_POWERUP_BONUS: Int = ConfigFileValues.PICKUP_POWERUP_BONUS
     def USE_POWERUP_BONUS: Int = ConfigFileValues.USE_POWERUP_BONUS
+
+    def RACER_PLACEMENT_SORTING: Int = ConfigFileValues.RACER_PLACEMENT_SORTING
 }
