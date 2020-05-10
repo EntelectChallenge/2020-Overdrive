@@ -15,15 +15,18 @@ class CarGameRoundProcessor extends GameRoundProcessor{
     val carGameMap = gameMap.asInstanceOf[CarGameMap];
     val gamePlayers = carGameMap.getGamePlayers();
     val commandFactory = new CommandFactory;
-    for ( i <- 0 to (gamePlayers.length - 1)) {
+    for ( i <- gamePlayers.indices) {
       val gamePlayer = gamePlayers(i);
-      val commandText = commandsToProcess.get(gamePlayer).get(0).getCommand();
+      val commandText = commandsToProcess.get(gamePlayer).get(0).getCommand;
       var playerCommand: RawCommand = commandFactory.makeCommand(commandText);
       playerCommand.performCommand(gameMap, gamePlayer);
     }
 
+    carGameMap.resolveCyberTruckCollisions(); //needs to happen first because projected path of player is used in player collisions
     carGameMap.resolvePlayerCollisions();
-    carGameMap.commitStagedPositions();
+    carGameMap.calculateEffectsOfAndApplyStagedPositionsToPlayers();
+
+    carGameMap.placeRequestedCyberTrucks();
     return true;
   }
 

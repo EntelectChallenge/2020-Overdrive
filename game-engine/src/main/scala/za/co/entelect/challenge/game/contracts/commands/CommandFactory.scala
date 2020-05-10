@@ -15,9 +15,12 @@ class CommandFactory {
 
     private val USE_BOOST = Config.USE_BOOST_COMMAND;
     private val USE_OIL = Config.USE_OIL_COMMAND
+    private val USE_LIZARD = Config.USE_LIZARD_COMMAND;
+    private val USE_TWEET = Config.USE_TWEET_COMMAND;
 
     def makeCommand(commandText: String): RawCommand = {
-        val commandHeader = commandText.toUpperCase();
+        val fullCommand = commandText.toUpperCase().split(" ");
+        val commandHeader = fullCommand(0);
         commandHeader match {
           case NO_COMMAND  => return defaultToNothingCommand("Bot did nothing");
           case NOTHING => return makeNothingCommand();
@@ -26,8 +29,10 @@ class CommandFactory {
           case ACCELERATE => return makeAccelerateCommand();
           case DECELERATE => return makeDecelerateCommand();
           case USE_BOOST => return makeUseBoostCommand();
-          case USE_OIL => makeUseOilCommand();
-          case invalidCommandType  => return defaultToNothingCommand("Bot sent invalid command: " + invalidCommandType.toString())
+          case USE_OIL => return makeUseOilCommand();
+          case USE_LIZARD => return makeUseLizardCommand();
+          case USE_TWEET => return makeUseTweetCommand(fullCommand);
+          case invalidCommandType  => return defaultToNothingCommand("Bot sent invalid command: " + invalidCommandType.toString());
       }
     }
 
@@ -62,6 +67,39 @@ class CommandFactory {
         return new UseBoostCommand;
     }
 
-    private def makeUseOilCommand(): RawCommand = new UseOilCommand
+    private def makeUseOilCommand(): RawCommand = {
+        return new UseOilCommand
+    }
+
+    private def makeUseLizardCommand(): RawCommand = {
+         return new UseLizardCommand
+    }
+
+    private def makeUseTweetCommand(fullCommand: Array[String]): RawCommand =
+    {
+      if(fullCommand.length < 3)
+      {
+        return defaultToNothingCommand("Not all arguments provided for tweet command");
+      }
+      var lane: Int = 0;
+      var block: Int = 0;
+      try {
+        lane = fullCommand(1).toInt
+        block = fullCommand(2).toInt
+      } catch {
+        case e: Exception => return defaultToNothingCommand("Invalid land and block values for tweet command");
+      }
+
+      if(lane < Config.MIN_LANE || lane > Config.MAX_LANE)
+      {
+        return defaultToNothingCommand("Lane for TWEET command out of bounds");
+      }
+      if(block < 1 || block > Config.TRACK_LENGTH)
+      {
+        return defaultToNothingCommand("Block for TWEET command out of bounds");
+      }
+
+      return new UseTweetCommand(lane, block);
+    }
 
 }

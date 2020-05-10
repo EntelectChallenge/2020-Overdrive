@@ -33,7 +33,7 @@ class Command_Use_Boost_Tests extends FunSuite{
 
     TestHelper.processRound(gameMap, useBoostCommand, useBoostCommand)
 
-    assert(testCarGamePlayer1.isBoosting() == false);
+    assert(!testCarGamePlayer1.isBoosting());
     assert(testCarGamePlayer1.speed != Config.BOOST_SPEED);
   }
 
@@ -49,7 +49,7 @@ class Command_Use_Boost_Tests extends FunSuite{
 
     TestHelper.processRound(gameMap, useBoostCommand, useBoostCommand)
 
-    assert(testCarGamePlayer1.isBoosting() == true);
+    assert(testCarGamePlayer1.isBoosting());
     assert(testCarGamePlayer1.getPowerups().count(x => x == Config.BOOST_POWERUP_ITEM) == 2);
   }
 
@@ -63,7 +63,7 @@ class Command_Use_Boost_Tests extends FunSuite{
 
     TestHelper.processRound(gameMap, useBoostCommand, useBoostCommand)
 
-    assert(testCarGamePlayer1.isBoosting() == true);
+    assert(testCarGamePlayer1.isBoosting());
     assert(testCarGamePlayer1.speed == Config.BOOST_SPEED);
   }
 
@@ -97,7 +97,7 @@ class Command_Use_Boost_Tests extends FunSuite{
     testCarGamePlayer1.tickBoost();
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
-    assert(testCarGamePlayer1.isBoosting() == false);
+    assert(!testCarGamePlayer1.isBoosting());
     assert(testCarGamePlayer1.speed != Config.BOOST_SPEED);
   }
 }
