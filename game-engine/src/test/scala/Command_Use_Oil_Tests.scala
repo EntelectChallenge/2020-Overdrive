@@ -52,7 +52,7 @@ class Command_Use_Oil_Tests extends FunSuite{
     assert(testCarGamePlayer1.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) == 2);
   }
 
-  test("Given player with oil when USE_OIL command then oil spill is left one block behind where the player was") {
+  test("Given player with oil when USE_OIL command then oil spill is left beneath the player") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects();
     val testGamePlayer1 = TestHelper.getTestGamePlayer1();
@@ -64,8 +64,50 @@ class Command_Use_Oil_Tests extends FunSuite{
     val playerPositionBeforeCommand = carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId());
     TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
 
-    val blockWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber() - 1).get;
+    val blockWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber()).get;
     assert(blockWherePlayerUsedToBe.mapObject == Config.OIL_SPILL_MAP_OBJECT);
+  }
+
+  test("Given player with oil when USE_OIL command then player is not affected by their own oil spill") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+
+    testCarGamePlayer1.pickupOilItem();
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
+
+    assert(testCarGamePlayer1.getState() == Config.USED_POWERUP_OIL_PLAYER_STATE);
+    assert(testCarGamePlayer1.getSpeed() == Config.INITIAL_SPEED);
+  }
+
+  test("Given player with oil and enemy in block right behind when use oil then enemy is affected by oil") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects();
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2 //should be 6
+    val newLaneMidRacePlayer1 = 2
+    val newBlockNumberMidRacePlayer1 = 35
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_2 //should be 6
+    val newLaneMidRacePlayer2 = 2
+    val newBlockNumberMidRacePlayer2 = 34
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    testCarGamePlayer1.pickupOilItem();
+    TestHelper.processRound(gameMap, useOilCommand, nothingCommand)
+
+    assert(testCarGamePlayer2.getState() == Config.HIT_OIL_PLAYER_STATE);
+    assert(testCarGamePlayer2.getSpeed() == Config.SPEED_STATE_1);
   }
 
 }

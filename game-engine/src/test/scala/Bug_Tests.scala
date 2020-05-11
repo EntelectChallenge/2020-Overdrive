@@ -67,25 +67,6 @@ class Bug_Tests extends FunSuite{
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_2)
   }
 
-  test("Given player with oil when USE_OIL command then oil spill is left one block behind current position and player is not penalized") {
-    initialise()
-    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
-    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
-    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
-
-    testCarGamePlayer1.pickupOilItem()
-    val carGameMap = gameMap.asInstanceOf[CarGameMap]
-
-    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
-
-    val playerPositionBeforeCommand = carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId())
-
-    TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
-
-    val blockBehindWherePlayerUsedToBe = carGameMap.blocks.find(x => x.getPosition().getLane() == playerPositionBeforeCommand.getLane() && x.getPosition().getBlockNumber() == playerPositionBeforeCommand.getBlockNumber()-1).get
-    assert(blockBehindWherePlayerUsedToBe.mapObject == Config.OIL_SPILL_MAP_OBJECT)
-  }
-
   test("Given the same seed when generating the map then the same map is generated")
   {
     initialise()
