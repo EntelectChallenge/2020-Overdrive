@@ -4,6 +4,7 @@ import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
+import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Use_Lizard_Tests extends FunSuite {
     private val lizardCommandText = "USE_LIZARD"
@@ -232,6 +233,74 @@ class Command_Use_Lizard_Tests extends FunSuite {
         assert(testCarGamePlayer.isLizarding);
         assert(testCarGamePlayer.hasLizard)
         assert(testCarGamePlayer.speed == Config.SPEED_STATE_3);
+    }
+
+    test("Given a player that is lizarding when they would land on another player in the final block then they end up behind that player") {
+        initialise();
+        val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(6,9), Config.LIZARD_MAP_OBJECT);
+        val carGameMap = gameMap.asInstanceOf[CarGameMap]
+        val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+        val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+        val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+        testCarGamePlayer1.pickupLizard();
+
+        testCarGamePlayer1.speed = Config.SPEED_STATE_2 //should be 6
+        val newLaneMidRacePlayer1 = 2
+        val newBlockNumberMidRacePlayer1 = 35
+        TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+        val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+        val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+        val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+        testCarGamePlayer2.speed = Config.SPEED_STATE_1 //should be 3
+        val newLaneMidRacePlayer2 = 2
+        val newBlockNumberMidRacePlayer2 = 38
+        TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+        TestHelper.processRound(gameMap, lizardCommand, nothingCommand);
+
+        val expectedLane = 2
+        val expectedPlayer2BlockNumber = 41
+        val actualPlayer2PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer2Id);
+        assert(actualPlayer2PositionOnMap.getLane() == expectedLane && actualPlayer2PositionOnMap.getBlockNumber() == expectedPlayer2BlockNumber, "non lizarding player at end of lane did not stop in their correct block");
+
+        val expectedPlayer1BlockNumber = 40;
+        val actualPlayer1PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+        assert(actualPlayer1PositionOnMap.getLane() == expectedLane && actualPlayer1PositionOnMap.getBlockNumber() == expectedPlayer1BlockNumber, "lizarding player did not end up one block behind player they landed on in last block")
+    }
+
+    test("Given a player that is lizarding when they would rear end another player mid path then they end up flying over that player") {
+        initialise();
+        val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(6,9), Config.LIZARD_MAP_OBJECT);
+        val carGameMap = gameMap.asInstanceOf[CarGameMap]
+        val testGamePlayer1 = TestHelper.getTestGamePlayer1();
+        val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+        val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+        testCarGamePlayer1.pickupLizard();
+
+        testCarGamePlayer1.speed = Config.SPEED_STATE_2 //should be 6
+        val newLaneMidRacePlayer1 = 2
+        val newBlockNumberMidRacePlayer1 = 35
+        TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+        val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+        val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+        val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+        testCarGamePlayer2.speed = Config.SPEED_STATE_1 //should be 3
+        val newLaneMidRacePlayer2 = 2
+        val newBlockNumberMidRacePlayer2 = 37
+        TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+        TestHelper.processRound(gameMap, lizardCommand, nothingCommand);
+
+        val expectedLane = 2
+        val expectedPlayer2BlockNumber = 40
+        val actualPlayer2PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer2Id);
+        assert(actualPlayer2PositionOnMap.getLane() == expectedLane && actualPlayer2PositionOnMap.getBlockNumber() == expectedPlayer2BlockNumber);
+
+        val expectedPlayer1BlockNumber = 41;
+        val actualPlayer1PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+        assert(actualPlayer1PositionOnMap.getLane() == expectedLane && actualPlayer1PositionOnMap.getBlockNumber() == expectedPlayer1BlockNumber)
     }
 
 }
