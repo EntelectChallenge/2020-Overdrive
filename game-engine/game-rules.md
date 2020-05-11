@@ -152,7 +152,7 @@ Using a boost will:
 
 * Immediately increase your speed to **BOOST_SPEED** for 5 turns. 
 * Any form of deceleration (a **DECELERATE** command or hitting mud / oil) will cancel the boost bringing speed back down to **MAXIMUM_SPEED**
-* Attempting to use a boost when you have none will have a negative impact on your score and default to a **DO_NOTHING** command.
+* Attempting to use a boost when you have none will default to a **DO_NOTHING** command.
 
 ### Command: USE_OIL
 
@@ -160,7 +160,7 @@ Using oil will:
 
 * Place an oil block directly behind your car. 
 * Any car that passes through it will have their speed reduced to the previous speed state, same behaviour as driving through mud.
-* Attempting to use an oil powerup when you have none will have a negative impact on your score and default to a **DO_NOTHING** command.
+* Attempting to use an oil powerup when you have none will default to a **DO_NOTHING** command.
 
 ### Command: USE_TWEET 4 76
 
@@ -171,7 +171,7 @@ Using a tweet will:
 * If a player tweets again, their existing cyber truck will move to the new location next round.
 * If a player tries to spawn cyber truck at location where another player's cybertruck is already located, their powerup usage will be refunded and their old cyber truck will remain where it was.
 * If both players try to spawn a cyber truck at the same location at the same time, they will both be refunded and their old cyber trucks will remain where the cyber trucks were.
-* Attempting to use an tweet powerup when you have none will have a negative impact on your score and default to a **DO_NOTHING** command.
+* Attempting to use an tweet powerup when you have none will default to a **DO_NOTHING** command.
 
 ### Command: USE_LIZARD
 
@@ -182,6 +182,7 @@ Using a lizard will:
 * With regards to player collisions occuring in the final block (the block you land on), they are treated in the same manner as when your car rear-ends the other player. 
     Example: If you land on [1,20], but another player is already in [1,20], your car will be put back to [1,19] as per normal collision     handling.
 
+* Attempting to use an lizard powerup when you have none will default to a **DO_NOTHING** command.
 
 ## Collisions
 
