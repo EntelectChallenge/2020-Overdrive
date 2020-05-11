@@ -17,11 +17,16 @@ In a match **2** players with **1** car each will race against each other. The g
     - [Command: NOTHING](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-nothing)
     - [Command: ACCELERATE](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-ACCELERATE)
     - [Command: DECELERATE](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-DECELERATE)
-    - [Command:-TURN LEFT](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-TURN_LEFT)
-    - [Command:-TURN RIGHT](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-TURN_RIGHT)
+    - [Command: TURN LEFT](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-TURN_LEFT)
+    - [Command: TURN RIGHT](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-TURN_RIGHT)
     - [Command: USE BOOST](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-USE_BOOST)
     - [Command: USE OIL](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:-USE_OIL)
+    - [Command: USE_TWEET 4 76](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:-USE_TWEET 4 76)
+    - [Command: Command: USE_LIZARD](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:-Command: USE_LIZARD)
   - [Collisions](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#collisions)
+  - [Obstacles](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#obstacles) 
+    - [Obstacle: MUD](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#obstacle:MUD)
+    - [Obstacle: WALL](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#obstacle:WALL)
   - [Endgame](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#endgame)
   - [Score](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#score)
 
@@ -130,14 +135,14 @@ This command decreases your car's speed to the previous speed state (up to **MIN
 This command changes your car's lane to the next lane on the left. This is equivalent to up on the visualisation in the console. The first block the bot moves will be directly to the left, and then the rest of the blocks directly forward in the new lane.
 Your current speed does not change. To be clear this means the total forward movement of your car will be speed - 1.
 
-* attempting to turn outside of the track will keep your car in the current lane, you will still incur the speed -1 penalty AND this will negatively impact your score
+* Attempting to turn outside of the track will keep your car in the current lane, you will still incur the speed -1 penalty AND this will negatively impact your score
 
 ### Command: TURN_RIGHT
 
 This command changes your car's lane to the next lane on the right. This is equivalent to down on the visualisation in the console. The first block the bot moves will be directly to the right, and then the rest of the blocks directly forward in the new lane.
 Your current speed does not change. To be clear this means the total forward movement of your car will be speed - 1.
 
-* attempting to turn outside of the track will keep your car in the current lane, you will still incur the speed -1 penalty AND this will negatively impact your score
+* Attempting to turn outside of the track will keep your car in the current lane, you will still incur the speed -1 penalty AND this will negatively impact your score.
 
 ### Command: USE_BOOST
 
@@ -151,11 +156,32 @@ Using a boost will:
 
 ### Command: USE_OIL
 
-This command will:
+Using oil will:
 
 * Place an oil block directly behind your car. 
-* Any car that passes through it will have their speed reduced to the previous speed state
-* Attempting to use an oil powerup when you have none will have a negative impact on your score and default to a **DO_NOTHING** command
+* Any car that passes through it will have their speed reduced to the previous speed state, same behaviour as driving through mud.
+* Attempting to use an oil powerup when you have none will have a negative impact on your score and default to a **DO_NOTHING** command.
+
+### Command: USE_TWEET 4 76
+
+Using a tweet will: 
+
+* Spawn a cyber truck at lane 4, block 76 next round.
+* If player collides with cyber truck, they get stuck behind cyber truck till end of round and have their speed reduced to 3, the cyber truck then dissapears.
+* If a player tweets again, their existing cyber truck will move to the new location next round.
+* If a player tries to spawn cyber truck at location where another player's cybertruck is already located, their powerup usage will be refunded and their old cyber truck will remain where it was.
+* If both players try to spawn a cyber truck at the same location at the same time, they will both be refunded and their old cyber trucks will remain where the cyber trucks were.
+* Attempting to use an tweet powerup when you have none will have a negative impact on your score and default to a **DO_NOTHING** command.
+
+### Command: USE_LIZARD
+
+Using a lizard will:
+* Allow your car to jump for the round to avoid a lizard running across the track!
+* All Collisions, including powerup pickups, obstacles, and other players, are ignored for the round. Your car stays in the same lane. 
+* All Collisions, including powerup pickups, obstacles, and other players, in your final block(the block you land on) for the round are applied.
+* With regards to player collisions occuring in the final block (the block you land on), they are treated in the same manner as when your car rear-ends the other player. 
+    Example: If you land on [1,20], but another player is already in [1,20], your car will be put back to [1,19] as per normal collision     handling.
+
 
 ## Collisions
 
@@ -166,7 +192,36 @@ For Example:
 
 * Bot 1 is in position(3,28) with a speed of 6 and issues a ACCELERATE command => future position is (3,36)
 * Bot 2 is in position(2,31) with a speed of 6 and issues a TURN_RIGHT command => future position is (3,36)
-* The collision will be resolved by moving bot 1 to (3,35) and bot 2 to (2,35)
+* The collision will be resolved by moving bot 1 to (3,35) and bot 2 to (2,35).
+* If your car is behind another player's car in the same lane you can not over take them using ACCELERATE as you will rear-end them       causing you to be "stuck" behind them unless a applicable boost is used(LIZARD) or you change lane.
+
+## Obstacles
+
+### Obstacle: MUD
+
+Interaction: 
+
+* If a player collides with mud their speed will be reduced a level, if they are boosting the boost will end.
+    SPEED_STATE_1 => SPEED_STATE_1
+    INITIAL_SPEED => SPEED_STATE_1
+    SPEED_STATE_2 => SPEED_STATE_1
+    SPEED_STATE_3 => SPEED_STATE_2
+    MAXIMUM_SPEED => SPEED_STATE_3
+    BOOST_SPEED   => MAXIMUM_SPEED
+* If changing lane and turning into a block with the obstacle the car will still be affected.
+
+### Obstacle: WALL
+
+Interaction: 
+
+* If a player collides with a wall their speed will be reduced to 3 regardless of the current speed, if they are boosting the boost will end.
+    SPEED_STATE_1 => SPEED_STATE_1
+    INITIAL_SPEED => SPEED_STATE_1
+    SPEED_STATE_2 => SPEED_STATE_1
+    SPEED_STATE_3 => SPEED_STATE_1
+    MAXIMUM_SPEED => SPEED_STATE_1
+    BOOST_SPEED   => SPEED_STATE_1
+* If changing lane and turning into a block with the obstacle the car will still be affected.
 
 ## Endgame
 
