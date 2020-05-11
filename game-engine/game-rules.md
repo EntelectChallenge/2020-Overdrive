@@ -158,8 +158,8 @@ Using a boost will:
 
 Using oil will:
 
-* Place an oil block directly behind your car. 
-* Any car that passes through it will have their speed reduced to the previous speed state, same behaviour as driving through mud.
+* Place an oil block directly underneath your car. 
+* Any car that passes through it (except you) will have their speed reduced to the previous speed state, same behaviour as driving through mud.
 * Attempting to use an oil powerup when you have none will default to a **DO_NOTHING** command.
 
 ### Command: USE_TWEET 4 76
