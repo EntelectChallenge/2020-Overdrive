@@ -12,21 +12,21 @@ In a match **2** players with **1** car each will race against each other. The g
       - [Files](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#files)
   - [The Car](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#the-car)
   - [The Commands](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#the-commands)
-    - [All Commands](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#move)
-    - [Command Structure](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#move)
+    - [All Commands](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#all-commands)
+    - [Command Structure](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command-structure)
     - [Command: NOTHING](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-nothing)
-    - [Command: ACCELERATE](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-ACCELERATE)
-    - [Command: DECELERATE](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-DECELERATE)
-    - [Command: TURN LEFT](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-TURN_LEFT)
-    - [Command: TURN RIGHT](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-TURN_RIGHT)
-    - [Command: USE BOOST](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-USE_BOOST)
-    - [Command: USE OIL](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:-USE_OIL)
-    - [Command: USE_TWEET 4 76](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:USE_TWEET)
-    - [Command: USE_LIZARD](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:-Command:USE_LIZARD)
+    - [Command: ACCELERATE](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-accelerate)
+    - [Command: DECELERATE](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-decelerate)
+    - [Command: TURN_LEFT](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-turn_left)
+    - [Command: TURN_RIGHT](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-turn_right)
+    - [Command: USE_BOOST](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#command:-use_boost)
+    - [Command: USE_OIL](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:-use_oil)
+    - [Command: USE_TWEET 4 76](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:-use_tweet-4-76)
+    - [Command: USE_LIZARD](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#command:-Command:-use_lizard)
   - [Collisions](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#collisions)
   - [Obstacles](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#obstacles) 
-    - [Obstacle: MUD](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#obstacle:MUD)
-    - [Obstacle: WALL](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#obstacle:WALL)
+    - [Obstacle: MUD](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#obstacle:-mud)
+    - [Obstacle: WALL](https://github.com/EntelectChallenge/2020-Overdrive1/blob/master/game-engine/game-rules.md#obstacle:-wall)
   - [Endgame](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#endgame)
   - [Score](https://github.com/EntelectChallenge/2020-Overdrive/blob/master/game-engine/game-rules.md#score)
 
@@ -202,12 +202,12 @@ For Example:
 Interaction: 
 
 * If a player collides with mud their speed will be reduced a level, if they are boosting the boost will end.
-    SPEED_STATE_1 => SPEED_STATE_1
-    INITIAL_SPEED => SPEED_STATE_1
-    SPEED_STATE_2 => SPEED_STATE_1
-    SPEED_STATE_3 => SPEED_STATE_2
-    MAXIMUM_SPEED => SPEED_STATE_3
-    BOOST_SPEED   => MAXIMUM_SPEED
+    * SPEED_STATE_1 => SPEED_STATE_1
+    * INITIAL_SPEED => SPEED_STATE_1
+    * SPEED_STATE_2 => SPEED_STATE_1
+    * SPEED_STATE_3 => SPEED_STATE_2
+    * MAXIMUM_SPEED => SPEED_STATE_3
+    * BOOST_SPEED   => MAXIMUM_SPEED
 * If changing lane and turning into a block with the obstacle the car will still be affected.
 
 ### Obstacle: WALL
@@ -215,12 +215,12 @@ Interaction:
 Interaction: 
 
 * If a player collides with a wall their speed will be reduced to 3 regardless of the current speed, if they are boosting the boost will end.
-    SPEED_STATE_1 => SPEED_STATE_1
-    INITIAL_SPEED => SPEED_STATE_1
-    SPEED_STATE_2 => SPEED_STATE_1
-    SPEED_STATE_3 => SPEED_STATE_1
-    MAXIMUM_SPEED => SPEED_STATE_1
-    BOOST_SPEED   => SPEED_STATE_1
+    * SPEED_STATE_1 => SPEED_STATE_1
+    * INITIAL_SPEED => SPEED_STATE_1
+    * SPEED_STATE_2 => SPEED_STATE_1
+    * SPEED_STATE_3 => SPEED_STATE_1
+    * MAXIMUM_SPEED => SPEED_STATE_1
+    * BOOST_SPEED   => SPEED_STATE_1
 * If changing lane and turning into a block with the obstacle the car will still be affected.
 
 ## Endgame
