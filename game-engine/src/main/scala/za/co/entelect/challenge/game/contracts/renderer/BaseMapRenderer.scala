@@ -8,17 +8,17 @@ import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 abstract class BaseMapRenderer extends GameMapRenderer {
 
     override def render(gameMap: GameMap, gamePlayer: GamePlayer): String = {
-        val carGameMap: CarGameMap = gameMap.asInstanceOf[CarGameMap];
+        val carGameMap: CarGameMap = gameMap.asInstanceOf[CarGameMap]
 
-        val shouldRenderFragment = gamePlayer != null;
+        val shouldRenderFragment = gamePlayer != null
         if(shouldRenderFragment) 
         {
-            val carGamePlayer: CarGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer];
-            return renderFragment(carGameMap, carGamePlayer);
+            val carGamePlayer: CarGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer]
+            return renderFragment(carGameMap, carGamePlayer)
         } 
         else 
         {
-            return renderVisualiserMap(carGameMap);
+            return renderVisualiserMap(carGameMap)
         }
     }
     

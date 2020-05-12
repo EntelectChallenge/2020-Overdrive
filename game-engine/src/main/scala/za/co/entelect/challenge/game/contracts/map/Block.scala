@@ -4,7 +4,7 @@ import za.co.entelect.challenge.game.contracts.Config.Config
 
 class Block(position: BlockPosition, var mapObject: Int, var occupiedByPlayerWithId: Int) {
 
-    private var hasCyberTruck: Boolean = false;
+    private var hasCyberTruck: Boolean = false
 
     override def toString() : String = { 
         val stringRepresentation =
@@ -25,23 +25,23 @@ class Block(position: BlockPosition, var mapObject: Int, var occupiedByPlayerWit
     }
 
     def getPosition(): BlockPosition = {
-        return position;
+        return position
     }
 
     def getMapObject(): Int = {
-        return mapObject;
+        return mapObject
     }
 
     def getOccupiedByPlayerWithId(): Int = {
-        return occupiedByPlayerWithId;
+        return occupiedByPlayerWithId
     }
 
     def vacate() = {
-        occupiedByPlayerWithId = Config.EMPTY_PLAYER;
+        occupiedByPlayerWithId = Config.EMPTY_PLAYER
     }
 
     def occupy(gamePlayerId: Int) {
-        occupiedByPlayerWithId = gamePlayerId;
+        occupiedByPlayerWithId = gamePlayerId
     }
 
     def setMapObject(mapObjectToAdd: Int) = {
@@ -49,14 +49,14 @@ class Block(position: BlockPosition, var mapObject: Int, var occupiedByPlayerWit
     }
 
     def isOccupiedByCyberTruck(): Boolean = {
-        return hasCyberTruck;
+        return hasCyberTruck
     }
 
     def removeCyberTruck() = {
-        hasCyberTruck = false;
+        hasCyberTruck = false
     }
 
     def addCyberTruck() = {
-        hasCyberTruck = true;
+        hasCyberTruck = true
     }
 }

@@ -8,20 +8,20 @@ import scala.collection.JavaConverters._
 
 class CarReferee extends GameReferee {
   override def isMatchValid(gameMap: GameMap): RefereeMessage = {
-    val maxRoundsExceeded = gameMap.getCurrentRound() > Config.MAX_ROUNDS;
+    val maxRoundsExceeded = gameMap.getCurrentRound() > Config.MAX_ROUNDS
     if(maxRoundsExceeded)
     {
-      val matchIsValid = false;
+      val matchIsValid = false
       var reasonsForDecision = new Array[String](1)
       reasonsForDecision(0) = "max rounds exceeded"
-      val reasonsForDecisionJava = reasonsForDecision.toList.asJava;
+      val reasonsForDecisionJava = reasonsForDecision.toList.asJava
 
       val refereeMessage = new RefereeMessage(matchIsValid, reasonsForDecisionJava)
-      return refereeMessage;
+      return refereeMessage
     }
-    val matchIsValid = true;
-    val reasonsForDecision = new Array[String](0).toList.asJava;
+    val matchIsValid = true
+    val reasonsForDecision = new Array[String](0).toList.asJava
     val refereeMessage = new RefereeMessage(matchIsValid, reasonsForDecision)
-    return refereeMessage;
+    return refereeMessage
   }
 }

@@ -12,26 +12,26 @@ class CarGameRoundProcessor extends GameRoundProcessor{
   
 
   override def processRound(gameMap: GameMap, commandsToProcess: util.Map[GamePlayer, util.List[RawCommand]]): Boolean = {
-    val carGameMap = gameMap.asInstanceOf[CarGameMap];
-    val gamePlayers = carGameMap.getGamePlayers();
-    val commandFactory = new CommandFactory;
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+    val gamePlayers = carGameMap.getGamePlayers()
+    val commandFactory = new CommandFactory
     for ( i <- gamePlayers.indices) {
-      val gamePlayer = gamePlayers(i);
-      val commandText = commandsToProcess.get(gamePlayer).get(0).getCommand;
-      var playerCommand: RawCommand = commandFactory.makeCommand(commandText);
-      playerCommand.performCommand(gameMap, gamePlayer);
+      val gamePlayer = gamePlayers(i)
+      val commandText = commandsToProcess.get(gamePlayer).get(0).getCommand
+      var playerCommand: RawCommand = commandFactory.makeCommand(commandText)
+      playerCommand.performCommand(gameMap, gamePlayer)
     }
 
-    carGameMap.resolveCyberTruckCollisions(); //needs to happen first because projected path of player is used in player collisions
-    carGameMap.resolvePlayerCollisions();
-    carGameMap.calculateEffectsOfAndApplyStagedPositionsToPlayers();
+    carGameMap.resolveCyberTruckCollisions() //needs to happen first because projected path of player is used in player collisions
+    carGameMap.resolvePlayerCollisions()
+    carGameMap.calculateEffectsOfAndApplyStagedPositionsToPlayers()
 
-    carGameMap.placeRequestedCyberTrucks();
-    return true;
+    carGameMap.placeRequestedCyberTrucks()
+    return true
   }
 
   override def getErrorList(gameMap: GameMap): util.List[String] = {
-    return new Array[String](0).toList.asJava;
+    return new Array[String](0).toList.asJava
     //TODO: Fix error reporting
   }
 

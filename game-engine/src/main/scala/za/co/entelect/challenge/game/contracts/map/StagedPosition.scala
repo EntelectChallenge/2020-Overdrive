@@ -12,7 +12,7 @@ class StagedPosition(carGamePlayer: CarGamePlayer, var newPosition: BlockPositio
   }
 
   def setNewPosition(newNewPosition: BlockPosition) = {
-    newPosition = newNewPosition;
+    newPosition = newNewPosition
   }
 
   def getOldPosition(): BlockPosition = {

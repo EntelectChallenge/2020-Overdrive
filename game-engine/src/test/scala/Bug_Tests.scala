@@ -80,15 +80,15 @@ class Bug_Tests extends FunSuite{
     val carGameMap2 = gameMap2.asInstanceOf[CarGameMap]
     val carGameMap2Blocks = carGameMap2.getBlocks()
 
-    val maxLane = 4;
+    val maxLane = 4
 
-    val carGameRendererFactory = new CarGameRendererFactory;
-    val jsonRenderer = carGameRendererFactory.makeJsonRenderer();
-    val gameMap1Json = jsonRenderer.render(gameMap1, null);
+    val carGameRendererFactory = new CarGameRendererFactory
+    val jsonRenderer = carGameRendererFactory.makeJsonRenderer()
+    val gameMap1Json = jsonRenderer.render(gameMap1, null)
 
     for(blockNumber <- 0 until Config.TRACK_LENGTH-1) {
         for(lane <- 0 until maxLane-1) {
-            val indexOfInterest = lane*Config.TRACK_LENGTH + blockNumber;
+            val indexOfInterest = lane*Config.TRACK_LENGTH + blockNumber
             assert(carGameMap1Blocks(indexOfInterest).occupiedByPlayerWithId == carGameMap2Blocks(indexOfInterest).occupiedByPlayerWithId, "At: " + (lane+1) + " , " + (blockNumber+1) + " Blocks not occupied by same player")
             assert(carGameMap1Blocks(indexOfInterest).mapObject == carGameMap2Blocks(indexOfInterest).mapObject, "At: " + (lane+1) + " , " + (blockNumber+1) + " Blocks don't have same map object")
           }
@@ -102,10 +102,10 @@ class Bug_Tests extends FunSuite{
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1()
-    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
     testCarGamePlayer1.speed = Config.SPEED_STATE_1
     val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
-    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 4, 106);
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 4, 106)
 
     testCarGamePlayer1.pickupLizard()
     val useLizardCommentText = "USE_LIZARD"
@@ -128,10 +128,10 @@ class Bug_Tests extends FunSuite{
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1()
-    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
     testCarGamePlayer1.speed = Config.SPEED_STATE_1
     val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
-    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 4, 106);
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 4, 106)
 
     testCarGamePlayer1.pickupLizard()
     val useLizardCommentText = "USE_LIZARD"

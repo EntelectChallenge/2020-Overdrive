@@ -105,20 +105,20 @@ case class GameEngineConfig
 object Config {
     implicit val formats = DefaultFormats
 
-    private var ConfigFilePath: String = "";
-    private var ConfigJson: String = "";
-    private var ParsedConfigJson: JValue = null;
-    private var ConfigFileValues: GameEngineConfig = null;
+    private var ConfigFilePath: String = ""
+    private var ConfigJson: String = ""
+    private var ParsedConfigJson: JValue = null
+    private var ConfigFileValues: GameEngineConfig = null
 
     def load(configFilePath: String) = {
-        ConfigFilePath = configFilePath;
-        ConfigJson = Source.fromFile(ConfigFilePath).getLines.mkString;
-        ParsedConfigJson = parse(ConfigJson);
-        ConfigFileValues = ParsedConfigJson.extract[GameEngineConfig];
+        ConfigFilePath = configFilePath
+        ConfigJson = Source.fromFile(ConfigFilePath).getLines.mkString
+        ParsedConfigJson = parse(ConfigJson)
+        ConfigFileValues = ParsedConfigJson.extract[GameEngineConfig]
     }
 
     def loadDefault() = {
-        load("default-config.json");
+        load("default-config.json")
     }
     def NUMBER_OF_LANES: Int = ConfigFileValues.NUMBER_OF_LANES
     def TRACK_LENGTH: Int = ConfigFileValues.TRACK_LENGTH
@@ -161,7 +161,7 @@ object Config {
     def PLAYER_TWO_START_LANE: Int = ConfigFileValues.PLAYER_TWO_START_LANE
     def PLAYER_TWO_START_BLOCK: Int = ConfigFileValues.PLAYER_TWO_START_BLOCK
     
-    def EMPTY_MAP_OBJECT: Int = ConfigFileValues.EMPTY_MAP_OBJECT;
+    def EMPTY_MAP_OBJECT: Int = ConfigFileValues.EMPTY_MAP_OBJECT
 
     def STARTING_BLOCK_FOR_GENERATED_MAP_OBJECTS: Int = ConfigFileValues.STARTING_BLOCK_FOR_GENERATED_MAP_OBJECTS
 

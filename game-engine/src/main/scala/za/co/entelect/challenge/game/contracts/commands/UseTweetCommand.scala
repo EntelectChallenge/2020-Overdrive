@@ -5,22 +5,22 @@ import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap, S
 
 class UseTweetCommand(lane: Int, block: Int) extends BaseCarGameCommand {
   override def getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap: CarGameMap, carGamePlayer: CarGamePlayer, currentPlayerPosition: BlockPosition): BlockPosition = {
-    val futureBlockNumber = currentPlayerPosition.getBlockNumber() + carGamePlayer.getSpeed();
-    val futurePosition = new BlockPosition(currentPlayerPosition.getLane(), futureBlockNumber);
+    val futureBlockNumber = currentPlayerPosition.getBlockNumber() + carGamePlayer.getSpeed()
+    val futurePosition = new BlockPosition(currentPlayerPosition.getLane(), futureBlockNumber)
 
     if (carGamePlayer.hasTweet()) {
       carGamePlayer.useTweet()
 
-      val requestedCyberTruckPosition = new BlockPosition(lane, block);
-      val oldCyberTruckPosition = carGamePlayer.getCurrentCyberTruckPosition();
-      val stagedCyberTruckPosition = new StagedPosition(carGamePlayer, requestedCyberTruckPosition, oldCyberTruckPosition);
-      carGameMap.stageCyberTruckAt(stagedCyberTruckPosition);
+      val requestedCyberTruckPosition = new BlockPosition(lane, block)
+      val oldCyberTruckPosition = carGamePlayer.getCurrentCyberTruckPosition()
+      val stagedCyberTruckPosition = new StagedPosition(carGamePlayer, requestedCyberTruckPosition, oldCyberTruckPosition)
+      carGameMap.stageCyberTruckAt(stagedCyberTruckPosition)
     }
     else {
       //TODO: report match issues
       carGamePlayer.doNothing()
     }
 
-    return futurePosition;
+    return futurePosition
   }
 }

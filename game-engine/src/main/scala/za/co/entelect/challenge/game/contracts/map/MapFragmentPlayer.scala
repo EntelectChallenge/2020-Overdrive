@@ -3,42 +3,42 @@ package za.co.entelect.challenge.game.contracts.map
 class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: String, powerups: Array[String],
                         boosting: Boolean, boostCounter: Int, score: Int) {
     def getId(): Int = {
-        return id;
+        return id
     }
 
     def getPosition(): BlockPosition = {
-        return position;
+        return position
     }
 
     def getSpeed(): Int = {
-        return speed;
+        return speed
     }
 
     def getState(): String = {
-        return state;
+        return state
     }
 
     def getPowerups(): Array[String] = {
-        return powerups;
+        return powerups
     }
 
     def isBoosting(): Boolean = {
-        return boosting;
+        return boosting
     }
 
     def getBoostCounter(): Int = {
-        return boostCounter;
+        return boostCounter
     }
 
     def getScore(): Int = {
-        return score;
+        return score
     }
 
     def toString(limited: Boolean): String = {
         var stringRepresentation =
             "id:" + id +
               " position: " + position.toString() +
-              " speed:" + speed;
+              " speed:" + speed
         if(!limited)
         {
             stringRepresentation +=
@@ -51,7 +51,7 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
         }
         else
         {
-            stringRepresentation += "\n";
+            stringRepresentation += "\n"
         }
 
         stringRepresentation
