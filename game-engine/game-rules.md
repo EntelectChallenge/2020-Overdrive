@@ -167,22 +167,22 @@ Using oil will:
 Using a tweet will: 
 
 * Spawn a cyber truck at lane 4, block 76 next round.
-* If player collides with cyber truck, they get stuck behind cyber truck till end of round and have their speed reduced to 3, the cyber truck then dissapears.
+* If a player collides with the cyber truck, they get stuck behind cyber truck until the end of the round and will have their speed reduced to 3, the cyber truck then disappears.
 * If a player tweets again, their existing cyber truck will move to the new location next round.
 * If a player tries to spawn cyber truck at location where another player's cybertruck is already located, their powerup usage will be refunded and their old cyber truck will remain where it was.
 * If both players try to spawn a cyber truck at the same location at the same time, they will both be refunded and their old cyber trucks will remain where the cyber trucks were.
-* Attempting to use an tweet powerup when you have none will default to a **DO_NOTHING** command.
+* Attempting to use a tweet powerup when you have none, will default to a **DO_NOTHING** command.
 
 ### Command: USE_LIZARD
 
 Using a lizard will:
-* Allow your car to jump for the round to avoid a lizard running across the track!
+* Make your car jump for the round to avoid a lizard running across the track!
 * All Collisions, including powerup pickups, obstacles, and other players, are ignored for the round. Your car stays in the same lane. 
 * All Collisions, including powerup pickups, obstacles, and other players, in your final block(the block you land on) for the round are applied.
 * With regards to player collisions occuring in the final block (the block you land on), they are treated in the same manner as when your car rear-ends the other player. 
     Example: If you land on [1,20], but another player is already in [1,20], your car will be put back to [1,19] as per normal collision     handling.
 
-* Attempting to use an lizard powerup when you have none will default to a **DO_NOTHING** command.
+* Attempting to use a lizard powerup when you have none, will default to a **DO_NOTHING** command.
 
 ## Collisions
 
@@ -194,7 +194,7 @@ For Example:
 * Bot 1 is in position(3,28) with a speed of 6 and issues a ACCELERATE command => future position is (3,36)
 * Bot 2 is in position(2,31) with a speed of 6 and issues a TURN_RIGHT command => future position is (3,36)
 * The collision will be resolved by moving bot 1 to (3,35) and bot 2 to (2,35).
-* If your car is behind another player's car in the same lane you can not over take them using ACCELERATE as you will rear-end them       causing you to be "stuck" behind them unless a applicable boost is used(LIZARD) or you change lane.
+* If your car is behind another player's car in the same lane you can not over take them using ACCELERATE as you will rear-end them       causing you to be "stuck" behind them unless an applicable powerup is used (e.g. LIZARD) or you change lane.
 
 ## Obstacles
 
@@ -202,7 +202,8 @@ For Example:
 
 Interaction: 
 
-* If a player collides with mud their speed will be reduced a level, if they are boosting the boost will end.
+* If a player collides with mud their speed will be reduced to a lower level. 
+* If they are boosting the boost will end.
     * SPEED_STATE_1 => SPEED_STATE_1
     * INITIAL_SPEED => SPEED_STATE_1
     * SPEED_STATE_2 => SPEED_STATE_1
