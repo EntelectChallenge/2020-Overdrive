@@ -94,4 +94,57 @@ class Bug_Tests extends FunSuite{
           }
       }
   }
+
+  test("Given player during race when player users lizard powerup then next round player is not lizarding")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(4, 115, Config.TWEET_MAP_OBJECT)
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    testCarGamePlayer1.speed = Config.SPEED_STATE_1
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 4, 106);
+
+    testCarGamePlayer1.pickupLizard()
+    val useLizardCommentText = "USE_LIZARD"
+    var lizardCommand = commandFactory.makeCommand(useLizardCommentText)
+    lizardCommand.setCommand(useLizardCommentText)
+    TestHelper.processRound(gameMap, lizardCommand, nothingCommand)
+
+    val accelerateCommandText = "ACCELERATE"
+    var accelerateCommand = commandFactory.makeCommand(accelerateCommandText)
+    accelerateCommand.setCommand(accelerateCommandText)
+    TestHelper.processRound(gameMap, accelerateCommand, nothingCommand)
+
+    assert(!testCarGamePlayer1.isLizarding, "player still lizarding in subsequent round")
+  }
+
+  test("Given player during race when player users lizard powerup then next round player can pickup items in middle of path")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(4, 114, Config.TWEET_MAP_OBJECT)
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer];
+    testCarGamePlayer1.speed = Config.SPEED_STATE_1
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 4, 106);
+
+    testCarGamePlayer1.pickupLizard()
+    val useLizardCommentText = "USE_LIZARD"
+    var lizardCommand = commandFactory.makeCommand(useLizardCommentText)
+    lizardCommand.setCommand(useLizardCommentText)
+    TestHelper.processRound(gameMap, lizardCommand, nothingCommand)
+
+    val accelerateCommandText = "ACCELERATE"
+    var accelerateCommand = commandFactory.makeCommand(accelerateCommandText)
+    accelerateCommand.setCommand(accelerateCommandText)
+    TestHelper.processRound(gameMap, accelerateCommand, nothingCommand)
+
+    assert(testCarGamePlayer1.getPowerups().count(x => x.equals(Config.TWEET_POWERUP_ITEM)) == 1, "player did not pickup item they should have")
+  }
+
 }

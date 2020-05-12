@@ -17,6 +17,10 @@ abstract class BaseCarGameCommand extends RawCommand {
         {
             carGamePlayer.tickBoost();
         }
+        if(carGamePlayer.isLizarding)
+        {
+            carGamePlayer.setLizarding(false);
+        }
 
         val carGamePlayerId = carGamePlayer.getGamePlayerId();
         val currentBlockThatHasBeenVacated = getCurrentBlockThatHasBeenVacated(carGameMap, carGamePlayerId);
