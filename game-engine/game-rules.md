@@ -202,7 +202,8 @@ For Example:
 
 Interaction: 
 
-* If a player collides with mud their speed will be reduced a level, if they are boosting the boost will end.
+* If a player collides with mud their speed will be reduced to a lower level. 
+* If they are boosting the boost will end.
     * SPEED_STATE_1 => SPEED_STATE_1
     * INITIAL_SPEED => SPEED_STATE_1
     * SPEED_STATE_2 => SPEED_STATE_1
