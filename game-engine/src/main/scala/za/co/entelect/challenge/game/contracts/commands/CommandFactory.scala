@@ -41,9 +41,7 @@ class CommandFactory {
         return new NothingCommand;
     }
 
-    private def makeNothingCommand(): RawCommand = {
-        return new NothingCommand;
-    }
+    private def makeNothingCommand(): RawCommand = new NothingCommand
 
     private def makeTurnLeftCommand(): RawCommand = {
         val isLeft = true;
@@ -55,25 +53,15 @@ class CommandFactory {
         return new ChangeLaneCommand(isLeft);
     }
 
-    private def makeAccelerateCommand(): RawCommand = {
-        return new AccelerateCommand;
-    }
+    private def makeAccelerateCommand(): RawCommand = new AccelerateCommand
 
-    private def makeDecelerateCommand(): RawCommand = {
-        return new DecelerateCommand;
-    }
+    private def makeDecelerateCommand(): RawCommand = new DecelerateCommand
 
-    private def makeUseBoostCommand(): RawCommand = {
-        return new UseBoostCommand;
-    }
+    private def makeUseBoostCommand(): RawCommand = new UseBoostCommand
 
-    private def makeUseOilCommand(): RawCommand = {
-        return new UseOilCommand
-    }
+    private def makeUseOilCommand(): RawCommand = new UseOilCommand
 
-    private def makeUseLizardCommand(): RawCommand = {
-         return new UseLizardCommand
-    }
+    private def makeUseLizardCommand(): RawCommand = new UseLizardCommand
 
     private def makeUseTweetCommand(fullCommand: Array[String]): RawCommand =
     {
