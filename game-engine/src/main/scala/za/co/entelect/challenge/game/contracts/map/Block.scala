@@ -17,7 +17,7 @@ class Block(position: BlockPosition, var mapObject: Int, var occupiedByPlayerWit
             else if (mapObject == Config.OIL_ITEM_MAP_OBJECT) "Φ"
             else if (mapObject == Config.OIL_SPILL_MAP_OBJECT) "█"
             else if (mapObject == Config.WALL_MAP_OBJECT) "#"
-            else if (mapObject == Config.LIZARD_MAP_OBJECT) "&"
+            else if (mapObject == Config.LIZARD_MAP_OBJECT) "∱"
             else if (mapObject == Config.TWEET_MAP_OBJECT) "T"
             else throw new Exception("Unknown block content encountered when rendering")
 
