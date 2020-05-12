@@ -167,7 +167,7 @@ Using oil will:
 Using a tweet will: 
 
 * Spawn a cyber truck at lane 4, block 76 next round.
-* If player collides with cyber truck, they get stuck behind cyber truck till end of round and have their speed reduced to 3, the cyber truck then dissapears.
+* If a player collides with the cyber truck, they get stuck behind cyber truck until the end of the round and will have their speed reduced to 3, the cyber truck then disappears.
 * If a player tweets again, their existing cyber truck will move to the new location next round.
 * If a player tries to spawn cyber truck at location where another player's cybertruck is already located, their powerup usage will be refunded and their old cyber truck will remain where it was.
 * If both players try to spawn a cyber truck at the same location at the same time, they will both be refunded and their old cyber trucks will remain where the cyber trucks were.
