@@ -155,27 +155,42 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
     def resolveCyberTruckCollisions(): Boolean = {
         var playerHitCyberTruck = false
-        var blockWithCyberTruck = null
         stagedFuturePositions.foreach(x => {
             val startBlockNumber = x.getOldPosition().getBlockNumber()
             val endBlockNumber = x.getNewPosition().getBlockNumber()
             val endLane = x.getNewPosition().getLane()
-            val blockWithCyberTruck = blocks.find(b => (b.getPosition().getLane() == endLane
+            val blockWithCyberTruckInMiddleOfPath = blocks.find(b => (b.getPosition().getLane() == endLane
               && b.getPosition().getBlockNumber() >= startBlockNumber
-              && b.getPosition().getBlockNumber() <= endBlockNumber)
+              && b.getPosition().getBlockNumber() <= endBlockNumber-1)
               && b.isOccupiedByCyberTruck()
             )
-            val pathHasCyberTruck = blockWithCyberTruck.isDefined
-            if(pathHasCyberTruck)
-            {
-                val definedBlockWithCyberTruck = blockWithCyberTruck.get
-                val adjustedNewLane = definedBlockWithCyberTruck.getPosition().getLane()
-                val adjustedNewBlockNumber = definedBlockWithCyberTruck.getPosition().getBlockNumber() - 1
-                val newFuturePosition = new BlockPosition(adjustedNewLane, adjustedNewBlockNumber)
-                x.setNewPosition(newFuturePosition)
-                x.getPlayer().hitCyberTruck()
-                definedBlockWithCyberTruck.removeCyberTruck()
-                playerHitCyberTruck = true
+            val lastBlockWithCyberTruck = blocks.find(b => b.getPosition().getLane() == endLane
+              && b.getPosition().getBlockNumber() == endBlockNumber
+              && b.isOccupiedByCyberTruck()
+            )
+            val middleOfPathHasCyberTruckAndPlayerIsOnTheGround = blockWithCyberTruckInMiddleOfPath.isDefined && !x.getPlayer().isLizarding
+            val playerCollidesWithCyberTruck = middleOfPathHasCyberTruckAndPlayerIsOnTheGround || lastBlockWithCyberTruck.isDefined
+            if(playerCollidesWithCyberTruck) {
+                if(middleOfPathHasCyberTruckAndPlayerIsOnTheGround) {
+                    val definedBlockWithCyberTruck = blockWithCyberTruckInMiddleOfPath.get
+                    val adjustedNewLane = definedBlockWithCyberTruck.getPosition().getLane()
+                    val adjustedNewBlockNumber = definedBlockWithCyberTruck.getPosition().getBlockNumber() - 1
+                    val newFuturePosition = new BlockPosition(adjustedNewLane, adjustedNewBlockNumber)
+                    x.setNewPosition(newFuturePosition)
+                    x.getPlayer().hitCyberTruck()
+                    definedBlockWithCyberTruck.removeCyberTruck()
+                    playerHitCyberTruck = true
+                }
+                else {
+                    val definedBlockWithCyberTruck = lastBlockWithCyberTruck.get
+                    val adjustedNewLane = definedBlockWithCyberTruck.getPosition().getLane()
+                    val adjustedNewBlockNumber = definedBlockWithCyberTruck.getPosition().getBlockNumber() - 1
+                    val newFuturePosition = new BlockPosition(adjustedNewLane, adjustedNewBlockNumber)
+                    x.setNewPosition(newFuturePosition)
+                    x.getPlayer().hitCyberTruck()
+                    definedBlockWithCyberTruck.removeCyberTruck()
+                    playerHitCyberTruck = true
+                }
             }
         })
         return playerHitCyberTruck

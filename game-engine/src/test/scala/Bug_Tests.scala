@@ -147,4 +147,90 @@ class Bug_Tests extends FunSuite{
     assert(testCarGamePlayer1.getPowerups().count(x => x.equals(Config.TWEET_POWERUP_ITEM)) == 1, "player did not pickup item they should have")
   }
 
+  test("Given a player with a lizard when that player is lizarding over a cyber truck in their path, but not the last block, then they are not affected by the cybertruck")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 2, 139)
+
+    testCarGamePlayer1.pickupTweet()
+    val tweetCommandText = "USE_TWEET 2 150"
+    var tweetCommand = commandFactory.makeCommand(tweetCommandText)
+    tweetCommand.setCommand(tweetCommandText)
+    TestHelper.processRound(gameMap, tweetCommand, nothingCommand)
+
+    testCarGamePlayer1.pickupLizard()
+    val useLizardCommentText = "USE_LIZARD"
+    var lizardCommand = commandFactory.makeCommand(useLizardCommentText)
+    lizardCommand.setCommand(useLizardCommentText)
+    TestHelper.processRound(gameMap, lizardCommand, nothingCommand)
+
+    val expectedPlayerLane = 2
+    val expectedPlayerBlockNumber = 151
+    val actualPlayerPosition = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+    assert(actualPlayerPosition.getLane() == expectedPlayerLane && actualPlayerPosition.getBlockNumber() == expectedPlayerBlockNumber)
+  }
+
+  test("Given a player with a lizard when that player is not lizarding over a cyber truck in their path, but not the last block, then they are affected by the cybertruck")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 2, 139)
+
+    testCarGamePlayer1.pickupTweet()
+    val tweetCommandText = "USE_TWEET 2 150"
+    var tweetCommand = commandFactory.makeCommand(tweetCommandText)
+    tweetCommand.setCommand(tweetCommandText)
+    TestHelper.processRound(gameMap, tweetCommand, nothingCommand)
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val expectedPlayerLane = 2
+    val expectedPlayerBlockNumber = 149
+    val actualPlayerPosition = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+    assert(actualPlayerPosition.getLane() == expectedPlayerLane && actualPlayerPosition.getBlockNumber() == expectedPlayerBlockNumber)
+  }
+
+  test("Given a player with a lizard when that player is lizarding over a cyber truck in the last block of their path then they are stuck behind the cybertruck")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 2, 138)
+
+    testCarGamePlayer1.pickupTweet()
+    val tweetCommandText = "USE_TWEET 2 150"
+    var tweetCommand = commandFactory.makeCommand(tweetCommandText)
+    tweetCommand.setCommand(tweetCommandText)
+    TestHelper.processRound(gameMap, tweetCommand, nothingCommand)
+
+    testCarGamePlayer1.pickupLizard()
+    val useLizardCommentText = "USE_LIZARD"
+    var lizardCommand = commandFactory.makeCommand(useLizardCommentText)
+    lizardCommand.setCommand(useLizardCommentText)
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val expectedPlayerLane = 2
+    val expectedPlayerBlockNumber = 149
+    val actualPlayerPosition = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+    assert(actualPlayerPosition.getLane() == expectedPlayerLane && actualPlayerPosition.getBlockNumber() == expectedPlayerBlockNumber)
+  }
+
 }
