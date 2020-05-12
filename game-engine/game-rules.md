@@ -176,7 +176,7 @@ Using a tweet will:
 ### Command: USE_LIZARD
 
 Using a lizard will:
-* Allow your car to jump for the round to avoid a lizard running across the track!
+* Make your car jump for the round to avoid a lizard running across the track!
 * All Collisions, including powerup pickups, obstacles, and other players, are ignored for the round. Your car stays in the same lane. 
 * All Collisions, including powerup pickups, obstacles, and other players, in your final block(the block you land on) for the round are applied.
 * With regards to player collisions occuring in the final block (the block you land on), they are treated in the same manner as when your car rear-ends the other player. 
