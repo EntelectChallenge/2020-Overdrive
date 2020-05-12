@@ -182,7 +182,7 @@ Using a lizard will:
 * With regards to player collisions occuring in the final block (the block you land on), they are treated in the same manner as when your car rear-ends the other player. 
     Example: If you land on [1,20], but another player is already in [1,20], your car will be put back to [1,19] as per normal collision     handling.
 
-* Attempting to use an lizard powerup when you have none will default to a **DO_NOTHING** command.
+* Attempting to use a lizard powerup when you have none, will default to a **DO_NOTHING** command.
 
 ## Collisions
 
