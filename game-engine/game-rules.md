@@ -194,7 +194,7 @@ For Example:
 * Bot 1 is in position(3,28) with a speed of 6 and issues a ACCELERATE command => future position is (3,36)
 * Bot 2 is in position(2,31) with a speed of 6 and issues a TURN_RIGHT command => future position is (3,36)
 * The collision will be resolved by moving bot 1 to (3,35) and bot 2 to (2,35).
-* If your car is behind another player's car in the same lane you can not over take them using ACCELERATE as you will rear-end them       causing you to be "stuck" behind them unless a applicable boost is used(LIZARD) or you change lane.
+* If your car is behind another player's car in the same lane you can not over take them using ACCELERATE as you will rear-end them       causing you to be "stuck" behind them unless an applicable powerup is used (e.g. LIZARD) or you change lane.
 
 ## Obstacles
 
