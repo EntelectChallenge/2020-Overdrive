@@ -171,7 +171,7 @@ Using a tweet will:
 * If a player tweets again, their existing cyber truck will move to the new location next round.
 * If a player tries to spawn cyber truck at location where another player's cybertruck is already located, their powerup usage will be refunded and their old cyber truck will remain where it was.
 * If both players try to spawn a cyber truck at the same location at the same time, they will both be refunded and their old cyber trucks will remain where the cyber trucks were.
-* Attempting to use an tweet powerup when you have none will default to a **DO_NOTHING** command.
+* Attempting to use a tweet powerup when you have none, will default to a **DO_NOTHING** command.
 
 ### Command: USE_LIZARD
 
