@@ -62,6 +62,6 @@ The effects of these are defined in the game rules.
     * ║ block is the finish line
     * Φ block contains an oil barrel power up
     * █ block contains an oil spill obstacle
-    * # block contains a flimsy wall obstacle
+    * \# block contains a flimsy wall obstacle
     * ∱ block contains a lizard powerup
     * T block contains a tweet powerup
