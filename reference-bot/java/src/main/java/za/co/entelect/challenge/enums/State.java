@@ -26,7 +26,13 @@ public enum State {
     @SerializedName("USED_OIL")
     USED_OIL,
     @SerializedName("FINISHED")
-    FINISHED
+    FINISHED,
+    @SerializedName("USED_LIZARD")
+    USED_LIZARD,
+    @SerializedName("USED_TWEET")
+    USED_TWEET,
+    @SerializedName("HIT_WALL")
+    HIT_WALL
 }
 
 
