@@ -14,5 +14,11 @@ public enum Terrain {
     @SerializedName("4")
     FINISH,
     @SerializedName("5")
-    BOOST
+    BOOST,
+    @SerializedName( "6")
+    WALL,
+    @SerializedName( "7")
+    LIZARD,
+    @SerializedName( "8")
+    TWEET
 }
