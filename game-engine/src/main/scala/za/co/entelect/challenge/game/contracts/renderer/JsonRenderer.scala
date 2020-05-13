@@ -49,7 +49,8 @@ class JsonRenderer extends BaseMapRenderer {
                     ("x" -> b.getPosition().getBlockNumber())
                   ) ~
                   ("surfaceObject" -> b.getMapObject()) ~
-                  ("occupiedByPlayerId" -> b.getOccupiedByPlayerWithId())
+                  ("occupiedByPlayerId" -> b.getOccupiedByPlayerWithId()) ~
+                  ("isOccupiedByCyberTruck" -> b.isOccupiedByCyberTruck())
               }.toList)
           }.toList)
 
@@ -79,9 +80,10 @@ class JsonRenderer extends BaseMapRenderer {
                 ("blockNumber" -> b.getPosition().getBlockNumber())
               ) ~
               ("surfaceObject" -> b.getMapObject()) ~
-              ("occupiedByPlayerWithId" -> b.getOccupiedByPlayerWithId())
+              ("occupiedByPlayerWithId" -> b.getOccupiedByPlayerWithId()) ~
+              ("isOccupiedByCyberTruck" -> b.isOccupiedByCyberTruck())
           }
-          )
+        )
 
     prettyRender(globalMapJsonStructure)
   }
