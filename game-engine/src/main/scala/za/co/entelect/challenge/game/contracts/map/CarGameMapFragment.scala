@@ -2,19 +2,19 @@ package za.co.entelect.challenge.game.contracts.map
 
 class CarGameMapFragment(currentRound: Int, player: MapFragmentPlayer, opponent: MapFragmentPlayer, lanes: Array[Block]) {
     def getCurrentRound(): Int = {
-        return currentRound;
+        return currentRound
     }
 
     def getPlayer(): MapFragmentPlayer = {
-        return player;
+        return player
     }
 
     def getOpponent(): MapFragmentPlayer = {
-        return opponent;
+        return opponent
     }
 
     def getBlocks(): Array[Block] = {
-        return lanes;
+        return lanes
     }
 
     override def toString(): String = {

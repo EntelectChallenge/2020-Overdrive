@@ -7,9 +7,9 @@ import za.co.entelect.challenge.game.contracts.game.{CarGamePlayer}
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class ConcurrentLogic_Tests extends FunSuite{
-  private var nothingCommandText: String = null;
-  private var turnLeftCommandText: String = null;
-  private var turnRightCommandText: String = null;
+  private var nothingCommandText: String = null
+  private var turnLeftCommandText: String = null
+  private var turnRightCommandText: String = null
 
   private var commandFactory: CommandFactory = null
 
@@ -19,7 +19,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
 
   def initialise() = {
-    Config.loadDefault();
+    Config.loadDefault()
 
     nothingCommandText = Config.NOTHING_COMMAND
     turnLeftCommandText = Config.TURN_LEFT_COMMAND
@@ -49,7 +49,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 35
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_3 //should be 8
@@ -82,7 +82,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 35
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_3 //should be 8
@@ -95,7 +95,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     val expectedPlayer2Lane = 3
     val expectedPlayer2BlockNumber = 39
-    val actualPlayer2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2Id);
+    val actualPlayer2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
     assert((actualPlayer2Position.getLane() == expectedPlayer2Lane) && (actualPlayer2Position.getBlockNumber() == expectedPlayer2BlockNumber), "Collision victim (from left) final position not correct")
   }
 
@@ -114,7 +114,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 35
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_3 //should be 8
@@ -147,7 +147,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 35
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_3 //should be 8
@@ -160,7 +160,7 @@ class ConcurrentLogic_Tests extends FunSuite{
 
     val expectedPlayer2Lane = 3
     val expectedPlayer2BlockNumber = 39
-    val actualPlayer2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2Id);
+    val actualPlayer2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
     assert((actualPlayer2Position.getLane() == expectedPlayer2Lane) && (actualPlayer2Position.getBlockNumber() == expectedPlayer2BlockNumber), "Collision victim (from left) final position not correct")
   }
 
@@ -179,7 +179,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 35
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_2 //should be 6
@@ -212,7 +212,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 35
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_2 //should be 6
@@ -245,7 +245,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 38
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_1 //should be 3
@@ -278,7 +278,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 38
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_1 //should be 3
@@ -308,7 +308,7 @@ class ConcurrentLogic_Tests extends FunSuite{
     val newBlockNumberMidRacePlayer1 = 35
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2();
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
     testCarGamePlayer2.speed = Config.SPEED_STATE_2 //should be 6

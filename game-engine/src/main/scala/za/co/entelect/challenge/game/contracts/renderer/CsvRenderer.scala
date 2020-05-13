@@ -7,11 +7,11 @@ import za.co.entelect.challenge.game.contracts.map.CarGameMap
 class CsvRenderer extends BaseMapRenderer {
 
     override def renderFragment(gameMap: CarGameMap, gamePlayer: CarGamePlayer): String = {
-        val mapFragment = gameMap.getMapFragment(gamePlayer);
-        val csvHeaderString = "Round,PlayerId,Position:X,Position:Y,Speed,State,Boosting,Boost-Counter,#Boosts,#Oil,Score";
+        val mapFragment = gameMap.getMapFragment(gamePlayer)
+        val csvHeaderString = "Round,PlayerId,Position:X,Position:Y,Speed,State,Boosting,Boost-Counter,#Boosts,#Oil,Score"
 
-        val currentRound = mapFragment.getCurrentRound();
-        val player = mapFragment.getPlayer();
+        val currentRound = mapFragment.getCurrentRound()
+        val player = mapFragment.getPlayer()
         val playerInfoString =
             currentRound + "," +
             player.getId() + "," +
@@ -23,12 +23,12 @@ class CsvRenderer extends BaseMapRenderer {
             player.getBoostCounter() + "," +
             player.getPowerups().count(x => x == Config.BOOST_POWERUP_ITEM) + "," +
             player.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) + "," +
-            player.getScore();
+            player.getScore()
 
-        return playerInfoString;
+        return playerInfoString
     }
 
     override def renderVisualiserMap(gameMap: CarGameMap) : String = {
-        throw new NotImplementedError("Csv renderer render visualiser map");
+        throw new NotImplementedError("Csv renderer render visualiser map")
     }
 }
