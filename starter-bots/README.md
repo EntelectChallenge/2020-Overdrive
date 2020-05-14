@@ -30,7 +30,8 @@ To submit a new language for the tournament the following will need to be provid
 3. A Docker container with environment for the language setup
 	* Details on how to create the docker container will be added shortly.
 
-Submissions for additional languages will close on **TBH**, after which no more starter bot or language requests will be accepted.
+Submissions for additional languages will close on 18th of April (2 weeks before the first challenge to allow the new bot to be merged), 
+after which no more starter bot or language requests will be accepted.
 
 When submitting a new starter bot, a Pull Request to **this** repository needs to made. The Entelect Challenge team will then review the starter bot code as well as test the Docker container. Please ensure the `Dockerfile` is located in the **same** folder as the starter bot. In other words, the pull request will consist of the following files, in the **same** folder:
 - Starter bot source code
@@ -56,9 +57,30 @@ The bot itself needs to follow some basic rules:
 
 ## Building the Docker Containers
 
-This year all bots will run within their own docker containers. To faciliate this, the submission of a new language for the tournament will also require a docker container that will support the running and compiling of the language.
-		
-### More detailed information to follow shortly.
+This year all bots will run within their own docker containers. To facilitate this, the submission of a new language for the tournament will also require a docker container that will support the running and compiling of the language.
+
+### Creating the Docker Container:
+1. Install Docker Desktop CE
+2. Ensure your Docker Desktop is setup to run Linux Containers.
+	* https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers
+3. Pull the base container
+    * You will need to use entelectchallenge/base:2019 for the base of the container, for 2020 we are using the same base container as in 2019.
+        * So in the Dockerfile, the first line should be "FROM entelectchallenge/base:2019"
+4. Start with the example Dockerfile provided.
+5. Thereafter install the requirements for the language.
+6. Ensure the stater bot can run within the container.
+7. Ensure the docker contains all the commands necessary to install any dependencies the bot has and compile the bot.
+
+### Reference Material:
+1. Reference guide to building a docker container
+	* https://docs.docker.com/engine/reference/builder/
+2. Overall guide to Docker
+	* https://docker-curriculum.com/
+
+### Base Container Details :
+* Base : stretch
+* Contains :
+	* Python 3.7.1
 
 Once your starter bot and docker container has been created. Create a pull request on github with the starter bot as well as the relevant docker container.
-If you require any assistance building the continers please feel free to contact us at challenge@entelect.co.za.
+If you require any assistance building the containers please feel free to contact us at challenge@entelect.co.za.

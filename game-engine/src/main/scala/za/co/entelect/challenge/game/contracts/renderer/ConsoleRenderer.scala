@@ -8,12 +8,12 @@ import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 class ConsoleRenderer extends BaseMapRenderer {
 
     override def renderFragment(gameMap: CarGameMap, gamePlayer: CarGamePlayer): String = {
-        val mapFragment = gameMap.getMapFragment(gamePlayer);
-        val mapFragmentAsString = mapFragment.toString();
-        return mapFragmentAsString;
+        val mapFragment = gameMap.getMapFragment(gamePlayer)
+        val mapFragmentAsString = mapFragment.toString()
+        return mapFragmentAsString
     }
     
     override def renderVisualiserMap(gameMap: CarGameMap) : String = {
-        throw new NotImplementedError("Console renderer render visualiser map");
+        throw new NotImplementedError("Console renderer render visualiser map")
     }
 }

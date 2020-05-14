@@ -32,6 +32,7 @@ The world map is made up of an array of objects. Each object defines a block in 
 
 * surfaceObject → *Defines what is on this block.*
 * occupiedByPlayerId → *Corresponds to the ID of the player in this block. Is 0 if no player is on the block*
+* isOccupiedByCyberTruck → *true if occupied, false if not*
 
 ##### Surface Object Options
 The surface object is defined by an enumerator. The value will be an integer in the state file. They correspond to the following:
@@ -42,6 +43,9 @@ The surface object is defined by an enumerator. The value will be an integer in 
 *  OIL ITEM = 3
 *  FINISH LINE = 4
 *  BOOST = 5
+*  WALL = 6
+*  LIZARD = 7
+*  TWEET = 8
 
 The effects of these are defined in the game rules.
 
@@ -56,5 +60,8 @@ The effects of these are defined in the game rules.
     * ▓ block has mud
     * » block contains a boost powerup
     * ║ block is the finish line
-    *  block contains an oil barrel power up Φ
+    * Φ block contains an oil barrel power up
     * █ block contains an oil spill obstacle
+    * # block contains a flimsy wall obstacle
+    * ∱ block contains a lizard powerup
+    * T block contains a tweet powerup
