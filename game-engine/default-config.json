@@ -93,5 +93,5 @@
 	
 	"csvSeparator": ",",
 
-    "RACER_PLACEMENT_SORTING": 1
+    "RACER_PLACEMENT_SORTING": -1
 }
