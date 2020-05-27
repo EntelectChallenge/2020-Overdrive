@@ -98,6 +98,7 @@ std::string executeRound(std::string& roundNumber)
 int main(int argc, char** argv)
 {
 	std::string roundNumber;
+	
 	while(true)
 	{
 		std::cin >> roundNumber;
