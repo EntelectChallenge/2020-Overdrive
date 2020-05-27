@@ -12,7 +12,7 @@ public class GolangBotRunner extends BotRunner {
 
     @Override
     protected void runBot() throws IOException {
-        String line = "go run \"" + this.getBotDirectory() + "/" + this.getBotFileName() + "\"";
+        String line = "\"" + this.getBotDirectory() + "/" + this.getBotFileName() + "\"";
         runSimpleCommandLineCommand(line, 0);
     }
 
