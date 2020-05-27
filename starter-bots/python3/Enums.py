@@ -8,6 +8,9 @@ class BlockObject(enum.Enum):
     OIL_POWER = 3
     FINISH = 4
     BOOST = 5
+    WALL = 6
+    LIZARD = 7
+    TWEET = 8
 
 
 class Direction(enum.Enum):
@@ -37,3 +40,5 @@ class State(enum.Enum):
     USED_OIL = "USED_OIL"
     HIT_OIL = "HIT_OIL"
     FINISHED = "FINISHED"
+    HIT_WALL = "HIT_WALL",
+    HIT_CYBER_TRUCK = "HIT_CYBER_TRUCK",
