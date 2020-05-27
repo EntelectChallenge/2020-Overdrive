@@ -240,7 +240,7 @@ Different actions that occur in game will affect your score as below:
 * Hitting mud will reduce your score by 3
 * Hitting an oil spill will reduce your score by 4
 * Picking up a powerup will increase your score by 4
-* Using a powerup will increase your score by 
+* Using a powerup will increase your score by 4
 * Issuing and invalid command will reduce your score by 5. Invalid commands are defined as below: 
 
     * Turning left while in lane 1
