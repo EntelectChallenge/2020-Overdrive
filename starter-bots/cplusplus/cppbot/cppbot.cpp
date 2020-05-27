@@ -97,8 +97,10 @@ std::string executeRound(std::string& roundNumber)
 
 int main(int argc, char** argv)
 {
-  for (std::string roundNumber; std::getline(std::cin, roundNumber);) 
-  {
-    std::cout << executeRound(roundNumber);
-  }
+	std::string roundNumber;
+	while(true)
+	{
+		std::cin >> roundNumber;
+		std::cout << executeRound(roundNumber);
+	}
 }
