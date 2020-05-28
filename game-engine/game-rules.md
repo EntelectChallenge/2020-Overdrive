@@ -173,6 +173,38 @@ Using a tweet will:
 * If both players try to spawn a cyber truck at the same location at the same time, they will both be refunded and their old cyber trucks will remain where the cyber trucks were.
 * Attempting to use a tweet powerup when you have none, will default to a **DO_NOTHING** command.
 
+Edge Cases:
+**Case 1:**
+Both cars are in the same lane and do nothing for the round.
+```
+|1| |2| | | |C| 
+```
+
+Car 2 gets stuck behind the cybertruck and car 1 gets stuck behind 2.
+```
+| | | | |1|2|C|
+```
+
+**Case 2:**
+For example given the map above and that both players are driving at the same speed, what happens if player 2 takes a right turn?
+```
+| | |2| | | | | 
+|1| | | | | |C| 
+```
+
+This goes to:
+```
+| | | | | |2| | 
+| | | | | |1|C| 
+```
+
+So when we resolve collisions they happen in this order:
+1. resolve collisions with cyber truck by updating players final block to be behind cyber truck
+2. resolve player on player collisions if their final blocks are the same
+
+^ so because of this based on the original collision rules, player 1 and player 2's final block is the same (behind cyber truck), 
+so player 2 must stay in original lane and player 1 must stay in original lane
+
 ### Command: USE_LIZARD
 
 Using a lizard will:
