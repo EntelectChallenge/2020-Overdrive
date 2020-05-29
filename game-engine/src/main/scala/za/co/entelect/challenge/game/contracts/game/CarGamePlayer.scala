@@ -102,7 +102,9 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             boostCounter = 0
         }
 
-        speed = speedLevel
+        if(speed != Config.MINIMUM_SPEED) { //only reduce speed if player not already stopped
+            speed = speedLevel
+        }
     }
 
     def hasOilItem: Boolean = powerups.contains(Config.OIL_POWERUP_ITEM)
