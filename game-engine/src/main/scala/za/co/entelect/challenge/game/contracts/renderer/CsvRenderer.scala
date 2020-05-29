@@ -8,7 +8,7 @@ class CsvRenderer extends BaseMapRenderer {
 
     override def renderFragment(gameMap: CarGameMap, gamePlayer: CarGamePlayer): String = {
         val mapFragment = gameMap.getMapFragment(gamePlayer)
-        val csvHeaderString = "Round,PlayerId,Position:X,Position:Y,Speed,State,Boosting,Boost-Counter,#Boosts,#Oil,Score"
+        val csvHeaderString = "Round,PlayerId,Position:Y,Position:X,Speed,State,Boosting,Boost-Counter,#Boosts,#Oil,Score\r\n"
 
         val currentRound = mapFragment.getCurrentRound()
         val player = mapFragment.getPlayer()
@@ -25,7 +25,13 @@ class CsvRenderer extends BaseMapRenderer {
             player.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) + "," +
             player.getScore()
 
-        return playerInfoString
+        if(gameMap.getCurrentRound() == 1)
+        {
+            return csvHeaderString + playerInfoString;
+        } else
+        {
+            return playerInfoString
+        }
     }
 
     override def renderVisualiserMap(gameMap: CarGameMap) : String = {
