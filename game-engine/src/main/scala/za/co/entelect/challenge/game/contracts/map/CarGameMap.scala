@@ -240,7 +240,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             return true
         }
 
-        val collisionFromTheSide = playersFuturePositionsAreSame
+        val collisionFromTheSide = playersFuturePositionsAreSame && !anyPlayerWasLizarding;
         if (collisionFromTheSide) {
             val correctedPlayer1Lane = player1StagedPosition.getOldPosition().getLane()
             val correctedPlayer1BlockNumber = player1FuturePosition.getBlockNumber() - 1
@@ -251,6 +251,20 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val correctedPlayer2BlockNumber = player2FuturePosition.getBlockNumber() - 1
             val correctedPlayer2FuturePosition = new BlockPosition(correctedPlayer2Lane, correctedPlayer2BlockNumber)
             player2StagedPosition.setNewPosition(correctedPlayer2FuturePosition)
+            return true
+        }
+
+        val collisionFromAbove = playersFuturePositionsAreSame && anyPlayerWasLizarding;
+        if (collisionFromAbove) {
+            val stagedPositionOfPlayerInFront = if (player1DroveIntoPlayer2) player2StagedPosition
+            else player1StagedPosition
+
+            val stagedPositionOfPlayerCollidingFromBehind = stagedFuturePositions.find(x => x != stagedPositionOfPlayerInFront).get
+            val correctedBlockNumber = stagedPositionOfPlayerInFront.getNewPosition().getBlockNumber() - 1
+            val correctedLane = stagedPositionOfPlayerCollidingFromBehind.getNewPosition().getLane()
+            val correctedPositionOfPlayerCollidingFromBehind = new BlockPosition(correctedLane, correctedBlockNumber)
+            stagedPositionOfPlayerCollidingFromBehind.setNewPosition(correctedPositionOfPlayerCollidingFromBehind)
+
             return true
         }
 
