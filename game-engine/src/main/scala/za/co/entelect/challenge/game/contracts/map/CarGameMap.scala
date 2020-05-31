@@ -60,8 +60,9 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val isBoosting = gamePlayer.isBoosting()
         val playerBoostCounter = gamePlayer.getBoostCounter()
         val score = gamePlayer.getScore()
+        val lastCyberTruckPosition = gamePlayer.getCurrentCyberTruckPosition()
         val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState, playerPowerUps,
-            isBoosting, playerBoostCounter, score)
+            isBoosting, playerBoostCounter, score, lastCyberTruckPosition)
 
         val lanes = blocks.filter(block =>
             (((playerBlockPosition.getBlockNumber() >= block.getPosition().getBlockNumber()) && (scala.math.abs(playerBlockPosition.getBlockNumber() - block.getPosition().getBlockNumber()) <= Config.BACKWARD_VISIBILITY))
@@ -72,7 +73,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val opponentBlock = getPlayerBlockPosition(opponentGamePlayerId)
 
         val opponent = new MapFragmentPlayer(opponentGamePlayerId, opponentBlock, opponentGamePlayer.getSpeed(), opponentGamePlayer.getState(),
-            opponentGamePlayer.getPowerups(), opponentGamePlayer.isBoosting(), opponentGamePlayer.getBoostCounter(), opponentGamePlayer.getScore)
+            opponentGamePlayer.getPowerups(), opponentGamePlayer.isBoosting(), opponentGamePlayer.getBoostCounter(), opponentGamePlayer.getScore, opponentGamePlayer.getCurrentCyberTruckPosition())
 
         val carGameMapFragment = new CarGameMapFragment(round, player, opponent, lanes)
         return carGameMapFragment
