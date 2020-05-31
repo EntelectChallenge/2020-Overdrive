@@ -303,4 +303,37 @@ class Command_Use_Lizard_Tests extends FunSuite {
         assert(actualPlayer1PositionOnMap.getLane() == expectedLane && actualPlayer1PositionOnMap.getBlockNumber() == expectedPlayer1BlockNumber)
     }
 
+    test("Given both players are lizarding when player 2 would rear end player 1 in final block Then maintain original order") {
+        initialise()
+        val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(6,9), Config.LIZARD_MAP_OBJECT)
+        val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+        val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+        val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+        val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+        testCarGamePlayer1.pickupLizard()
+        testCarGamePlayer1.speed = Config.SPEED_STATE_1 //should be 3
+        val newLaneMidRacePlayer1 = 2
+        val newBlockNumberMidRacePlayer1 = 35 // means end of round will be x = 38
+        TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+        val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+        val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+        val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+        testCarGamePlayer1.pickupLizard()
+        testCarGamePlayer2.speed = Config.SPEED_STATE_2 //should be 6
+        val newLaneMidRacePlayer2 = 2
+        val newBlockNumberMidRacePlayer2 = 32 // means end of round will be x = 38
+        TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+        TestHelper.processRound(gameMap, lizardCommand, lizardCommand)
+
+        val expectedPlayer2BlockNumber = 37
+        val expectedPlayer1BlockNumber = 38
+        val actualPlayer2PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
+        val actualPlayer1PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+
+        assert(expectedPlayer2BlockNumber == actualPlayer2PositionOnMap.getBlockNumber())
+        assert(expectedPlayer1BlockNumber == actualPlayer1PositionOnMap.getBlockNumber())
+    }
 }
