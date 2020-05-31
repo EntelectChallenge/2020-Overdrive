@@ -320,7 +320,7 @@ class Command_Use_Lizard_Tests extends FunSuite {
         val testGamePlayer2 = TestHelper.getTestGamePlayer2()
         val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
         val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
-        testCarGamePlayer1.pickupLizard()
+        testCarGamePlayer2.pickupLizard()
         testCarGamePlayer2.speed = Config.SPEED_STATE_2 //should be 6
         val newLaneMidRacePlayer2 = 2
         val newBlockNumberMidRacePlayer2 = 32 // means end of round will be x = 38
@@ -330,6 +330,41 @@ class Command_Use_Lizard_Tests extends FunSuite {
 
         val expectedPlayer2BlockNumber = 37
         val expectedPlayer1BlockNumber = 38
+        val actualPlayer2PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
+        val actualPlayer1PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+
+        assert(expectedPlayer2BlockNumber == actualPlayer2PositionOnMap.getBlockNumber())
+        assert(expectedPlayer1BlockNumber == actualPlayer1PositionOnMap.getBlockNumber())
+    }
+
+    test("Given player 1 is boosting when player 2 is lizarding And player 1 is behind player 2 but should overtake Then player 1 can overtake") {
+        initialise()
+        val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(6,9), Config.LIZARD_MAP_OBJECT)
+        val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+        val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+        val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+        val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+        testCarGamePlayer1.speed = Config.BOOST_SPEED
+        testCarGamePlayer1.pickupBoost()
+        testCarGamePlayer1.useBoost();
+        val newLaneMidRacePlayer1 = 2
+        val newBlockNumberMidRacePlayer1 = 67 // means end of round will be x = 38
+        TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+        val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+        val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+        val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+        testCarGamePlayer2.speed = Config.MAXIMUM_SPEED // should be 9
+        testCarGamePlayer2.pickupLizard()
+        val newLaneMidRacePlayer2 = 2
+        val newBlockNumberMidRacePlayer2 = 68 // means end of round will be x = 38
+        TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+        TestHelper.processRound(gameMap, nothingCommand, lizardCommand)
+
+        val expectedPlayer2BlockNumber = 77
+        val expectedPlayer1BlockNumber = 82
         val actualPlayer2PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
         val actualPlayer1PositionOnMap = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
 

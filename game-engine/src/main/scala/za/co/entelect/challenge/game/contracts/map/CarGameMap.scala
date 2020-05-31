@@ -205,6 +205,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val player2FuturePosition = player2StagedPosition.getNewPosition()
 
         val playersFuturePositionsAreSame = (player1FuturePosition.getLane() == player2FuturePosition.getLane()) && (player1FuturePosition.getBlockNumber() == player2FuturePosition.getBlockNumber())
+        val anyPlayerWasLizarding = player1StagedPosition.getPlayer().isLizarding || player2StagedPosition.getPlayer().isLizarding
 
         val player1WasInSameLaneAsPlayer2 = (player1StagedPosition.getOldPosition().getLane() == player2StagedPosition.getOldPosition().getLane())
         val player1WasBehindPlayer2 = (player1StagedPosition.getOldPosition().getBlockNumber() < player2StagedPosition.getOldPosition().getBlockNumber())
@@ -218,7 +219,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val player2EndedUpInSameLaneAsPlayer1 = (player2FuturePosition.getLane() == player1FuturePosition.getLane())
         val player2DroveIntoPlayer1 = player2WasInSameLaneAsPlayer1 && player2WasBehindPlayer1 && player2EndedUpInFrontOfPlayer1 && player2EndedUpInSameLaneAsPlayer1 && (playersFuturePositionsAreSame || !player2StagedPosition.getPlayer().isLizarding)
 
-        val isCollisionFromBehind = player1DroveIntoPlayer2 || player2DroveIntoPlayer1
+        val isCollisionFromBehind = (player1DroveIntoPlayer2 || player2DroveIntoPlayer1) && !anyPlayerWasLizarding;
 
         val isCollision = playersFuturePositionsAreSame || isCollisionFromBehind
 
