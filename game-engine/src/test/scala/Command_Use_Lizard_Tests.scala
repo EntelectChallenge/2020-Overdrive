@@ -349,7 +349,7 @@ class Command_Use_Lizard_Tests extends FunSuite {
         testCarGamePlayer1.pickupBoost()
         testCarGamePlayer1.useBoost();
         val newLaneMidRacePlayer1 = 2
-        val newBlockNumberMidRacePlayer1 = 67 // means end of round will be x = 38
+        val newBlockNumberMidRacePlayer1 = 67
         TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
 
         val testGamePlayer2 = TestHelper.getTestGamePlayer2()
@@ -358,7 +358,7 @@ class Command_Use_Lizard_Tests extends FunSuite {
         testCarGamePlayer2.speed = Config.MAXIMUM_SPEED // should be 9
         testCarGamePlayer2.pickupLizard()
         val newLaneMidRacePlayer2 = 2
-        val newBlockNumberMidRacePlayer2 = 68 // means end of round will be x = 38
+        val newBlockNumberMidRacePlayer2 = 68
         TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
 
         TestHelper.processRound(gameMap, nothingCommand, lizardCommand)
