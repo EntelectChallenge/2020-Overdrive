@@ -8,10 +8,23 @@ class CsvRenderer extends BaseMapRenderer {
 
     override def renderFragment(gameMap: CarGameMap, gamePlayer: CarGamePlayer): String = {
         val mapFragment = gameMap.getMapFragment(gamePlayer)
-        val csvHeaderString = "Round,PlayerId,Position:X,Position:Y,Speed,State,Boosting,Boost-Counter,#Boosts,#Oil,Score"
+        val csvHeaderString = "Round,PlayerId,Position:Y,Position:X,Speed,State,Boosting,Boost-Counter,#Boosts,#Oil,#Lizards,LastCyberTruck:Y,LastCyberTruck:X,#Tweets,Score\r\n"
 
         val currentRound = mapFragment.getCurrentRound()
         val player = mapFragment.getPlayer()
+
+        val lastCyberTruckPosition = player.getLastCyberTruckPosition();
+
+        var lastCyberTruckLane = "";
+        if(lastCyberTruckPosition != null) {
+            lastCyberTruckLane = lastCyberTruckPosition.getLane().toString()
+        }
+
+        var lastCyberTruckBlockNumber = "";
+        if(lastCyberTruckPosition != null) {
+            lastCyberTruckBlockNumber = lastCyberTruckPosition.getBlockNumber().toString()
+        }
+
         val playerInfoString =
             currentRound + "," +
             player.getId() + "," +
@@ -23,9 +36,19 @@ class CsvRenderer extends BaseMapRenderer {
             player.getBoostCounter() + "," +
             player.getPowerups().count(x => x == Config.BOOST_POWERUP_ITEM) + "," +
             player.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) + "," +
+            player.getPowerups().count(x => x == Config.LIZARD_POWERUP_ITEM) + "," +
+              lastCyberTruckLane + "," +
+              lastCyberTruckBlockNumber + "," +
+            player.getPowerups().count(x => x == Config.TWEET_POWERUP_ITEM) + "," +
             player.getScore()
 
-        return playerInfoString
+        if(gameMap.getCurrentRound() == 1)
+        {
+            return csvHeaderString + playerInfoString;
+        } else
+        {
+            return playerInfoString
+        }
     }
 
     override def renderVisualiserMap(gameMap: CarGameMap) : String = {

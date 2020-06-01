@@ -12,17 +12,30 @@ import za.co.entelect.challenge.game.contracts.renderer.CarGameRendererFactory
 class Bug_Tests extends FunSuite{
   private val nothingCommandText = "NOTHING"
   private val oilCommandText = "USE_OIL"
+  private val accelerateCommandText = "ACCELERATE"
+  private val decelerateCommandText = "DECELERATE"
+
   private var commandFactory: CommandFactory = null
   private var nothingCommand: RawCommand = null
   private var useOilCommand: RawCommand = null
+  private var accelerateCommand: RawCommand = null
+  private var declerateCommand: RawCommand = null
 
   def initialise() = {
     Config.loadDefault()
     commandFactory = new CommandFactory
+
     nothingCommand = commandFactory.makeCommand(nothingCommandText)
+    nothingCommand.setCommand(nothingCommandText)
 
     useOilCommand = commandFactory.makeCommand(oilCommandText)
     useOilCommand.setCommand(oilCommandText)
+
+    accelerateCommand = commandFactory.makeCommand(accelerateCommandText)
+    accelerateCommand.setCommand(accelerateCommandText)
+
+    declerateCommand = commandFactory.makeCommand(decelerateCommandText)
+    declerateCommand.setCommand(decelerateCommandText)
   }
 
   test("Given player during race when creating map fragment player must be visible in their own map fragment")
@@ -231,6 +244,31 @@ class Bug_Tests extends FunSuite{
     val expectedPlayerBlockNumber = 149
     val actualPlayerPosition = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
     assert(actualPlayerPosition.getLane() == expectedPlayerLane && actualPlayerPosition.getBlockNumber() == expectedPlayerBlockNumber)
+  }
+
+  test("Given a player during race when player decelerates while on wall then player is stopped on wall")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(2, 141, Config.WALL_MAP_OBJECT)
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.speed = Config.MINIMUM_SPEED
+
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 2, 138)
+
+    TestHelper.processRound(gameMap, accelerateCommand, nothingCommand) //should now be at speed 3 and hits a wall
+    TestHelper.processRound(gameMap, declerateCommand, nothingCommand) //should now be at speed 0 and still on same block as wall
+
+    assert(testCarGamePlayer1.speed == Config.MINIMUM_SPEED, "player speed should be stopped but has a positive speed")
+
+    val expectedPlayerLane = 2
+    val expectedPlayerBlockNumber = 141
+    val actualPlayerPosition = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+    assert(actualPlayerPosition.getLane() == expectedPlayerLane && actualPlayerPosition.getBlockNumber() == expectedPlayerBlockNumber, "player not stuck on same block as wall")
+
   }
 
 }
