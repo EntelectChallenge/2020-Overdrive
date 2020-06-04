@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.config.GameRunnerConfig;
-import za.co.entelect.challenge.engine.bootstrapper.GameBootstrapper;
 import za.co.entelect.challenge.engine.exceptions.InvalidRunnerState;
 import za.co.entelect.challenge.game.contracts.command.RawCommand;
 import za.co.entelect.challenge.game.contracts.common.RefereeMessage;
@@ -34,12 +33,12 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     private static final Logger LOGGER = LogManager.getLogger(GameEngineRunner.class);
     private static final String COMMAND_DELIMITER = ";";
+    public static final String SECTION_DELIMITER = "=======================================";
+    public static final String ROUND_DELIMITER = "******************************************************************************************************";
 
     private GameRunnerConfig gameRunnerConfig;
 
-    private String consoleOutput = "";
     private BehaviorSubject<Boolean> unsubscribe;
-    private BehaviorSubject<String> addToConsoleOutput;
 
     private GameMap gameMap;
     private List<Player> players;
@@ -70,24 +69,15 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     @Override
     public void onGameStarting() throws Exception {
         this.unsubscribe = BehaviorSubject.create();
-        this.addToConsoleOutput = BehaviorSubject.create();
-        this.addToConsoleOutput
-                .takeUntil(this.unsubscribe)
-                .subscribe(text -> consoleOutput += text);
 
-        if (players == null || players.size() == 0) {
+        if (players == null || players.isEmpty()) {
             throw new InvalidRunnerState("No players provided");
         }
 
         prepareGameMap();
         preparePlayers();
 
-        StringBuilder s = new StringBuilder();
-        s.append("=======================================\n");
-        s.append("Starting game\n");
-        s.append("=======================================\n");
-
-        LOGGER.info(s);
+        LOGGER.info("Starting game");
 
         gameResult = new GameResult();
         gameResult.isComplete = false;
@@ -105,13 +95,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     @Override
     public void onRoundStarting() {
         gameMap.setCurrentRound(gameMap.getCurrentRound() + 1);
-
-        StringBuilder s = new StringBuilder();
-        s.append("=======================================\n");
-        s.append(String.format("Starting round: %d \n", gameMap.getCurrentRound()));
-        s.append("=======================================\n");
-
-        LOGGER.info(s);
+        LOGGER.info(ROUND_DELIMITER);
+        LOGGER.info("Starting round: {}", gameMap.getCurrentRound());
 
         roundProcessor = new RunnerRoundProcessor(gameMap, gameRoundProcessor);
 
@@ -120,11 +105,11 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     @Override
     public void onProcessRound() throws Exception {
-        GameMapRenderer renderer = rendererResolver.resolve(RendererType.CONSOLE);
-        LOGGER.info(renderer.render(gameMap, players.get(0).getGamePlayer()));
+        GameMapRenderer consoleRenderer = rendererResolver.resolve(RendererType.CONSOLE);
 
         for (Player player : players) {
-
+            LOGGER.info("Player {}: Map View ", player.getName());
+            LOGGER.info(() -> consoleRenderer.render(gameMap, player.getGamePlayer()));
             Thread thread = new Thread(() -> {
                 BasePlayer currentPlayer = (BasePlayer) player;
                 BotExecutionContext botExecutionContext = currentPlayer.executeBot(gameMap);
@@ -150,12 +135,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     @Override
     public void onRoundComplete() {
-        StringBuilder s = new StringBuilder();
-        s.append("=======================================\n");
-        s.append(String.format("Completed round: %d \n", gameMap.getCurrentRound()));
-        s.append("=======================================\n");
-
-        LOGGER.info(s);
+        LOGGER.info("Completed round: {}", gameMap.getCurrentRound());
 
         for (BotExecutionContext botExecutionContext : botExecutionContexts) {
             try {
@@ -164,7 +144,6 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                 LOGGER.error("Failed to write round information", e);
             }
         }
-
 
         try {
             String roundDirectory = FileUtils.getRoundDirectory(gameMap.getCurrentRound());
@@ -179,6 +158,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     @Override
     public void onGameComplete() {
+        LOGGER.info(ROUND_DELIMITER);
+        LOGGER.info("Game Complete");
         this.unsubscribe.onNext(Boolean.TRUE);
 
         GamePlayer winningPlayer = gameMap.getWinningPlayer();
@@ -215,6 +196,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         for (Player player : players) {
             player.gameEnded(gameMap);
         }
+        LOGGER.info(ROUND_DELIMITER);
     }
 
     private boolean isGameComplete() throws TimeoutException {
@@ -225,17 +207,23 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         StringBuilder winnerStringBuilder = new StringBuilder();
 
         for (Player player : players) {
-            winnerStringBuilder.append(player.getName()
-                    + "- score:" + player.getGamePlayer().getScore()
-                    + " health:" + player.getGamePlayer().getHealth()
-                    + "\n");
+            winnerStringBuilder.append(player.getName())
+                    .append(" - score:")
+                    .append(player.getGamePlayer().getScore())
+                    .append(" health:")
+                    .append(player.getGamePlayer().getHealth())
+                    .append("\n");
         }
 
-        LOGGER.info("=======================================");
-        LOGGER.info((winner == null)
-                ? "The game ended in a tie"
-                : "The winner is: " + winner.getName());
-        LOGGER.info("=======================================");
+        if (winner == null) {
+            winnerStringBuilder.insert(0, "The game ended in a tie" + "\n\n");
+        } else {
+            winnerStringBuilder.insert(0, "The winner is: " + winner.getName() + "\n\n");
+        }
+
+        LOGGER.info(SECTION_DELIMITER);
+        LOGGER.info(winnerStringBuilder);
+        LOGGER.info(SECTION_DELIMITER);
 
         try {
             String roundLocation = String.format("%s/%s/endGameState.txt", gameRunnerConfig.gameName, FileUtils.getRoundDirectory(gameMap.getCurrentRound()));
@@ -249,30 +237,24 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                 endStateFile.createNewFile();
             }
 
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(endStateFile));
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(endStateFile))) {
 
-            if (winner == null) {
-                winnerStringBuilder.insert(0, "The game ended in a tie" + "\n\n");
-            } else {
-                winnerStringBuilder.insert(0, "The winner is: " + winner.getName() + "\n\n");
-            }
+                winnerStringBuilder.insert(0, "Match seed: " + gameRunnerConfig.seed + "\n\n");
 
-            winnerStringBuilder.insert(0, "Match seed: " + gameRunnerConfig.seed + "\n\n");
+                if (!refereeMessage.isValid) {
+                    winnerStringBuilder.append(SECTION_DELIMITER + "\n");
+                    winnerStringBuilder.append("Referee messages\n");
+                    winnerStringBuilder.append(SECTION_DELIMITER + "\n");
 
-            if (!refereeMessage.isValid) {
-                winnerStringBuilder.append("=======================================\n");
-                winnerStringBuilder.append("Referee messages\n");
-                winnerStringBuilder.append("=======================================\n");
-
-                for (String reason : refereeMessage.reasons) {
-                    winnerStringBuilder.append(reason);
-                    winnerStringBuilder.append("\n");
+                    for (String reason : refereeMessage.reasons) {
+                        winnerStringBuilder.append(reason);
+                        winnerStringBuilder.append("\n");
+                    }
                 }
-            }
 
-            bufferedWriter.write(winnerStringBuilder.toString());
-            bufferedWriter.flush();
-            bufferedWriter.close();
+                bufferedWriter.write(winnerStringBuilder.toString());
+                bufferedWriter.flush();
+            }
 
         } catch (IOException e) {
             LOGGER.error("Error writing end game file", e);
@@ -285,7 +267,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             throw new InvalidRunnerState("No GameMapGenerator instance found");
         }
 
-        if (players == null || players.size() == 0) {
+        if (players == null || players.isEmpty()) {
             throw new InvalidRunnerState("No players found");
         }
 

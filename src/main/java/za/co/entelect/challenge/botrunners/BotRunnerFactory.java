@@ -29,6 +29,10 @@ public class BotRunnerFactory {
                 return new ScalaBotRunner(botMetaData, timeoutInMilliseconds);
             case RUST:
                 return new RustBotRunner(botMetaData, timeoutInMilliseconds);
+            case LISP:
+                return new LISPBotRunner(botMetaData, timeoutInMilliseconds);
+            case GOLANG:
+                return new GolangBotRunner(botMetaData, timeoutInMilliseconds);
             default:
                 throw new InvalidRunnerState("No runner found for bot language " + botLanguage);
         }

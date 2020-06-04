@@ -22,15 +22,15 @@ import java.io.IOException;
 
 public class TournamentPlayer extends BasePlayer {
 
-    private int apiPort;
-    private File botZip;
-    private BotServices botServices;
-    private int maxRequestRetries;
-    private int retryTimeout;
+    private final int apiPort;
+    private final File botZip;
+    private final BotServices botServices;
+    private final int maxRequestRetries;
+    private final int retryTimeout;
 
     private static final Logger LOGGER = LogManager.getLogger(TournamentPlayer.class);
 
-    public TournamentPlayer(GameRunnerConfig gameRunnerConfig, String name, int apiPort, File botZip) throws Exception {
+    public TournamentPlayer(GameRunnerConfig gameRunnerConfig, String name, int apiPort, File botZip) throws IOException {
         super(name);
         this.apiPort = apiPort;
         this.botZip = botZip;
@@ -47,7 +47,7 @@ public class TournamentPlayer extends BasePlayer {
         instantiateBot();
     }
 
-    private void instantiateBot() throws Exception {
+    private void instantiateBot() throws IOException {
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/zip"), botZip);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", botZip.getName(), requestBody);
@@ -62,10 +62,10 @@ public class TournamentPlayer extends BasePlayer {
             String errorMessage = String.format("Failed to instantiate bot: %s on api port %d", getName(), apiPort);
 
             LOGGER.error(errorMessage);
-            throw new Exception(errorMessage);
+            throw new IllegalStateException(errorMessage);
         }
 
-        LOGGER.info(String.format("Successfully instantiated bot: %s on api port %d", getName(), apiPort));
+        LOGGER.info("Successfully instantiated bot: {} on api port {}", getName(), apiPort);
     }
 
     @Override
@@ -78,16 +78,23 @@ public class TournamentPlayer extends BasePlayer {
             Response<RunBotResponseDto> execute = botServices.runBot(jsonPart, textPart, botExecutionContext.round).execute();
 
             RunBotResponseDto runBotResponseDto = execute.body();
-            botExecutionContext.command = runBotResponseDto.getCommand();
-            if (botExecutionContext.command != null) {
-                botExecutionContext.command = botExecutionContext.command.trim();
+            if (runBotResponseDto != null) {
+                botExecutionContext.command = runBotResponseDto.getCommand();
+                LOGGER.info("Player {} - Got command [{}]", getName(), botExecutionContext.command);
+                if (botExecutionContext.command != null) {
+                    botExecutionContext.command = botExecutionContext.command.trim();
+                }
+
+                botExecutionContext.exception = runBotResponseDto.getStdError();
+                botExecutionContext.executionTime = runBotResponseDto.getExecutionTime();
+            } else {
+                LOGGER.error("Player {} - Execution data is null, has the bot crashed?", getName());
+                botExecutionContext.exception = "Execution data is null";
             }
 
-            botExecutionContext.exception = runBotResponseDto.getStdError();
-            botExecutionContext.executionTime = runBotResponseDto.getExecutionTime();
-
         } catch (IOException e) {
-            LOGGER.error("Failed to get bot command", e);
+            LOGGER.error("Player {} - Failed to get bot command", getName(), e);
+            botExecutionContext.exception = e.toString();
         }
     }
 
@@ -100,12 +107,11 @@ public class TournamentPlayer extends BasePlayer {
     public void gameEnded(GameMap gameMap) {
         super.gameEnded(gameMap);
 
-        LOGGER.info(String.format("Signaling bot runner to shutdown - Player id: %s", getPlayerId()));
+        LOGGER.info("Player {} (id {}) - Signaling bot runner to shutdown", getName(), getPlayerId());
         try {
             botServices.killBot().execute();
-        }
-        catch (IOException e) {
-            LOGGER.warn(String.format("Request to runner failed due to the shutdown signal - Player id: %s", getPlayerId()));
+        } catch (IOException e) {
+            LOGGER.warn("Player {} (id {}) - Request to runner failed due to the shutdown signal ", getName(), getPlayerId());
         }
     }
 }
