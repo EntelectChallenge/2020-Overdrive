@@ -9,9 +9,11 @@ import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap}
 class Command_Tweet_Tests extends FunSuite{
   private val commandText = "NOTHING"
   private val turnRightCommandText = "TURN_RIGHT"
+  private val accelerateCommandText = "ACCELERATE"
   private var commandFactory: CommandFactory = null
   private var nothingCommand: RawCommand = null
   private var turnRightCommand: RawCommand = null
+  private var accelerateCommand: RawCommand = null
 
   def initialise() = {
     Config.loadDefault()
@@ -20,6 +22,8 @@ class Command_Tweet_Tests extends FunSuite{
     nothingCommand.setCommand(commandText)
     turnRightCommand = commandFactory.makeCommand(turnRightCommandText)
     turnRightCommand.setCommand(turnRightCommandText)
+    accelerateCommand = commandFactory.makeCommand(accelerateCommandText)
+    accelerateCommand.setCommand(accelerateCommandText)
   }
 
   def makeTweetCommand(laneX: Int, blockY: Int) : RawCommand =
@@ -761,28 +765,58 @@ class Command_Tweet_Tests extends FunSuite{
     assert(player1TweetCount == 1)
   }
 
-  test("Given a race when both players are in the same lane behind each other and hit a cybertruck") {
+  test("Given a race when both players are in the same lane and will hit the cybertruck when player 2 would reach the cybertruck first then final order is p1 p2 cybertruck") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects()
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1()
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
-    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 2, 700)
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 3, 36)
 
     val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
-    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 2, 702)
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 40)
 
-    val blockForCyberTruck = carGameMap.getBlockMatchingPosition(new BlockPosition(2, 706))
+    testCarGamePlayer1.speed = 8
+    testCarGamePlayer2.speed = 8
+
+    val blockForCyberTruck = carGameMap.getBlockMatchingPosition(new BlockPosition(3, 43))
     blockForCyberTruck.addCyberTruck();
 
     assert(blockForCyberTruck.isOccupiedByCyberTruck())
 
-    TestHelper.processRound(carGameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(carGameMap, accelerateCommand, accelerateCommand)
 
-    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId()).getBlockNumber() == 704)
-    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer2.getGamePlayerId()).getBlockNumber() == 705)
+    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId()).getBlockNumber() == 41)
+    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer2.getGamePlayerId()).getBlockNumber() == 42)
+  }
+
+  test("Given a race when both players are in the same lane and will hit the cybertruck when player 1 would reach the cybertruck first then final order is p2 p1 cybertruck") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 3, 39)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 38)
+
+    testCarGamePlayer1.speed = 8
+    testCarGamePlayer2.speed = 8
+
+    val blockForCyberTruck = carGameMap.getBlockMatchingPosition(new BlockPosition(3, 43))
+    blockForCyberTruck.addCyberTruck();
+
+    assert(blockForCyberTruck.isOccupiedByCyberTruck())
+
+    TestHelper.processRound(carGameMap, accelerateCommand, accelerateCommand)
+
+    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId()).getBlockNumber() == 42)
+    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer2.getGamePlayerId()).getBlockNumber() == 41)
   }
 
   test("Given a race when both players are in different lanes and turn into in the same lane behind each other and hit a cybertruck") {
