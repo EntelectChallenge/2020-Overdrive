@@ -100,7 +100,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             maxSpeedState = MINIMUM_SPEED;
             return;
         }
-        var maxSpeedIndex = allSpeedStates.length - damage - 1
+        var maxSpeedIndex = Math.max(allSpeedStates.length - damage - 1, 0)
         maxSpeedState = allSpeedStates(maxSpeedIndex);
     }
 
