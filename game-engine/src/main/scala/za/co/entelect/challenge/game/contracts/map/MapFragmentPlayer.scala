@@ -1,7 +1,7 @@
 package za.co.entelect.challenge.game.contracts.map
 
 class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, statesThatOccurredThisRound: Array[String], powerups: Array[String],
-                        boosting: Boolean, boostCounter: Int, score: Int, lastCyberTruckPosition: BlockPosition) {
+                        boosting: Boolean, boostCounter: Int, score: Int, damage: Int, lastCyberTruckPosition: BlockPosition) {
     def getId(): Int = {
         return id
     }
@@ -30,6 +30,10 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, statesThat
         return boostCounter
     }
 
+    def getDamage(): Int = {
+        return damage
+    }
+
     def getScore(): Int = {
         return score
     }
@@ -50,6 +54,7 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, statesThat
                 " statesThatOccurredThisRound:" + statesThatOccurredThisRound.mkString(", ") +
                 " boosting:" + boosting +
                 " boost-counter:" + boostCounter +
+                " damage:" + damage +
                 " score:" + score +
                 " powerups: " + powerups.groupBy(p => p)
                 .map(kv => s"${kv._1}:${kv._2.length}")

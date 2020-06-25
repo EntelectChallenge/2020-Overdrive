@@ -40,7 +40,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         return speed
     }
 
-    def getDamage: Int = {
+    def getDamage(): Int = {
         return damage
     }
     

@@ -30,6 +30,7 @@ class JsonRenderer extends BaseMapRenderer {
             ("powerups" -> player.getPowerups().toList) ~
             ("boosting" -> player.isBoosting()) ~
             ("boostCounter" -> player.getBoostCounter()) ~
+            ("damage" -> player.getDamage()) ~
             ("score" -> player.getScore())
           ) ~
         ("opponent" ->
@@ -74,6 +75,7 @@ class JsonRenderer extends BaseMapRenderer {
             ("powerups" -> p.getPowerups().toList) ~
             ("boosting" -> p.isBoosting()) ~
             ("boostCounter" -> p.getBoostCounter()) ~
+            ("damage" -> p.getDamage()) ~
             ("score" -> p.getScore())
         }
         ) ~
