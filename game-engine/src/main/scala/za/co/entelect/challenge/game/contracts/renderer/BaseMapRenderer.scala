@@ -39,7 +39,7 @@ abstract class BaseMapRenderer extends GameMapRenderer {
         commandPrompt += "USE_LIZARD    : use lizard powerup to jump for this round avoiding all obstacles, pickups and players until you land\r\n"
         commandPrompt += "USE_TWEET X Y : spawn a cyber at lane X and blocknumber \r\n"
         commandPrompt += "USE_EMP       : use EMP powerup to slow down car infront\r\n"
-        commandPrompt += "FIX"          : use FIX command to repair car \r\n"
+        commandPrompt += "FIX           : use FIX command to repair car \r\n"
         commandPrompt += "====================================================================================================================="
 
         return commandPrompt
