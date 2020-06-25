@@ -11,6 +11,7 @@ import scala.collection.mutable
 
 class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, var blocks: Array[Block], var round: Int) extends GameMap {
 
+    var startMap: Array[BlockPosition] = Array[BlockPosition]()
     var stagedFuturePositions: List[StagedPosition] = List[StagedPosition]()
     var stagedCyberTruckPositions: List[StagedPosition] = List[StagedPosition]()
 
@@ -27,7 +28,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         for (i <- 0 until players.size()) {
             val gamePlayer = players.get(i).getGamePlayer
             val carGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer]
-            if (carGamePlayer.getState() == Config.FINISHED_PLAYER_STATE) {
+            if (carGamePlayer.getState().last == Config.FINISHED_PLAYER_STATE) {
                 winningPlayers.addOne(gamePlayer)
             }
         }
@@ -84,6 +85,11 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val playerBlock = blocks(indexOfPlayerOnTrack)
         val playerBlockPosition = playerBlock.getPosition()
         return playerBlockPosition
+    }
+
+    def getPlayerStartOfRoundBlockPosition(gameplayerId: Int): BlockPosition = {
+        val playerBlock = startMap(gameplayerId-1)
+        return playerBlock
     }
 
     def getCarGamePlayers(): Array[CarGamePlayer] = {
@@ -156,13 +162,12 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
     def resolveCyberTruckCollisions(): Boolean = {
         var playerHitCyberTruck = false
-        var hitCyberTrucks = new Array[Block](0)
         stagedFuturePositions.foreach(x => {
             val startBlockNumber = x.getOldPosition().getBlockNumber()
             val endBlockNumber = x.getNewPosition().getBlockNumber()
             val endLane = x.getNewPosition().getLane()
             val blockWithCyberTruckInMiddleOfPath = blocks.find(b => (b.getPosition().getLane() == endLane
-              && b.getPosition().getBlockNumber() >= startBlockNumber
+              && b.getPosition().getBlockNumber() > startBlockNumber
               && b.getPosition().getBlockNumber() <= endBlockNumber-1)
               && b.isOccupiedByCyberTruck()
             )
@@ -180,7 +185,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
                     val newFuturePosition = new BlockPosition(adjustedNewLane, adjustedNewBlockNumber)
                     x.setNewPosition(newFuturePosition)
                     x.getPlayer().hitCyberTruck()
-                    hitCyberTrucks = hitCyberTrucks :+ definedBlockWithCyberTruck
+                    definedBlockWithCyberTruck.removeCyberTruck()
                     playerHitCyberTruck = true
                 }
                 else {
@@ -190,16 +195,11 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
                     val newFuturePosition = new BlockPosition(adjustedNewLane, adjustedNewBlockNumber)
                     x.setNewPosition(newFuturePosition)
                     x.getPlayer().hitCyberTruck()
-                    hitCyberTrucks = hitCyberTrucks :+ definedBlockWithCyberTruck
+                    definedBlockWithCyberTruck.removeCyberTruck()
                     playerHitCyberTruck = true
                 }
             }
         })
-
-        for (block <- hitCyberTrucks) {
-          block.removeCyberTruck()
-        }
-
         return playerHitCyberTruck
     }
 
@@ -448,6 +448,10 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         carGamePlayer.pickupItem(blockToApply.getMapObject())
         carGamePlayer.setLizarding(wasLizarding)
 
+    }
+
+    def setStartRound(currentStartMap: Array[BlockPosition]): Unit = {
+        startMap = currentStartMap
     }
 
     private def checkIfPlayerHasWon(carGamePlayer: CarGamePlayer, newPosition: BlockPosition) = {

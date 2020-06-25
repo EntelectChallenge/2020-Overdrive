@@ -22,6 +22,19 @@ class MapObject_Mud_Tests extends FunSuite{
     turnRightCommand.setCommand(turnRightCommandText)
   }
 
+  test("Given players during race when player hits mud then damage increases") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+
+    val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer.speed = Config.SPEED_STATE_2
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    assert(testCarGamePlayer.getDamage == Config.DAMAGE_MUD)
+  }
+
   test("Given players during race when player hits mud then speed is reduced") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.MUD_MAP_OBJECT)
@@ -46,6 +59,7 @@ class MapObject_Mud_Tests extends FunSuite{
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_1)
+    assert(testCarGamePlayer.getDamage == Config.DAMAGE_MUD * 2)
   }
 
   test("Given player that is boosting during race when player hits mud then speed is reduced and player is no longer boosting") {

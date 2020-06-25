@@ -16,6 +16,7 @@ class BlockObjectCreator() {
     mapObjects.put(mapObjects.lastKey + (Config.WALL_GENERATION_PERCENTAGE * 0.01), Config.WALL_MAP_OBJECT)
     mapObjects.put(mapObjects.lastKey + (Config.LIZARD_GENERATION_PERCENTAGE * 0.01), Config.LIZARD_MAP_OBJECT)
     mapObjects.put(mapObjects.lastKey + (Config.TWEET_GENERATION_PERCENTAGE * 0.01), Config.TWEET_MAP_OBJECT)
+    mapObjects.put(mapObjects.lastKey + (Config.EMP_GENERATION_PERCENTAGE * 0.01), Config.EMP_MAP_OBJECT)
     mapObjects.put(1.0, Config.EMPTY_MAP_OBJECT)
 
     val (_, value) = mapObjects.minAfter(randomNumberGenerator.nextDouble).get

@@ -17,6 +17,9 @@ class CommandFactory {
     private val USE_OIL = Config.USE_OIL_COMMAND
     private val USE_LIZARD = Config.USE_LIZARD_COMMAND
     private val USE_TWEET = Config.USE_TWEET_COMMAND
+    private val USE_EMP = Config.USE_EMP_COMMAND
+
+    private val FIX = Config.FIX_COMMAND
 
     def makeCommand(commandText: String): RawCommand = {
         val fullCommand = commandText.toUpperCase().split(" ")
@@ -32,7 +35,9 @@ class CommandFactory {
           case USE_OIL => return makeUseOilCommand()
           case USE_LIZARD => return makeUseLizardCommand()
           case USE_TWEET => return makeUseTweetCommand(fullCommand)
-          case invalidCommandType  => return defaultToNothingCommand("Bot sent invalid command: " + invalidCommandType.toString())
+          case USE_EMP => return makeUseEmpCommand()
+          case FIX => return makeFixCommand()
+          case invalidCommandType => return defaultToNothingCommand("Bot sent invalid command: " + invalidCommandType.toString())
       }
     }
 
@@ -47,7 +52,7 @@ class CommandFactory {
         val isLeft = true
         return new ChangeLaneCommand(isLeft)
     }
-    
+
     private def makeTurnRightCommand(): RawCommand = {
         val isLeft = false
         return new ChangeLaneCommand(isLeft)
@@ -62,6 +67,9 @@ class CommandFactory {
     private def makeUseOilCommand(): RawCommand = new UseOilCommand
 
     private def makeUseLizardCommand(): RawCommand = new UseLizardCommand
+
+    private def makeUseEmpCommand(): RawCommand = new UseEmpCommand
+    private def makeFixCommand(): RawCommand = new FixCommand
 
     private def makeUseTweetCommand(fullCommand: Array[String]): RawCommand =
     {

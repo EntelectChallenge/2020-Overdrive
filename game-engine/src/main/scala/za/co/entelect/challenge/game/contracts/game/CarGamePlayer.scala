@@ -6,7 +6,6 @@ import za.co.entelect.challenge.game.contracts.map.BlockPosition
 import scala.collection.mutable
 
 class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: Int) extends GamePlayer {
-
     private val MINIMUM_SPEED: Int = Config.MINIMUM_SPEED
     private val SPEED_STATE_1: Int = Config.SPEED_STATE_1
     private val INITIAL_SPEED: Int = Config.INITIAL_SPEED
@@ -14,12 +13,16 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     private val SPEED_STATE_3: Int = Config.SPEED_STATE_3
     private val MAXIMUM_SPEED: Int = Config.MAXIMUM_SPEED
     private val BOOST_SPEED: Int = Config.BOOST_SPEED
+    private var allSpeedStates: Array[Int] = Array(MINIMUM_SPEED, SPEED_STATE_1, INITIAL_SPEED, SPEED_STATE_2, SPEED_STATE_3, MAXIMUM_SPEED)
+    private var allowableSpeedStates = allSpeedStates
+    private var maxSpeedState:  Int = Config.MAXIMUM_SPEED
+    private var damage: Int = 0;
     private val powerups: mutable.ListBuffer[String] = mutable.ListBuffer[String]()
-    private var state: String = ""
     private var boosting: Boolean = false
     private var boostCounter = 0
     private var lizarding: Boolean = false
     private var currentCyberTruckPosition: BlockPosition = null
+    private var statesThatOccurredThisRound: Array[String] = Array.empty
 
     override def getHealth: Int = {
         return health
@@ -37,8 +40,20 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         return speed
     }
 
-    def getState(): String = {
-        return state
+    def getDamage: Int = {
+        return damage
+    }
+    
+    def getState(): Array[String] = {
+        return statesThatOccurredThisRound
+    }
+
+    def setDamage(newDamage: Int) = {
+        damage = newDamage;
+    }
+
+    def getAllowableSpeeds: Array[Int] = {
+        return allowableSpeedStates;
     }
 
     def getReady() = {
@@ -58,20 +73,35 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     def hasTurnedThisRound(): Boolean = {
-        return state == Config.TURNING_LEFT_PLAYER_STATE || state == Config.TURNING_RIGHT_PLAYER_STATE
+        return statesThatOccurredThisRound.contains(Config.TURNING_LEFT_PLAYER_STATE) || statesThatOccurredThisRound.contains(Config.TURNING_RIGHT_PLAYER_STATE)
     }
 
     def hitItem(item: Int): Unit = {
         if (isLizarding) return
         if (item == Config.MUD_MAP_OBJECT) {
+            damage += Config.DAMAGE_MUD;
+            reduceMaxAllowableSpeed()
             hitMud()
         }
         if (item == Config.OIL_SPILL_MAP_OBJECT) {
+            damage += Config.DAMAGE_OIL;
+            reduceMaxAllowableSpeed()
             hitOil()
         }
         if (item == Config.WALL_MAP_OBJECT) {
+            damage += Config.DAMAGE_WALL;
+            reduceMaxAllowableSpeed()
             hitWall()
         }
+    }
+
+    def reduceMaxAllowableSpeed(): Unit = {
+        if (allSpeedStates.length < damage){
+            maxSpeedState = MINIMUM_SPEED;
+            return;
+        }
+        var maxSpeedIndex = allSpeedStates.length - damage - 1
+        maxSpeedState = allSpeedStates(maxSpeedIndex);
     }
 
     def hitMud(): Unit = {
@@ -93,6 +123,13 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         reduceSpeedToLevel(allowStop, SPEED_STATE_1)
         setState(Config.HIT_WALL_PLAYER_STATE)
         updateScore(Config.HIT_WALL_SCORE_PENALTY)
+    }
+
+    def hitEmp(): Unit = {
+        val allowStop: Boolean = false
+        reduceSpeedToLevel(allowStop, SPEED_STATE_1)
+        setState(Config.HIT_EMP_PLAYER_STATE)
+        updateScore(Config.HIT_EMP_SCORE_PENALTY)
     }
 
     private def reduceSpeedToLevel(allowStop: Boolean, speedLevel: Int) = {
@@ -136,6 +173,10 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         {
             pickupTweet()
         }
+        if(pickupItem == Config.EMP_MAP_OBJECT)
+        {
+            pickupEmp()
+        }
     }
 
     def pickupOilItem(isLastBlock: Boolean = false): Unit = {
@@ -158,6 +199,11 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         updateScore(Config.PICKUP_POWERUP_BONUS)
     }
 
+    def pickupEmp() = {
+        powerups.addOne(Config.EMP_POWERUP_ITEM)
+        updateScore(Config.PICKUP_POWERUP_BONUS)
+    }
+
     def isLizarding: Boolean = {
         return lizarding
     }
@@ -176,6 +222,11 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         return playerHasTweet
     }
 
+    def hasEmp(): Boolean = {
+        val playerHasEmp = powerups.contains(Config.EMP_POWERUP_ITEM)
+        return playerHasEmp
+    }
+
     def useBoost() = {
         powerups.subtractOne(Config.BOOST_POWERUP_ITEM)
         speed = BOOST_SPEED
@@ -188,6 +239,12 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     def useTweet() = {
         powerups.subtractOne(Config.TWEET_POWERUP_ITEM)
         setState(Config.USED_POWERUP_TWEET_PLAYER_STATE)
+        updateScore(Config.USE_POWERUP_BONUS)
+    }
+
+    def useEmp() = {
+        powerups.subtractOne(Config.EMP_POWERUP_ITEM)
+        setState(Config.USED_POWERUP_EMP_PLAYER_STATE)
         updateScore(Config.USE_POWERUP_BONUS)
     }
 
@@ -240,6 +297,9 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     private def increaseSpeed() = {
+        if (!isBoosting()){
+            reduceMaxAllowableSpeed()
+        }
         speed match {
             case MINIMUM_SPEED => speed = SPEED_STATE_1
             case SPEED_STATE_1 => speed = SPEED_STATE_2
@@ -250,6 +310,9 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             case BOOST_SPEED => speed = BOOST_SPEED
             case invalidSpeed => throw new Exception("Invalid current speed: " + invalidSpeed.toString())
         }
+        if (speed > maxSpeedState && !isBoosting()) {
+            speed = maxSpeedState;
+        }
     }
 
     def finish() = {
@@ -257,7 +320,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     private def setState(newPlayerState: String) = {
-        state = newPlayerState
+        statesThatOccurredThisRound = statesThatOccurredThisRound.appended(newPlayerState)
     }
 
     def getPowerups(): Array[String] = {
@@ -287,9 +350,29 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     def hitCyberTruck() = {
+        val allowStop : Boolean = false
         setState(Config.HIT_CYBER_TRUCK_PLAYER_STATE)
-        speed = Config.SPEED_STATE_1
+        reduceSpeedToLevel(allowStop, Config.SPEED_STATE_1)
         updateScore(Config.HIT_CYBERTRUCK_SCORE_PENALTY)
+        damage += Config.DAMAGE_CYBERTRUCK;
+        reduceMaxAllowableSpeed()
     }
 
+    def clearStatesThatOccurredLastRound() = {
+        statesThatOccurredThisRound = Array.empty
+    }
+
+    def fixDamage() = {
+        val carIsDamaged = damage > 0
+        if (carIsDamaged){
+            damage -= Config.DAMAGE_REPAIR_VALUE;
+        }
+        capDamageAtZero()
+    }
+
+    private def capDamageAtZero() = {
+        if (damage < 0) {
+            damage = 0;
+        }
+    }
 }

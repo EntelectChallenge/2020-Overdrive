@@ -11,20 +11,20 @@ abstract class BaseMapRenderer extends GameMapRenderer {
         val carGameMap: CarGameMap = gameMap.asInstanceOf[CarGameMap]
 
         val shouldRenderFragment = gamePlayer != null
-        if(shouldRenderFragment) 
+        if(shouldRenderFragment)
         {
             val carGamePlayer: CarGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer]
             return renderFragment(carGameMap, carGamePlayer)
-        } 
-        else 
+        }
+        else
         {
             return renderVisualiserMap(carGameMap)
         }
     }
-    
+
     def renderFragment(carGameMap: CarGameMap, carGamePlayer: CarGamePlayer): String
     def renderVisualiserMap(carGameMap: CarGameMap): String
-    
+
     override def commandPrompt(gamePlayer: GamePlayer): String = {
         var commandPrompt = "===============================================================================================================\r\n"
         commandPrompt += "Please enter your command of choice:\r\n"
@@ -38,6 +38,8 @@ abstract class BaseMapRenderer extends GameMapRenderer {
         commandPrompt += "USE_OIL       : drop oil barrel if you have one in your possession\r\n"
         commandPrompt += "USE_LIZARD    : use lizard powerup to jump for this round avoiding all obstacles, pickups and players until you land\r\n"
         commandPrompt += "USE_TWEET X Y : spawn a cyber at lane X and blocknumber \r\n"
+        commandPrompt += "USE_EMP       : use EMP powerup to slow down car infront\r\n"
+        commandPrompt += "FIX"          : use FIX command to repair car \r\n"
         commandPrompt += "====================================================================================================================="
 
         return commandPrompt

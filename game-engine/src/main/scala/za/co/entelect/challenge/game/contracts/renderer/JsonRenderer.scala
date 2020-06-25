@@ -25,7 +25,8 @@ class JsonRenderer extends BaseMapRenderer {
                 ("x" -> player.getPosition().getBlockNumber())
               ) ~
             ("speed" -> player.getSpeed()) ~
-            ("state" -> player.getState()) ~
+            ("state" -> player.getState().last) ~
+            ("statesThatOccurredThisRound" -> player.getState().toList) ~
             ("powerups" -> player.getPowerups().toList) ~
             ("boosting" -> player.isBoosting()) ~
             ("boostCounter" -> player.getBoostCounter())
@@ -67,7 +68,8 @@ class JsonRenderer extends BaseMapRenderer {
                 ("blockNumber" -> gameMap.getPlayerBlockPosition(p.getGamePlayerId()).getBlockNumber())
               ) ~
             ("speed" -> p.getSpeed()) ~
-            ("state" -> p.getState()) ~
+            ("state" -> p.getState().last) ~
+            ("statesThatOccurredThisRound" -> p.getState().toList) ~
             ("powerups" -> p.getPowerups().toList) ~
             ("boosting" -> p.isBoosting()) ~
             ("boostCounter" -> p.getBoostCounter())
