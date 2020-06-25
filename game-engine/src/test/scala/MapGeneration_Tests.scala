@@ -5,7 +5,7 @@ import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class MapGeneration_Tests extends FunSuite {
 
-  private val numberOfIterations = 10000
+  private val numberOfIterations = 1000
   private val randomNumberGeneratorSeed = 50
   private val acceptableDeviationFromStatedGenerationPercentage = 0.01
 
