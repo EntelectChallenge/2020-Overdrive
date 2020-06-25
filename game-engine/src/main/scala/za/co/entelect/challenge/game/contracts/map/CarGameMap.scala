@@ -333,10 +333,12 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val positionToEndCounting = findPositionToEndCountingCollisionsFromInMiddlePath(newPosition)
             val lastBlockPosition = findLastPositionForIdentifyingEffectsAtEndOfPath(newPosition)
 
-            applyMapEffectsInMiddlePathToPlayer(player, positionToStartCounting, positionToEndCounting)
-            applyMapEffectsInLastBlockOfPathToPlayer(player, lastBlockPosition)
-            applyPickupsInPathToPlayer(player, positionToStartCounting, positionToEndCounting)
-            applyPickupsInLastBlockToPlayer(player, lastBlockPosition)
+            val oldPostionSameAsNewPosition = (oldPosition.getLane() == newPosition.getLane()) && (oldPosition.getBlockNumber() == newPosition.getBlockNumber())
+            val playerIsInert = (player.speed == 0) && (oldPostionSameAsNewPosition);
+            applyMapEffectsInMiddlePathToPlayer(player, positionToStartCounting, positionToEndCounting, playerIsInert)
+            applyMapEffectsInLastBlockOfPathToPlayer(player, lastBlockPosition, playerIsInert)
+            applyPickupsInPathToPlayer(player, positionToStartCounting, positionToEndCounting, playerIsInert)
+            applyPickupsInLastBlockToPlayer(player, lastBlockPosition, playerIsInert)
             occupyFinalMapPositionForPlayer(player.getGamePlayerId(), newPosition)
             checkIfPlayerHasWon(player, newPosition)
         })
@@ -362,20 +364,20 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         return new BlockPosition(newPosition.getLane(), newPosition.getBlockNumber())
     }
 
-    def applyMapEffectsInMiddlePathToPlayer(carGamePlayer: CarGamePlayer, positionToStartCounting: BlockPosition, positionToEndCounting: BlockPosition) = {
+    def applyMapEffectsInMiddlePathToPlayer(carGamePlayer: CarGamePlayer, positionToStartCounting: BlockPosition, positionToEndCounting: BlockPosition, playerIsInert: Boolean) = {
         val playerHitMudCount = mudCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerHitMudCount) {
-            carGamePlayer.hitItem(Config.MUD_MAP_OBJECT)
+            carGamePlayer.hitItem(Config.MUD_MAP_OBJECT, playerIsInert)
         }
 
         val playerHitOilCount = oilSpillCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerHitOilCount) {
-            carGamePlayer.hitItem(Config.OIL_SPILL_MAP_OBJECT)
+            carGamePlayer.hitItem(Config.OIL_SPILL_MAP_OBJECT, playerIsInert)
         }
 
         val playerHitWallCount = wallCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerHitWallCount) {
-            carGamePlayer.hitItem(Config.WALL_MAP_OBJECT)
+            carGamePlayer.hitItem(Config.WALL_MAP_OBJECT, playerIsInert)
         }
     }
 
@@ -406,33 +408,33 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         return blocks(blockIndex)
     }
 
-    def applyMapEffectsInLastBlockOfPathToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition) = {
+    def applyMapEffectsInLastBlockOfPathToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition, playerIsInert: Boolean) = {
         val blockToApply = getBlockMatchingPosition(lastBlockPosition)
         val wasLizarding = carGamePlayer.isLizarding
         carGamePlayer.setLizarding(false)
-        carGamePlayer.hitItem(blockToApply.getMapObject())
+        carGamePlayer.hitItem(blockToApply.getMapObject(), playerIsInert)
         carGamePlayer.setLizarding(wasLizarding)
     }
 
-    def applyPickupsInPathToPlayer(carGamePlayer: CarGamePlayer, positionToStartCounting: BlockPosition, positionToEndCounting: BlockPosition) = {
+    def applyPickupsInPathToPlayer(carGamePlayer: CarGamePlayer, positionToStartCounting: BlockPosition, positionToEndCounting: BlockPosition, playerIsInert: Boolean) = {
         val playerPickedUpOilItemCount = oilItemCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerPickedUpOilItemCount) {
-            carGamePlayer.pickupItem(Config.OIL_ITEM_MAP_OBJECT)
+            carGamePlayer.pickupItem(Config.OIL_ITEM_MAP_OBJECT, playerIsInert)
         }
 
         val playerPickedUpBoostCount = boostCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerPickedUpBoostCount) {
-            carGamePlayer.pickupItem(Config.BOOST_MAP_OBJECT)
+            carGamePlayer.pickupItem(Config.BOOST_MAP_OBJECT, playerIsInert)
         }
 
         val playerPickedUpLizardCount = lizardCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerPickedUpLizardCount) {
-            carGamePlayer.pickupItem(Config.LIZARD_MAP_OBJECT)
+            carGamePlayer.pickupItem(Config.LIZARD_MAP_OBJECT, playerIsInert)
         }
 
         val playerPickedUpTweetCount = tweetCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerPickedUpTweetCount) {
-            carGamePlayer.pickupItem(Config.TWEET_MAP_OBJECT)
+            carGamePlayer.pickupItem(Config.TWEET_MAP_OBJECT, playerIsInert)
         }
     }
 
@@ -448,11 +450,11 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     def tweetCountInPath(startPosition: BlockPosition, endPosition: BlockPosition): Int =
     numberOfMapObjectsInPath(startPosition, endPosition, Config.TWEET_MAP_OBJECT)
 
-    def applyPickupsInLastBlockToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition) = {
+    def applyPickupsInLastBlockToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition, playerIsInert: Boolean) = {
         val blockToApply = getBlockMatchingPosition(lastBlockPosition)
         val wasLizarding = carGamePlayer.isLizarding
         carGamePlayer.setLizarding(false)
-        carGamePlayer.pickupItem(blockToApply.getMapObject())
+        carGamePlayer.pickupItem(blockToApply.getMapObject(), playerIsInert)
         carGamePlayer.setLizarding(wasLizarding)
 
     }

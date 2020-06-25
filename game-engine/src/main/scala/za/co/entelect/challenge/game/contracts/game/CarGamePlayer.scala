@@ -76,7 +76,8 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         return statesThatOccurredThisRound.contains(Config.TURNING_LEFT_PLAYER_STATE) || statesThatOccurredThisRound.contains(Config.TURNING_RIGHT_PLAYER_STATE)
     }
 
-    def hitItem(item: Int): Unit = {
+    def hitItem(item: Int, playerIsInert: Boolean): Unit = {
+        if(playerIsInert) return
         if (isLizarding) return
         if (item == Config.MUD_MAP_OBJECT) {
             damage += Config.DAMAGE_MUD;
@@ -165,7 +166,8 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         this.lizarding = true
     }
 
-    def pickupItem(pickupItem: Int): Unit = {
+    def pickupItem(pickupItem: Int, playerIsInert: Boolean): Unit = {
+        if(playerIsInert) return
         if (isLizarding) return
         if (pickupItem == Config.BOOST_MAP_OBJECT) {
             pickupBoost()
