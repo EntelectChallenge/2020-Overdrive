@@ -50,6 +50,7 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, statesThat
                 " statesThatOccurredThisRound:" + statesThatOccurredThisRound.mkString(", ") +
                 " boosting:" + boosting +
                 " boost-counter:" + boostCounter +
+                " score:" + score +
                 " powerups: " + powerups.groupBy(p => p)
                 .map(kv => s"${kv._1}:${kv._2.length}")
                 .mkString(", ")
