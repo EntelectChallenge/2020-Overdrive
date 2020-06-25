@@ -93,6 +93,13 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             reduceMaxAllowableSpeed()
             hitWall()
         }
+        capDamageAtFive()
+    }
+
+    def capDamageAtFive() = {
+        if(damage > 5) {
+            damage = 5
+        }
     }
 
     def reduceMaxAllowableSpeed(): Unit = {
