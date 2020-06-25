@@ -34,6 +34,7 @@ case class GameEngineConfig
     HIT_WALL_PLAYER_STATE: String,
     HIT_CYBER_TRUCK_PLAYER_STATE: String,
     HIT_EMP_PLAYER_STATE: String,
+    FIX_CAR_PLAYER_STATE: String,
 
     MINIMUM_SPEED: Int,
     SPEED_STATE_1: Int,
@@ -166,6 +167,7 @@ object Config {
     def HIT_WALL_PLAYER_STATE: String = ConfigFileValues.HIT_WALL_PLAYER_STATE
     def HIT_CYBER_TRUCK_PLAYER_STATE: String = ConfigFileValues.HIT_CYBER_TRUCK_PLAYER_STATE
     def HIT_EMP_PLAYER_STATE: String = ConfigFileValues.HIT_EMP_PLAYER_STATE
+    def FIX_CAR_PLAYER_STATE: String = ConfigFileValues.FIX_CAR_PLAYER_STATE
 
     def MINIMUM_SPEED: Int = ConfigFileValues.MINIMUM_SPEED
     def SPEED_STATE_1: Int = ConfigFileValues.SPEED_STATE_1

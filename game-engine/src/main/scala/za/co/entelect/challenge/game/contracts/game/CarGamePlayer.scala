@@ -363,6 +363,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     def fixDamage() = {
+        setState(Config.FIX_CAR_PLAYER_STATE)
         val carIsDamaged = damage > 0
         if (carIsDamaged){
             damage -= Config.DAMAGE_REPAIR_VALUE;
