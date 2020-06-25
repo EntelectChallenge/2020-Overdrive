@@ -29,6 +29,7 @@ class ChangeLaneCommand(isLeft: Boolean) extends BaseCarGameCommand {
         {
             //reset player
             futureBlockNumber = currentPlayerPosition.getBlockNumber()
+            carGamePlayer.doNothing()
         }
 
         val futurePosition = new BlockPosition(futureLane, futureBlockNumber)
