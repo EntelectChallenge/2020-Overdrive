@@ -68,6 +68,7 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
 
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
+    assert(testCarGamePlayer.getDamage() == 1)
     assert(testCarGamePlayer.speed == Config.MAXIMUM_SPEED)
     assert(testCarGamePlayer.isBoosting() == false)
   }

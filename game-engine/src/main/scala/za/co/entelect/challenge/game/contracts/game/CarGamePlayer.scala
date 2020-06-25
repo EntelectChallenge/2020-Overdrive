@@ -13,9 +13,9 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     private val SPEED_STATE_3: Int = Config.SPEED_STATE_3
     private val MAXIMUM_SPEED: Int = Config.MAXIMUM_SPEED
     private val BOOST_SPEED: Int = Config.BOOST_SPEED
-    private var allSpeedStates: Array[Int] = Array(MINIMUM_SPEED, SPEED_STATE_1, INITIAL_SPEED, SPEED_STATE_2, SPEED_STATE_3, MAXIMUM_SPEED)
+    private var allSpeedStates: Array[Int] = Array(MINIMUM_SPEED, SPEED_STATE_1, INITIAL_SPEED, SPEED_STATE_2, SPEED_STATE_3, MAXIMUM_SPEED, BOOST_SPEED)
     private var allowableSpeedStates = allSpeedStates
-    private var maxSpeedState:  Int = Config.MAXIMUM_SPEED
+    private var maxSpeedState:  Int = Config.BOOST_SPEED
     private var damage: Int = 0;
     private val powerups: mutable.ListBuffer[String] = mutable.ListBuffer[String]()
     private var boosting: Boolean = false
@@ -94,12 +94,12 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             reduceMaxAllowableSpeed()
             hitWall()
         }
-        capDamageAtFive()
+        capDamageAtSix()
     }
 
-    def capDamageAtFive() = {
-        if(damage > 5) {
-            damage = 5
+    def capDamageAtSix() = {
+        if(damage > 6) {
+            damage = 6
         }
     }
 
@@ -110,6 +110,12 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         }
         var maxSpeedIndex = Math.max(allSpeedStates.length - damage - 1, 0)
         maxSpeedState = allSpeedStates(maxSpeedIndex);
+    }
+
+    def capSpeedAtMaxAllowable() = {
+        if(speed > maxSpeedState) {
+            speed = maxSpeedState
+        }
     }
 
     def hitMud(): Unit = {

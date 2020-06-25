@@ -63,6 +63,7 @@ class Command_Use_Boost_Tests extends FunSuite{
 
     TestHelper.processRound(gameMap, useBoostCommand, useBoostCommand)
 
+    assert(testCarGamePlayer1.getDamage() == 0)
     assert(testCarGamePlayer1.isBoosting())
     assert(testCarGamePlayer1.speed == Config.BOOST_SPEED)
   }

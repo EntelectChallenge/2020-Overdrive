@@ -341,6 +341,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             applyPickupsInLastBlockToPlayer(player, lastBlockPosition, playerIsInert)
             occupyFinalMapPositionForPlayer(player.getGamePlayerId(), newPosition)
             checkIfPlayerHasWon(player, newPosition)
+            player.capSpeedAtMaxAllowable()
         })
         stagedFuturePositions = List[StagedPosition]()
     }
