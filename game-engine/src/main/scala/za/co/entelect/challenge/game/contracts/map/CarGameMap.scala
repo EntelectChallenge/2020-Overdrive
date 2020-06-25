@@ -162,6 +162,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
     def resolveCyberTruckCollisions(): Boolean = {
         var playerHitCyberTruck = false
+		var hitCyberTrucks = new Array[Block](0)
         stagedFuturePositions.foreach(x => {
             val startBlockNumber = x.getOldPosition().getBlockNumber()
             val endBlockNumber = x.getNewPosition().getBlockNumber()
@@ -185,7 +186,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
                     val newFuturePosition = new BlockPosition(adjustedNewLane, adjustedNewBlockNumber)
                     x.setNewPosition(newFuturePosition)
                     x.getPlayer().hitCyberTruck()
-                    definedBlockWithCyberTruck.removeCyberTruck()
+                    hitCyberTrucks = hitCyberTrucks :+ definedBlockWithCyberTruck
                     playerHitCyberTruck = true
                 }
                 else {
@@ -195,11 +196,16 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
                     val newFuturePosition = new BlockPosition(adjustedNewLane, adjustedNewBlockNumber)
                     x.setNewPosition(newFuturePosition)
                     x.getPlayer().hitCyberTruck()
-                    definedBlockWithCyberTruck.removeCyberTruck()
+                    hitCyberTrucks = hitCyberTrucks :+ definedBlockWithCyberTruck
                     playerHitCyberTruck = true
                 }
             }
         })
+		
+		for (block <- hitCyberTrucks) {
+          block.removeCyberTruck()
+        }
+		
         return playerHitCyberTruck
     }
 
