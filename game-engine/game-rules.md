@@ -126,6 +126,7 @@ Speed scaling is not linear and is illustrated below:
 * USE_LIZARD
 * USE_TWEET
 * USE_EMP
+* FIX
 
 ### Command Structure
 
@@ -235,7 +236,13 @@ Using a lizard will:
 Using a emp will:
 * Shoot a EMP blast forward in a cone from your car
 * The emp shoots forward from your car, proceeding forward in the lane you are in as well as the lanes to your immediate left and right for the rest of the map.
-* The emp will reduce the speed of any player hit to 3 and stop them in their tracks for the rest of the round 
+* The emp will reduce the speed of any player hit to 3 and stop them in their tracks for the rest of the round
+
+### Command: FIX
+
+Using the fix command will allow you to make repairs on your car
+* Using it will remove 2 damage points from your car
+* Your car will remain stationary for the round while the repairs is being made
 
 ## Collisions
 
@@ -291,6 +298,7 @@ Amount of damage suffered per object collision
 * Oil: 1
 * Wall: 2
 * Cybertruck: 2
+
 ###Repairs
 * "Fix" is a new command allowing you to fix damage to your car!
  * Using it removes 2 damage points.
