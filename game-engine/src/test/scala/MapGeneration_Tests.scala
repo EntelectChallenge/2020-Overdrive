@@ -7,7 +7,7 @@ class MapGeneration_Tests extends FunSuite {
 
   private val numberOfIterations = 10000
   private val randomNumberGeneratorSeed = 50
-  private val acceptableDeviationFromStatedGenerationPercentage = 0.01
+  private val acceptableDeviationFromStatedGenerationPercentage = 0.025
 
   def initialise() = {
     Config.loadDefault()
