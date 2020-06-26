@@ -39,12 +39,16 @@ The Map is a 2D Array of 4 lanes. Each lane is made up of consecutive blocks. Ea
 * Empty - the block is clear and will have no impact on your car's speed
 * Mud - the block has mud on it, and will slow your car down
 * Oil Spill - the block has oil on it, and will slow your car down
-* Finish Line - Your car has reached the end of the map.
+* Flimsy wall - the block contains a flimsy wall in disrepair
+* Finish Line - Your car has reached the end of the map
 
 Blocks can contain powerups. Powerups are picked up when a car moves onto that block.
 
 * Oil Item - the block has an oil drum on it for you to collect, allowing you to create oil spills later.
 * Boost - the block has a boost powerup which upon use will dramatically speed up your car.
+* Lizard - the block has a lizard powerup which will make your car jump to avoid a lizard running accross the track
+* Tweet - the block has a tweet Elon Musks powerup which will park a Cybertruck on a desired location
+* EMP - the block contains an emp that will fire an emp wave forward
 
 ### Visiblity
 
@@ -78,7 +82,14 @@ Should you try to use a powerup you do not have this will default to a DO_NOTHIN
 * PICKED_UP_POWERUP: state player is in after picking up a power up
 * USED_BOOST: state player is in after successfully using a boost power up
 * USED_OIL: state player is in after successfully using an oil power up
+* USED_LIZARD: state player is in after successfully using a lizard power up 
+* USED_TWEET: state player is in after successfully using a tweet power up
+* USED_EMP: state player is in after successfully using a emp power up
 * HIT_MUD: state player is in after hitting a mud a block
+* HIT_OIL: state player is in after hitting a oil block
+* HIT_WALL: state player is in after hitting a wall
+* HIT_CYBER_TRUCK: state player is in after hitting a Cybertruck
+* HIT_EMP: state player is in after being hit by an emp
 * FINISHED: state player is in once they land on the finish line
 
 ## The Commands
@@ -112,6 +123,10 @@ Speed scaling is not linear and is illustrated below:
 * TURN_RIGHT
 * USE_BOOST
 * USE_OIL
+* USE_LIZARD
+* USE_TWEET
+* USE_EMP
+* FIX
 
 ### Command Structure
 
@@ -216,6 +231,19 @@ Using a lizard will:
 
 * Attempting to use a lizard powerup when you have none, will default to a **DO_NOTHING** command.
 
+### Command: USE_EMP
+
+Using a emp will:
+* Shoot a EMP blast forward in a cone from your car
+* The emp shoots forward from your car, proceeding forward in the lane you are in as well as the lanes to your immediate left and right for the rest of the map.
+* The emp will reduce the speed of any player hit to 3 and stop them in their tracks for the rest of the round
+
+### Command: FIX
+
+Using the fix command will allow you to make repairs on your car
+* Using it will remove 2 damage points from your car
+* Your car will remain stationary for the round while the repairs is being made
+
 ## Collisions
 
 Commands are processed in parallel, and not sequentially. This means that no bot has a command preference or precedence over the other. Due to this, should after processing bot commands they end up in the same block then,
@@ -256,6 +284,25 @@ Interaction:
     * MAXIMUM_SPEED => SPEED_STATE_1
     * BOOST_SPEED   => SPEED_STATE_1
 * If changing lane and turning into a block with the obstacle the car will still be affected.
+
+###Damage
+You spoke, we listened!
+ * Collisions with map objects will now damage your vehicle!
+ * Each collision reduces your maximum speed. 
+ * You can reach a maximum speed of 0, and be unable to move if you take too much damage!
+ * Collisions with other players does not count towards damage.
+ * Boosting will only boost you directly to your current maximum speed.
+ 
+Amount of damage suffered per object collision
+* Mud: 1
+* Oil: 1
+* Wall: 2
+* Cybertruck: 2
+
+###Repairs
+* "Fix" is a new command allowing you to fix damage to your car!
+ * Using it removes 2 damage points.
+ * Your car stands still for the round while repairs are being performed.
 
 ## Endgame
 
