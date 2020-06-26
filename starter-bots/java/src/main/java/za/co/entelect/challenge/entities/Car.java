@@ -17,6 +17,9 @@ public class Car {
     @SerializedName("state")
     public State state;
 
+    @SerializedName("damage")
+    public int damage;
+
     @SerializedName("powerups")
     public PowerUps[] powerups;
 
