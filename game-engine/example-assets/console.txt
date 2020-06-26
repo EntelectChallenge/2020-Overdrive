@@ -1,10 +1,10 @@
 ======================================================================================================
-round:133
-player: id:1 position: y:4 x:706 speed:3 state:TURNING_RIGHT boosting:false boost-counter:0 powerups: OIL:5, BOOST:13, LIZARD:14, TWEET:5
-opponent: id:2 position: y:4 x:850 speed:9
+round:424
+player: id:1 position: y:1 x:1231 speed:3 state:ACCELERATING statesThatOccurredThisRound:ACCELERATING boosting:false boost-counter:0 damage:4 score:-484 powerups: LIZARD:12, TWEET:8, EMP:2, OIL:12, BOOST:10
+opponent: id:2 position: y:2 x:19 speed:0
 
-[░░░░░░░░░»░░▓░░░░░░░░░░░░░]
-[▓░▓▓░░░░░░░░░░░░░░░░░░░░░░]
-[░░░Φ░░░░░░░▓░░#░░░░░░░░░░░]
-[░░░░░1░▓░░░░░░░░░░░░░░░░░░]
+[░░▓░░1░░░░░░░░░T#░░░░░░░░░]
+[░▓░░░░░░░░░░░░»░▓░░»Φ░░░░░]
+[░░░░░░░░░░░░░░░∱▓░░Φ░░░░░░]
+[░░*░░░░░░░░░░Φ░TT░░░░░░░░░]
 ======================================================================================================
