@@ -31,7 +31,7 @@ class CsvRenderer extends BaseMapRenderer {
             player.getPosition().getLane() + "," +
             player.getPosition().getBlockNumber() + "," +
             player.getSpeed() + "," +
-            player.getState() + "," +
+            player.getState().last + "," +
             player.isBoosting() + "," +
             player.getBoostCounter() + "," +
             player.getDamage() + "," +
