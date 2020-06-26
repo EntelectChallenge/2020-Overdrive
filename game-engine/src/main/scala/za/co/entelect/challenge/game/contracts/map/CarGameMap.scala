@@ -489,4 +489,18 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val pathIncludesObject = blocksWithObject.isDefined
         return pathIncludesObject
     }
+
+    override def toString() = {
+        val lanesAsString = blocks.groupBy { b => b.getPosition().getLane() }
+          .map { kv =>
+              kv._2.sortBy(b => b.getPosition().getBlockNumber())
+                .map { b => b.toString() }
+                .mkString("[", "", "]")
+          }
+          .mkString("\r\n")
+
+        "======================================================================================================" + "\r\n" +
+          lanesAsString + "\r\n" +
+          "======================================================================================================"
+    }
 }
