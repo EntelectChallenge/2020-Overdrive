@@ -46,6 +46,7 @@ The surface object is defined by an enumerator. The value will be an integer in 
 *  WALL = 6
 *  LIZARD = 7
 *  TWEET = 8
+*  EMP = 9
 
 The effects of these are defined in the game rules.
 
@@ -65,3 +66,4 @@ The effects of these are defined in the game rules.
     * \# block contains a flimsy wall obstacle
     * ∱ block contains a lizard powerup
     * T block contains a tweet powerup
+    * \* block contains a emp powerup
