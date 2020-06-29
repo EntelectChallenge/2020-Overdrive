@@ -9,21 +9,34 @@ import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap}
 class Command_Tweet_Tests extends FunSuite{
   private val commandText = "NOTHING"
   private val turnRightCommandText = "TURN_RIGHT"
-  private val accelerateCommandText = "ACCELERATE"
+  private val oilCommandText = "USE_OIL"
+  private val turnLeftCommandText = "TURN_LEFT"
+  private val boostCommandText = "USE_BOOST"
+
   private var commandFactory: CommandFactory = null
   private var nothingCommand: RawCommand = null
   private var turnRightCommand: RawCommand = null
-  private var accelerateCommand: RawCommand = null
+  private var oilCommand: RawCommand = null
+  private var turnLeftCommand: RawCommand = null
+  private var boostCommand: RawCommand = null
 
   def initialise() = {
     Config.loadDefault()
     commandFactory = new CommandFactory
     nothingCommand = commandFactory.makeCommand(commandText)
     nothingCommand.setCommand(commandText)
+
     turnRightCommand = commandFactory.makeCommand(turnRightCommandText)
     turnRightCommand.setCommand(turnRightCommandText)
-    accelerateCommand = commandFactory.makeCommand(accelerateCommandText)
-    accelerateCommand.setCommand(accelerateCommandText)
+
+    oilCommand = commandFactory.makeCommand(oilCommandText)
+    oilCommand.setCommand(oilCommandText)
+
+    turnLeftCommand = commandFactory.makeCommand(turnLeftCommandText)
+    turnLeftCommand.setCommand(turnLeftCommandText)
+
+    boostCommand = commandFactory.makeCommand(boostCommandText)
+    boostCommand.setCommand(boostCommandText)
   }
 
   def makeTweetCommand(laneX: Int, blockY: Int) : RawCommand =
@@ -89,7 +102,7 @@ class Command_Tweet_Tests extends FunSuite{
     assert(player1Position.getLane() == expectedLane && player1Position.getBlockNumber() == expectedBlock, "player movement after invalid tweet did not indicate DO_NOTHING movement")
 
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
-    assert(testCarGamePlayer1.getState() == Config.NOTHING_PLAYER_STATE, "player state after invalid tweet did not indicate DO_NOTHING player state")
+    assert(testCarGamePlayer1.getState().last == Config.NOTHING_PLAYER_STATE, "player state after invalid tweet did not indicate DO_NOTHING player state")
   }
 
   test("Given player during race with one tweet power-up when player uses tweet then player has no tweet power-ups left")
@@ -132,7 +145,7 @@ class Command_Tweet_Tests extends FunSuite{
     val tweetCommand = makeTweetCommand(1, 1)
     TestHelper.processRound(gameMap, tweetCommand, nothingCommand)
 
-    assert(testCarGamePlayer1.getState() == Config.USED_POWERUP_TWEET_PLAYER_STATE)
+    assert(testCarGamePlayer1.getState().last == Config.USED_POWERUP_TWEET_PLAYER_STATE)
   }
 
   test ("Given player during race with a tweet power-up when player uses tweet then player gets used powerup bonus to score")
@@ -172,7 +185,7 @@ class Command_Tweet_Tests extends FunSuite{
 
     assert(player1Position.getLane() == expectedLane && player1Position.getBlockNumber() == expectedBlock, "player movement after invalid tweet did not indicate DO_NOTHING movement")
 
-    assert(testCarGamePlayer1.getState() == Config.NOTHING_PLAYER_STATE, "player state after invalid tweet did not indicate DO_NOTHING player state")
+    assert(testCarGamePlayer1.getState().last == Config.NOTHING_PLAYER_STATE, "player state after invalid tweet did not indicate DO_NOTHING player state")
   }
 
   test("Given player who uses tweet when block y is out of bounds then player does nothing") {
@@ -194,7 +207,7 @@ class Command_Tweet_Tests extends FunSuite{
 
     assert(player1Position.getLane() == expectedLane && player1Position.getBlockNumber() == expectedBlock, "player movement after invalid tweet did not indicate DO_NOTHING movement")
 
-    assert(testCarGamePlayer1.getState() == Config.NOTHING_PLAYER_STATE, "player state after invalid tweet did not indicate DO_NOTHING player state")
+    assert(testCarGamePlayer1.getState().last == Config.NOTHING_PLAYER_STATE, "player state after invalid tweet did not indicate DO_NOTHING player state")
   }
 
   test("Given player who uses tweet with lane x and block y then cyber truck appears at lane x and block y") {
@@ -351,7 +364,7 @@ class Command_Tweet_Tests extends FunSuite{
     TestHelper.processRound(gameMap, tweetCommand, nothingCommand)
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
-    assert(testCarGamePlayer2.getState() == Config.HIT_CYBER_TRUCK_PLAYER_STATE)
+    assert(testCarGamePlayer2.getState().last == Config.HIT_CYBER_TRUCK_PLAYER_STATE)
   }
 
   test("Given player during race when cyber truck in path then player incurs hit cybertruck score penalty") {
@@ -765,58 +778,28 @@ class Command_Tweet_Tests extends FunSuite{
     assert(player1TweetCount == 1)
   }
 
-  test("Given a race when both players are in the same lane and will hit the cybertruck when player 2 would reach the cybertruck first then final order is p1 p2 cybertruck") {
+  test("Given a race when both players are in the same lane behind each other and hit a cybertruck") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects()
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
 
     val testGamePlayer1 = TestHelper.getTestGamePlayer1()
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
-    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 3, 36)
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 2, 700)
 
     val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
-    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 40)
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 2, 702)
 
-    testCarGamePlayer1.speed = 8
-    testCarGamePlayer2.speed = 8
-
-    val blockForCyberTruck = carGameMap.getBlockMatchingPosition(new BlockPosition(3, 43))
+    val blockForCyberTruck = carGameMap.getBlockMatchingPosition(new BlockPosition(2, 706))
     blockForCyberTruck.addCyberTruck();
 
     assert(blockForCyberTruck.isOccupiedByCyberTruck())
 
-    TestHelper.processRound(carGameMap, accelerateCommand, accelerateCommand)
+    TestHelper.processRound(carGameMap, nothingCommand, nothingCommand)
 
-    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId()).getBlockNumber() == 41)
-    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer2.getGamePlayerId()).getBlockNumber() == 42)
-  }
-
-  test("Given a race when both players are in the same lane and will hit the cybertruck when player 1 would reach the cybertruck first then final order is p2 p1 cybertruck") {
-    initialise()
-    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
-    val carGameMap = gameMap.asInstanceOf[CarGameMap]
-
-    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
-    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
-    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 3, 39)
-
-    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
-    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
-    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 38)
-
-    testCarGamePlayer1.speed = 8
-    testCarGamePlayer2.speed = 8
-
-    val blockForCyberTruck = carGameMap.getBlockMatchingPosition(new BlockPosition(3, 43))
-    blockForCyberTruck.addCyberTruck();
-
-    assert(blockForCyberTruck.isOccupiedByCyberTruck())
-
-    TestHelper.processRound(carGameMap, accelerateCommand, accelerateCommand)
-
-    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId()).getBlockNumber() == 42)
-    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer2.getGamePlayerId()).getBlockNumber() == 41)
+    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId()).getBlockNumber() == 704)
+    assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer2.getGamePlayerId()).getBlockNumber() == 705)
   }
 
   test("Given a race when both players are in different lanes and turn into in the same lane behind each other and hit a cybertruck") {
@@ -844,4 +827,105 @@ class Command_Tweet_Tests extends FunSuite{
     assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer2.getGamePlayerId()).getBlockNumber() == 704)
     assert(carGameMap.getPlayerBlockPosition(testCarGamePlayer2.getGamePlayerId()).getLane() == 1)
   }
+
+  test("Given player during race when cyber truck in path then player incurs hit cybertruck damage") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.pickupTweet()
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val initialScore = testCarGamePlayer2.getScore()
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_3
+    val newLaneMidRacePlayer2 = 1
+    val newBlockNumberMidRacePlayer2 = 750
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    val cyberTruckLane = 1
+    val cyberTruckBlock = 764
+    val tweetCommand = makeTweetCommand(cyberTruckLane, cyberTruckBlock)
+    TestHelper.processRound(gameMap, tweetCommand, nothingCommand)
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val expectedScore = initialScore + Config.HIT_CYBERTRUCK_SCORE_PENALTY
+    val actualScore = testCarGamePlayer2.getScore()
+    assert(testCarGamePlayer2.getDamage == Config.DAMAGE_CYBERTRUCK)
+  }
+
+  test("Given player during race when cyber truck dropped on players starting block then cyber truck is ignored") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.pickupTweet()
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_3
+    val newLaneMidRacePlayer2 = 1
+    val newBlockNumberMidRacePlayer2 = 750
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    val cyberTruckLane = 1
+    val cyberTruckBlock = 758
+    val tweetCommand = makeTweetCommand(cyberTruckLane, cyberTruckBlock)
+    TestHelper.processRound(gameMap, tweetCommand, nothingCommand)
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val expectedLane = 1
+    val expectedBlockNumber = 766
+
+    val actualPlayer2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
+    assert(actualPlayer2Position.getLane() == expectedLane && actualPlayer2Position.getBlockNumber() == expectedBlockNumber)
+  }
+
+  test("When cyber truck dropped on p2 next round starting block p2 ignores it but p1 who is behind hits the cyber truck") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    val testCarGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    testCarGamePlayer1.useBoost()
+    testCarGamePlayer1.pickupTweet()
+    val newLaneMidRacePlayer1 = 2
+    val newBlockNumberMidRacePlayer1 = 143
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.MAXIMUM_SPEED
+    testCarGamePlayer2.pickupOilItem()
+    val newLaneMidRacePlayer2 = 1
+    val newBlockNumberMidRacePlayer2 = 156
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    val cyberTruckLane = 1
+    val cyberTruckBlock = 165
+    val tweetCommand = makeTweetCommand(cyberTruckLane, cyberTruckBlock)
+    TestHelper.processRound(gameMap, tweetCommand, oilCommand) //p1 L2 B158 | p2 L1 B165
+    TestHelper.processRound(gameMap, turnLeftCommand, boostCommand) //p1 L1 164 | p2 L1 B174
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand) //p1 L1 167 | p2 L1 B183
+
+    val expectedPlayer1Lane = 1
+    val expectedPlayer1BlockNumber = 167
+    val actualPlayer1Position = carGameMap.getPlayerBlockPosition(testCarGamePlayer1Id)
+    assert(expectedPlayer1Lane == actualPlayer1Position.getLane() && expectedPlayer1BlockNumber == actualPlayer1Position.getBlockNumber(), "player 1 not in expected position")
+
+    val expectedPlayer2Lane = 1
+    val expectedPlayer2BlockNumber = 183
+    val actualPlayer2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
+    assert(expectedPlayer2Lane == actualPlayer2Position.getLane() && expectedPlayer2BlockNumber == actualPlayer2Position.getBlockNumber())
+  }
+
 }

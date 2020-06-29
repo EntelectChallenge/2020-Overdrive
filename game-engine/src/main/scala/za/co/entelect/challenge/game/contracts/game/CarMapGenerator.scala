@@ -2,13 +2,11 @@ package za.co.entelect.challenge.game.contracts.game
 
 import java.util
 
-import za.co.entelect.challenge.game.contracts.map.GameMap
-import za.co.entelect.challenge.game.contracts.map.CarGameMap
-import za.co.entelect.challenge.game.contracts.map.Block
-import za.co.entelect.challenge.game.contracts.map.BlockPosition
-import za.co.entelect.challenge.game.contracts.map.BlockObjectCreator
+import za.co.entelect.challenge.game.contracts.map.{Block, BlockObjectCreator, BlockPosition, CarGameMap, GameMap, Noise}
 import za.co.entelect.challenge.game.contracts.player.Player
 import za.co.entelect.challenge.game.contracts.Config.Config
+
+import scala.collection.mutable
 
 class CarMapGenerator(seed: Int) extends GameMapGenerator {
 
@@ -18,8 +16,7 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
 
         val intialisationRound = 0
         
-        val randomNumberGenerator = new scala.util.Random(seed)
-        val blocks = generateBlocks(Config.NUMBER_OF_LANES, Config.TRACK_LENGTH, randomNumberGenerator)
+        val blocks = generateBlocks(Config.NUMBER_OF_LANES, Config.TRACK_LENGTH, seed)
 
         val carGameMap = new CarGameMap(
             players, 
@@ -58,25 +55,42 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
         return players
     }
 
-    def generateBlocks(lanes: Int, trackLength: Int, randomNumberGenerator: scala.util.Random): Array[Block] = {
+    def generateBlocks(lanes: Int, trackLength: Int, seed:Int): Array[Block] = {
         var blocks = new Array[Block](lanes*trackLength)
         val blockObjectCreator = new BlockObjectCreator
+        Noise.seed = seed
+        Noise.init()
 
+        val mapObjects = mutable.SortedMap[Double, Int]()
+        mapObjects.put(0.0, Config.EMPTY_MAP_OBJECT)
+        mapObjects.put(((Config.MUD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.29, Config.MUD_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.BOOST_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.189, Config.BOOST_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.OIL_ITEM_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.197, Config.OIL_ITEM_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.WALL_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.26, Config.WALL_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.LIZARD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.2, Config.LIZARD_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.TWEET_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.173, Config.TWEET_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.EMP_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.165, Config.EMP_MAP_OBJECT)
+        mapObjects.put(1.0, Config.EMPTY_MAP_OBJECT)
+
+        //generate empty map
         for ( i <- 0 to (blocks.length - 1)) {
             val lane = i/trackLength + 1
             val blockNumber = i%trackLength + 1
             val position = new BlockPosition(lane, blockNumber)
-
-            var generatedMapObject = Config.EMPTY_MAP_OBJECT
-            val finalBlockForGeneratedMapObject = trackLength
-            if(blockNumber >= Config.STARTING_BLOCK_FOR_GENERATED_MAP_OBJECTS && blockNumber < Config.TRACK_LENGTH) {
-                generatedMapObject = blockObjectCreator.generateMapObject(randomNumberGenerator)
-            } else if (blockNumber == finalBlockForGeneratedMapObject) {
-                generatedMapObject = Config.FINISH_LINE_MAP_OBJECT
-            }
-           
+            val generatedMapObject = Config.EMPTY_MAP_OBJECT
             blocks(i) = new Block(position, generatedMapObject, Config.EMPTY_PLAYER)
         }
+
+        val zIndexForObstacles = 0.1
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.MUD_MAP_OBJECT, zIndexForObstacles)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.WALL_MAP_OBJECT, zIndexForObstacles)
+
+        val zIndexForPowerups = 0.9
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.BOOST_MAP_OBJECT, zIndexForPowerups)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.OIL_ITEM_MAP_OBJECT, zIndexForPowerups)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.LIZARD_MAP_OBJECT, zIndexForPowerups)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.TWEET_MAP_OBJECT, zIndexForPowerups)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.EMP_MAP_OBJECT, zIndexForPowerups)
 
         setPlayerOneStartPosition(blocks)
         setPlayerTwoStartPosition(blocks)

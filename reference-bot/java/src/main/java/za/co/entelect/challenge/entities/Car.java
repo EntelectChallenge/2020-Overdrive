@@ -14,6 +14,9 @@ public class Car {
     @SerializedName("speed")
     public int speed;
 
+    @SerializedName("damage")
+    public int damage;
+
     @SerializedName("state")
     public State state;
 

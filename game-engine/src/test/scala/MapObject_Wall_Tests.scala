@@ -35,6 +35,19 @@ class MapObject_Wall_Tests extends FunSuite{
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_1)
   }
 
+  test("Given players during race when player hits a wall then damage increases") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.WALL_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+
+    val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer.speed = Config.SPEED_STATE_3
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    assert(testCarGamePlayer.getDamage == Config.DAMAGE_WALL)
+  }
+
   test("Given players during race when player hits a wall twice then speed should be 3 again.") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(3,4), Config.WALL_MAP_OBJECT)
@@ -46,6 +59,7 @@ class MapObject_Wall_Tests extends FunSuite{
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_1)
+    assert(testCarGamePlayer.getDamage == Config.DAMAGE_WALL * 2)
   }
 
   test("Given player that is boosting during race when player hits a wall then speed is reduced and player is no longer boosting") {

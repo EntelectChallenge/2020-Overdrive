@@ -8,7 +8,7 @@ class CsvRenderer extends BaseMapRenderer {
 
     override def renderFragment(gameMap: CarGameMap, gamePlayer: CarGamePlayer): String = {
         val mapFragment = gameMap.getMapFragment(gamePlayer)
-        val csvHeaderString = "Round,PlayerId,Position:Y,Position:X,Speed,State,Boosting,Boost-Counter,#Boosts,#Oil,#Lizards,LastCyberTruck:Y,LastCyberTruck:X,#Tweets,Score\r\n"
+        val csvHeaderString = "Round,PlayerId,Position:Y,Position:X,Speed,State,Boosting,Boost-Counter,Damage,#Boosts,#Oil,#Lizards,LastCyberTruck:Y,LastCyberTruck:X,#Tweets,#EMPs,Score\r\n"
 
         val currentRound = mapFragment.getCurrentRound()
         val player = mapFragment.getPlayer()
@@ -31,15 +31,17 @@ class CsvRenderer extends BaseMapRenderer {
             player.getPosition().getLane() + "," +
             player.getPosition().getBlockNumber() + "," +
             player.getSpeed() + "," +
-            player.getState() + "," +
+            player.getState().last + "," +
             player.isBoosting() + "," +
             player.getBoostCounter() + "," +
+            player.getDamage() + "," +
             player.getPowerups().count(x => x == Config.BOOST_POWERUP_ITEM) + "," +
             player.getPowerups().count(x => x == Config.OIL_POWERUP_ITEM) + "," +
             player.getPowerups().count(x => x == Config.LIZARD_POWERUP_ITEM) + "," +
               lastCyberTruckLane + "," +
               lastCyberTruckBlockNumber + "," +
             player.getPowerups().count(x => x == Config.TWEET_POWERUP_ITEM) + "," +
+              player.getPowerups().count(x => x == Config.EMP_POWERUP_ITEM) + "," +
             player.getScore()
 
         if(gameMap.getCurrentRound() == 1)

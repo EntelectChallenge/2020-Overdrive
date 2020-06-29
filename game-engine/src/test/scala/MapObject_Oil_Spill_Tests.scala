@@ -17,6 +17,19 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
     nothingCommand.setCommand(commandText)
   }
 
+  test("Given players during race when player hits oil then damage increases") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.OIL_SPILL_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+
+    val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer.speed = Config.SPEED_STATE_2
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    assert(testCarGamePlayer.getDamage == Config.DAMAGE_OIL)
+  }
+
   test("Given players during race when player hits oil then speed is reduced") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 3, Config.OIL_SPILL_MAP_OBJECT)
@@ -41,6 +54,7 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     assert(testCarGamePlayer.speed == Config.SPEED_STATE_1)
+    assert(testCarGamePlayer.getDamage == Config.DAMAGE_OIL * 2)
   }
 
   test("Given player that is boosting during race when player hits oil then speed is reduced and player is no longer boosting") {
@@ -54,6 +68,7 @@ class MapObject_Oil_Spill_Tests extends FunSuite{
 
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
+    assert(testCarGamePlayer.getDamage() == 1)
     assert(testCarGamePlayer.speed == Config.MAXIMUM_SPEED)
     assert(testCarGamePlayer.isBoosting() == false)
   }
