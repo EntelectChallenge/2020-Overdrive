@@ -77,8 +77,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     def hitItem(item: Int, playerIsInert: Boolean): Unit = {
-        if(playerIsInert) return
-        if (isLizarding) return
+        if(playerIsInert || isLizarding) return
         if (item == Config.MUD_MAP_OBJECT) {
             damage += Config.DAMAGE_MUD;
             reduceMaxAllowableSpeed()
@@ -173,8 +172,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     def pickupItem(pickupItem: Int, playerIsInert: Boolean): Unit = {
-        if(playerIsInert) return
-        if (isLizarding) return
+        if(playerIsInert || isLizarding) return
         if (pickupItem == Config.BOOST_MAP_OBJECT) {
             pickupBoost()
         }
