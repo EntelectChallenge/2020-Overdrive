@@ -234,9 +234,9 @@ Using a lizard will:
 ### Command: USE_EMP
 
 Using a emp will:
-* Shoot a EMP blast forward in a cone from your car
+* Shoot a EMP blast forward in a cone from your car.
 * The emp shoots forward from your car, proceeding forward in the lane you are in as well as the lanes to your immediate left and right for the rest of the map.
-* The emp will reduce the speed of any player hit to 3 and stop them in their tracks for the rest of the round
+* The EMP will stop them in their tracks for the rest of the round, and then reduce their speed to 3.
 
 ### Command: FIX
 
@@ -288,7 +288,7 @@ Interaction:
 ###Damage
 You spoke, we listened!
  * Collisions with map objects will now damage your vehicle!
- * Each collision reduces your maximum speed. 
+ * Each collision reduces your maximum attainable speed. 
  * You can reach a maximum speed of 0, and be unable to move if you take too much damage!
  * Collisions with other players does not count towards damage.
  * Boosting will only boost you directly to your current maximum speed.
