@@ -168,10 +168,12 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val startBlockNumber = x.getOldPosition().getBlockNumber()
             val endBlockNumber = x.getNewPosition().getBlockNumber()
             val endLane = x.getNewPosition().getLane()
-            val blockWithCyberTruckInMiddleOfPath = blocks.find(b => (b.getPosition().getLane() == endLane
+            val playerTurned = x.getPlayer().hasTurnedThisRound()
+            val blockWithCyberTruckInMiddleOfPath = blocks.find(b => ((b.getPosition().getLane() == endLane
               && b.getPosition().getBlockNumber() > startBlockNumber
               && b.getPosition().getBlockNumber() <= endBlockNumber-1)
-              && b.isOccupiedByCyberTruck()
+              && b.isOccupiedByCyberTruck())
+              || (playerTurned && b.getPosition().getLane() == endLane && b.getPosition().getBlockNumber() == startBlockNumber && b.isOccupiedByCyberTruck())
             )
             val lastBlockWithCyberTruck = blocks.find(b => b.getPosition().getLane() == endLane
               && b.getPosition().getBlockNumber() == endBlockNumber
