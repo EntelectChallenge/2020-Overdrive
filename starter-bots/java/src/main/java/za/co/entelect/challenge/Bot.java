@@ -17,6 +17,7 @@ public class Bot {
     private GameState gameState;
     private Car opponent;
     private Car myCar;
+    private final static Command FIX = new FixCommand();
 
     public Bot(Random random, GameState gameState) {
         this.random = random;
@@ -30,6 +31,9 @@ public class Bot {
 
     public Command run() {
         List<Object> blocks = getBlocksInFront(myCar.position.lane, myCar.position.block);
+        if (myCar.damage >= 5) {
+            return new FixCommand();
+        }
         if (blocks.contains(Terrain.MUD)) {
             int i = random.nextInt(directionList.size());
             return new ChangeLaneCommand(directionList.get(i));

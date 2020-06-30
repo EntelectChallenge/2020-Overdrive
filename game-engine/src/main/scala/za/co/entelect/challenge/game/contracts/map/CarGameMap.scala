@@ -11,6 +11,7 @@ import scala.collection.mutable
 
 class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int, trackLength: Int, var blocks: Array[Block], var round: Int) extends GameMap {
 
+    var startMap: Array[BlockPosition] = Array[BlockPosition]()
     var stagedFuturePositions: List[StagedPosition] = List[StagedPosition]()
     var stagedCyberTruckPositions: List[StagedPosition] = List[StagedPosition]()
 
@@ -27,7 +28,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         for (i <- 0 until players.size()) {
             val gamePlayer = players.get(i).getGamePlayer
             val carGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer]
-            if (carGamePlayer.getState() == Config.FINISHED_PLAYER_STATE) {
+            if (carGamePlayer.getState().last == Config.FINISHED_PLAYER_STATE) {
                 winningPlayers.addOne(gamePlayer)
             }
         }
@@ -59,10 +60,11 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val playerPowerUps = gamePlayer.getPowerups()
         val isBoosting = gamePlayer.isBoosting()
         val playerBoostCounter = gamePlayer.getBoostCounter()
+        val damage = gamePlayer.getDamage()
         val score = gamePlayer.getScore()
         val lastCyberTruckPosition = gamePlayer.getCurrentCyberTruckPosition()
         val player = new MapFragmentPlayer(gamePlayerId, playerBlockPosition, playerSpeed, playerState, playerPowerUps,
-            isBoosting, playerBoostCounter, score, lastCyberTruckPosition)
+            isBoosting, playerBoostCounter, score, damage, lastCyberTruckPosition)
 
         val lanes = blocks.filter(block =>
             (((playerBlockPosition.getBlockNumber() >= block.getPosition().getBlockNumber()) && (scala.math.abs(playerBlockPosition.getBlockNumber() - block.getPosition().getBlockNumber()) <= Config.BACKWARD_VISIBILITY))
@@ -73,7 +75,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val opponentBlock = getPlayerBlockPosition(opponentGamePlayerId)
 
         val opponent = new MapFragmentPlayer(opponentGamePlayerId, opponentBlock, opponentGamePlayer.getSpeed(), opponentGamePlayer.getState(),
-            opponentGamePlayer.getPowerups(), opponentGamePlayer.isBoosting(), opponentGamePlayer.getBoostCounter(), opponentGamePlayer.getScore, opponentGamePlayer.getCurrentCyberTruckPosition())
+            opponentGamePlayer.getPowerups(), opponentGamePlayer.isBoosting(), opponentGamePlayer.getBoostCounter(), opponentGamePlayer.getDamage(), opponentGamePlayer.getScore, opponentGamePlayer.getCurrentCyberTruckPosition())
 
         val carGameMapFragment = new CarGameMapFragment(round, player, opponent, lanes)
         return carGameMapFragment
@@ -84,6 +86,11 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         val playerBlock = blocks(indexOfPlayerOnTrack)
         val playerBlockPosition = playerBlock.getPosition()
         return playerBlockPosition
+    }
+
+    def getPlayerStartOfRoundBlockPosition(gameplayerId: Int): BlockPosition = {
+        val playerBlock = startMap(gameplayerId-1)
+        return playerBlock
     }
 
     def getCarGamePlayers(): Array[CarGamePlayer] = {
@@ -156,13 +163,13 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
     def resolveCyberTruckCollisions(): Boolean = {
         var playerHitCyberTruck = false
-        var hitCyberTrucks = new Array[Block](0)
+		var hitCyberTrucks = new Array[Block](0)
         stagedFuturePositions.foreach(x => {
             val startBlockNumber = x.getOldPosition().getBlockNumber()
             val endBlockNumber = x.getNewPosition().getBlockNumber()
             val endLane = x.getNewPosition().getLane()
             val blockWithCyberTruckInMiddleOfPath = blocks.find(b => (b.getPosition().getLane() == endLane
-              && b.getPosition().getBlockNumber() >= startBlockNumber
+              && b.getPosition().getBlockNumber() > startBlockNumber
               && b.getPosition().getBlockNumber() <= endBlockNumber-1)
               && b.isOccupiedByCyberTruck()
             )
@@ -195,11 +202,11 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
                 }
             }
         })
-
-        for (block <- hitCyberTrucks) {
+		
+		for (block <- hitCyberTrucks) {
           block.removeCyberTruck()
         }
-
+		
         return playerHitCyberTruck
     }
 
@@ -326,12 +333,15 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val positionToEndCounting = findPositionToEndCountingCollisionsFromInMiddlePath(newPosition)
             val lastBlockPosition = findLastPositionForIdentifyingEffectsAtEndOfPath(newPosition)
 
-            applyMapEffectsInMiddlePathToPlayer(player, positionToStartCounting, positionToEndCounting)
-            applyMapEffectsInLastBlockOfPathToPlayer(player, lastBlockPosition)
-            applyPickupsInPathToPlayer(player, positionToStartCounting, positionToEndCounting)
-            applyPickupsInLastBlockToPlayer(player, lastBlockPosition)
+            val oldPostionSameAsNewPosition = (oldPosition.getLane() == newPosition.getLane()) && (oldPosition.getBlockNumber() == newPosition.getBlockNumber())
+            val playerIsInert = (player.speed == 0) && (oldPostionSameAsNewPosition);
+            applyMapEffectsInMiddlePathToPlayer(player, positionToStartCounting, positionToEndCounting, playerIsInert)
+            applyMapEffectsInLastBlockOfPathToPlayer(player, lastBlockPosition, playerIsInert)
+            applyPickupsInPathToPlayer(player, positionToStartCounting, positionToEndCounting, playerIsInert)
+            applyPickupsInLastBlockToPlayer(player, lastBlockPosition, playerIsInert)
             occupyFinalMapPositionForPlayer(player.getGamePlayerId(), newPosition)
             checkIfPlayerHasWon(player, newPosition)
+            player.capSpeedAtMaxAllowable()
         })
         stagedFuturePositions = List[StagedPosition]()
     }
@@ -355,20 +365,20 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         return new BlockPosition(newPosition.getLane(), newPosition.getBlockNumber())
     }
 
-    def applyMapEffectsInMiddlePathToPlayer(carGamePlayer: CarGamePlayer, positionToStartCounting: BlockPosition, positionToEndCounting: BlockPosition) = {
+    def applyMapEffectsInMiddlePathToPlayer(carGamePlayer: CarGamePlayer, positionToStartCounting: BlockPosition, positionToEndCounting: BlockPosition, playerIsInert: Boolean) = {
         val playerHitMudCount = mudCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerHitMudCount) {
-            carGamePlayer.hitItem(Config.MUD_MAP_OBJECT)
+            carGamePlayer.hitItem(Config.MUD_MAP_OBJECT, playerIsInert)
         }
 
         val playerHitOilCount = oilSpillCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerHitOilCount) {
-            carGamePlayer.hitItem(Config.OIL_SPILL_MAP_OBJECT)
+            carGamePlayer.hitItem(Config.OIL_SPILL_MAP_OBJECT, playerIsInert)
         }
 
         val playerHitWallCount = wallCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerHitWallCount) {
-            carGamePlayer.hitItem(Config.WALL_MAP_OBJECT)
+            carGamePlayer.hitItem(Config.WALL_MAP_OBJECT, playerIsInert)
         }
     }
 
@@ -399,33 +409,33 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         return blocks(blockIndex)
     }
 
-    def applyMapEffectsInLastBlockOfPathToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition) = {
+    def applyMapEffectsInLastBlockOfPathToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition, playerIsInert: Boolean) = {
         val blockToApply = getBlockMatchingPosition(lastBlockPosition)
         val wasLizarding = carGamePlayer.isLizarding
         carGamePlayer.setLizarding(false)
-        carGamePlayer.hitItem(blockToApply.getMapObject())
+        carGamePlayer.hitItem(blockToApply.getMapObject(), playerIsInert)
         carGamePlayer.setLizarding(wasLizarding)
     }
 
-    def applyPickupsInPathToPlayer(carGamePlayer: CarGamePlayer, positionToStartCounting: BlockPosition, positionToEndCounting: BlockPosition) = {
+    def applyPickupsInPathToPlayer(carGamePlayer: CarGamePlayer, positionToStartCounting: BlockPosition, positionToEndCounting: BlockPosition, playerIsInert: Boolean) = {
         val playerPickedUpOilItemCount = oilItemCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerPickedUpOilItemCount) {
-            carGamePlayer.pickupItem(Config.OIL_ITEM_MAP_OBJECT)
+            carGamePlayer.pickupItem(Config.OIL_ITEM_MAP_OBJECT, playerIsInert)
         }
 
         val playerPickedUpBoostCount = boostCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerPickedUpBoostCount) {
-            carGamePlayer.pickupItem(Config.BOOST_MAP_OBJECT)
+            carGamePlayer.pickupItem(Config.BOOST_MAP_OBJECT, playerIsInert)
         }
 
         val playerPickedUpLizardCount = lizardCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerPickedUpLizardCount) {
-            carGamePlayer.pickupItem(Config.LIZARD_MAP_OBJECT)
+            carGamePlayer.pickupItem(Config.LIZARD_MAP_OBJECT, playerIsInert)
         }
 
         val playerPickedUpTweetCount = tweetCountInPath(positionToStartCounting, positionToEndCounting)
         for (a <- 0 until playerPickedUpTweetCount) {
-            carGamePlayer.pickupItem(Config.TWEET_MAP_OBJECT)
+            carGamePlayer.pickupItem(Config.TWEET_MAP_OBJECT, playerIsInert)
         }
     }
 
@@ -441,13 +451,17 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
     def tweetCountInPath(startPosition: BlockPosition, endPosition: BlockPosition): Int =
     numberOfMapObjectsInPath(startPosition, endPosition, Config.TWEET_MAP_OBJECT)
 
-    def applyPickupsInLastBlockToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition) = {
+    def applyPickupsInLastBlockToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition, playerIsInert: Boolean) = {
         val blockToApply = getBlockMatchingPosition(lastBlockPosition)
         val wasLizarding = carGamePlayer.isLizarding
         carGamePlayer.setLizarding(false)
-        carGamePlayer.pickupItem(blockToApply.getMapObject())
+        carGamePlayer.pickupItem(blockToApply.getMapObject(), playerIsInert)
         carGamePlayer.setLizarding(wasLizarding)
 
+    }
+
+    def setStartRound(currentStartMap: Array[BlockPosition]): Unit = {
+        startMap = currentStartMap
     }
 
     private def checkIfPlayerHasWon(carGamePlayer: CarGamePlayer, newPosition: BlockPosition) = {
@@ -474,5 +488,19 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             )
         val pathIncludesObject = blocksWithObject.isDefined
         return pathIncludesObject
+    }
+
+    override def toString() = {
+        val lanesAsString = blocks.groupBy { b => b.getPosition().getLane() }
+          .map { kv =>
+              kv._2.sortBy(b => b.getPosition().getBlockNumber())
+                .map { b => b.toString() }
+                .mkString("[", "", "]")
+          }
+          .mkString("\r\n")
+
+        "======================================================================================================" + "\r\n" +
+          lanesAsString + "\r\n" +
+          "======================================================================================================"
     }
 }

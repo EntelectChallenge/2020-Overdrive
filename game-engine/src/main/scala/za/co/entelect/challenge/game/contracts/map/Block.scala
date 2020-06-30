@@ -6,7 +6,7 @@ class Block(position: BlockPosition, var mapObject: Int, var occupiedByPlayerWit
 
     private var hasCyberTruck: Boolean = false
 
-    override def toString() : String = { 
+    override def toString() : String = {
         val stringRepresentation =
             if(occupiedByPlayerWithId != Config.EMPTY_PLAYER) occupiedByPlayerWithId.toString
             else if(isOccupiedByCyberTruck()) "C"
@@ -19,6 +19,7 @@ class Block(position: BlockPosition, var mapObject: Int, var occupiedByPlayerWit
             else if (mapObject == Config.WALL_MAP_OBJECT) "#"
             else if (mapObject == Config.LIZARD_MAP_OBJECT) "∱"
             else if (mapObject == Config.TWEET_MAP_OBJECT) "T"
+            else if (mapObject == Config.EMP_MAP_OBJECT) "*"
             else throw new Exception("Unknown block content encountered when rendering")
 
         stringRepresentation

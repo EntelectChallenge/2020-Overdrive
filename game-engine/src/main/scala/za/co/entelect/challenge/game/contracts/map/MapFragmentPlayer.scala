@@ -1,7 +1,7 @@
 package za.co.entelect.challenge.game.contracts.map
 
-class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: String, powerups: Array[String],
-                        boosting: Boolean, boostCounter: Int, score: Int, lastCyberTruckPosition: BlockPosition) {
+class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, statesThatOccurredThisRound: Array[String], powerups: Array[String],
+                        boosting: Boolean, boostCounter: Int, score: Int, damage: Int, lastCyberTruckPosition: BlockPosition) {
     def getId(): Int = {
         return id
     }
@@ -14,8 +14,8 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
         return speed
     }
 
-    def getState(): String = {
-        return state
+    def getState(): Array[String] = {
+        return statesThatOccurredThisRound
     }
 
     def getPowerups(): Array[String] = {
@@ -28,6 +28,10 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
 
     def getBoostCounter(): Int = {
         return boostCounter
+    }
+
+    def getDamage(): Int = {
+        return damage
     }
 
     def getScore(): Int = {
@@ -46,9 +50,12 @@ class MapFragmentPlayer(id: Int, position: BlockPosition, speed: Int, state: Str
         if(!limited)
         {
             stringRepresentation +=
-              " state:" + state +
+                " state:" + statesThatOccurredThisRound.last +
+                " statesThatOccurredThisRound:" + statesThatOccurredThisRound.mkString(", ") +
                 " boosting:" + boosting +
                 " boost-counter:" + boostCounter +
+                " damage:" + damage +
+                " score:" + score +
                 " powerups: " + powerups.groupBy(p => p)
                 .map(kv => s"${kv._1}:${kv._2.length}")
                 .mkString(", ")

@@ -9,17 +9,19 @@ import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
 import za.co.entelect.challenge.game.contracts.map.CarGameMap
 import za.co.entelect.challenge.game.contracts.renderer.CarGameRendererFactory
 
-class Bug_Tests extends FunSuite{
+class Bug_Tests extends FunSuite {
   private val nothingCommandText = "NOTHING"
   private val oilCommandText = "USE_OIL"
   private val accelerateCommandText = "ACCELERATE"
   private val decelerateCommandText = "DECELERATE"
+  private val boostCommandText = "USE_BOOST"
 
   private var commandFactory: CommandFactory = null
   private var nothingCommand: RawCommand = null
   private var useOilCommand: RawCommand = null
   private var accelerateCommand: RawCommand = null
   private var declerateCommand: RawCommand = null
+  private var useBoostCommand: RawCommand = null
 
   def initialise() = {
     Config.loadDefault()
@@ -36,6 +38,9 @@ class Bug_Tests extends FunSuite{
 
     declerateCommand = commandFactory.makeCommand(decelerateCommandText)
     declerateCommand.setCommand(decelerateCommandText)
+
+    useBoostCommand = commandFactory.makeCommand(boostCommandText)
+    useBoostCommand.setCommand(boostCommandText)
   }
 
   test("Given player during race when creating map fragment player must be visible in their own map fragment")
@@ -66,7 +71,8 @@ class Bug_Tests extends FunSuite{
     assert(mapFragment.getOpponent() != null)
   }
 
-  test("Given players during race when player end a turn on mud then speed is reduced only once") {
+  test("Given players during race when player end a turn on mud then speed is reduced only once")
+  {
     initialise()
     val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 9, Config.MUD_MAP_OBJECT)
     val testGamePlayer1 = TestHelper.getTestGamePlayer1()
@@ -99,13 +105,13 @@ class Bug_Tests extends FunSuite{
     val jsonRenderer = carGameRendererFactory.makeJsonRenderer()
     val gameMap1Json = jsonRenderer.render(gameMap1, null)
 
-    for(blockNumber <- 0 until Config.TRACK_LENGTH-1) {
-        for(lane <- 0 until maxLane-1) {
-            val indexOfInterest = lane*Config.TRACK_LENGTH + blockNumber
-            assert(carGameMap1Blocks(indexOfInterest).occupiedByPlayerWithId == carGameMap2Blocks(indexOfInterest).occupiedByPlayerWithId, "At: " + (lane+1) + " , " + (blockNumber+1) + " Blocks not occupied by same player")
-            assert(carGameMap1Blocks(indexOfInterest).mapObject == carGameMap2Blocks(indexOfInterest).mapObject, "At: " + (lane+1) + " , " + (blockNumber+1) + " Blocks don't have same map object")
-          }
+    for (blockNumber <- 0 until Config.TRACK_LENGTH - 1) {
+      for (lane <- 0 until maxLane - 1) {
+        val indexOfInterest = lane * Config.TRACK_LENGTH + blockNumber
+        assert(carGameMap1Blocks(indexOfInterest).occupiedByPlayerWithId == carGameMap2Blocks(indexOfInterest).occupiedByPlayerWithId, "At: " + (lane + 1) + " , " + (blockNumber + 1) + " Blocks not occupied by same player")
+        assert(carGameMap1Blocks(indexOfInterest).mapObject == carGameMap2Blocks(indexOfInterest).mapObject, "At: " + (lane + 1) + " , " + (blockNumber + 1) + " Blocks don't have same map object")
       }
+    }
   }
 
   test("Given player during race when player users lizard powerup then next round player is not lizarding")
@@ -268,6 +274,38 @@ class Bug_Tests extends FunSuite{
     val expectedPlayerBlockNumber = 141
     val actualPlayerPosition = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
     assert(actualPlayerPosition.getLane() == expectedPlayerLane && actualPlayerPosition.getBlockNumber() == expectedPlayerBlockNumber, "player not stuck on same block as wall")
+
+  }
+
+  test("Given a player is boosting and hits a CyberTruck, the boost powerup should be taken away and the boosttick should be set to 0 and the players speed should be set to Speed state 1")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2
+
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, 1, 1)
+    testCarGamePlayer1.pickupBoost()
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer2.pickupTweet()
+
+    val tweetCommandText = "USE_TWEET 1 18"
+    var tweetCommand = commandFactory.makeCommand(tweetCommandText)
+    tweetCommand.setCommand(tweetCommandText)
+    TestHelper.processRound(gameMap, useBoostCommand, tweetCommand)
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    assert(testCarGamePlayer1.getBoostCounter() == 0, "The boost counter should be 0 as collision has occurred")
+    assert(testCarGamePlayer1.isBoosting() == false, "The player should not be boosting anymore")
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_1, "The player should be traveling at Speed state one after collision")
 
   }
 

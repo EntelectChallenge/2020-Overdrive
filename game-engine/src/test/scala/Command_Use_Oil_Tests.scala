@@ -78,7 +78,7 @@ class Command_Use_Oil_Tests extends FunSuite{
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
     TestHelper.processRound(gameMap, useOilCommand, useOilCommand)
 
-    assert(testCarGamePlayer1.getState() == Config.USED_POWERUP_OIL_PLAYER_STATE)
+    assert(testCarGamePlayer1.getState().last == Config.USED_POWERUP_OIL_PLAYER_STATE)
     assert(testCarGamePlayer1.getSpeed() == Config.INITIAL_SPEED)
   }
 
@@ -106,7 +106,7 @@ class Command_Use_Oil_Tests extends FunSuite{
     testCarGamePlayer1.pickupOilItem()
     TestHelper.processRound(gameMap, useOilCommand, nothingCommand)
 
-    assert(testCarGamePlayer2.getState() == Config.HIT_OIL_PLAYER_STATE)
+    assert(testCarGamePlayer2.getState().last == Config.HIT_OIL_PLAYER_STATE)
     assert(testCarGamePlayer2.getSpeed() == Config.SPEED_STATE_1)
   }
 

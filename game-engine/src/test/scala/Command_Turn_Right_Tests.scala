@@ -105,6 +105,7 @@ class Command_Turn_Right_Tests extends FunSuite{
 
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace))
+    assert(testCarGamePlayer1.getState().last == Config.NOTHING_PLAYER_STATE)
   }
 
   test("Given player that is boosting when TURN_RIGHT then player turns right, incurs change lane penalty and moves at boost speed") {

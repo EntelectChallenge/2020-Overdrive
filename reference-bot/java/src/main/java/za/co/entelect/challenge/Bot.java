@@ -18,6 +18,7 @@ public class Bot {
     private final Random random;
 
     private final static Command ACCELERATE = new AccelerateCommand();
+    private final static Command FIX = new FixCommand();
 
     private final static Command TURN_RIGHT = new ChangeLaneCommand(1);
     private final static Command TURN_LEFT = new ChangeLaneCommand(-1);
@@ -33,10 +34,15 @@ public class Bot {
         Car opponent = gameState.opponent;
 
         List<Object> blocks = getBlocksInFront(myCar.position.lane, myCar.position.block, gameState);
+        if(myCar.damage >= 5) {
+            return FIX;
+        }
+
         if (blocks.contains(Terrain.MUD)) {
             int i = random.nextInt(directionList.size());
             return directionList.get(i);
         }
+
         return ACCELERATE;
     }
 

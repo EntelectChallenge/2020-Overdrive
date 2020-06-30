@@ -7,19 +7,27 @@ import scala.util.Random
 
 class BlockObjectCreator() {
 
-  def generateMapObject(randomNumberGenerator: Random): Int = {
-    val mapObjects = mutable.SortedMap[Double, Int]()
-    mapObjects.put(0.0, Config.EMPTY_MAP_OBJECT)
-    mapObjects.put(Config.MUD_GENERATION_PERCENTAGE * 0.01, Config.MUD_MAP_OBJECT)
-    mapObjects.put(mapObjects.lastKey + (Config.BOOST_GENERATION_PERCENTAGE * 0.01), Config.BOOST_MAP_OBJECT)
-    mapObjects.put(mapObjects.lastKey + (Config.OIL_ITEM_GENERATION_PERCENTAGE * 0.01), Config.OIL_ITEM_MAP_OBJECT)
-    mapObjects.put(mapObjects.lastKey + (Config.WALL_GENERATION_PERCENTAGE * 0.01), Config.WALL_MAP_OBJECT)
-    mapObjects.put(mapObjects.lastKey + (Config.LIZARD_GENERATION_PERCENTAGE * 0.01), Config.LIZARD_MAP_OBJECT)
-    mapObjects.put(mapObjects.lastKey + (Config.TWEET_GENERATION_PERCENTAGE * 0.01), Config.TWEET_MAP_OBJECT)
-    mapObjects.put(1.0, Config.EMPTY_MAP_OBJECT)
+  def placeObjectOnTrack(blocks: Array[Block], mapObjects: mutable.SortedMap[Double, Int], mapObjectOfInterest: Int, zIndex:Double) = {
+    val trackLength = Config.TRACK_LENGTH
+    for ( i <- 0 to (blocks.length - 1)) {
+      val lane = i/trackLength + 1
+      val blockNumber = i%trackLength + 1
+      val position = new BlockPosition(lane, blockNumber)
+      var generatedMapObject = blocks(i).getMapObject()
+      if(generatedMapObject == Config.EMPTY_MAP_OBJECT) {
+        if(blockNumber >= Config.STARTING_BLOCK_FOR_GENERATED_MAP_OBJECTS && blockNumber < trackLength) {
+          val randomNumber = Math.abs(Noise.noise(blockNumber * 0.1, lane * 0.1, zIndex))
+          val (_, value) = mapObjects.minAfter(randomNumber).get
+          if(value == mapObjectOfInterest) {
+            generatedMapObject = mapObjectOfInterest
+          }
+        } else if (blockNumber == trackLength) {
+          generatedMapObject = Config.FINISH_LINE_MAP_OBJECT
+        }
 
-    val (_, value) = mapObjects.minAfter(randomNumberGenerator.nextDouble).get
-    value
+        blocks(i) = new Block(position, generatedMapObject, Config.EMPTY_PLAYER)
+      }
+    }
   }
 
 }
