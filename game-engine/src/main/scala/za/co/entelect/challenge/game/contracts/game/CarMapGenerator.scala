@@ -64,12 +64,12 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
         val mapObjects = mutable.SortedMap[Double, Int]()
         mapObjects.put(0.0, Config.EMPTY_MAP_OBJECT)
         mapObjects.put(((Config.MUD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.29, Config.MUD_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + ((Config.BOOST_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.189, Config.BOOST_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + ((Config.OIL_ITEM_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.197, Config.OIL_ITEM_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + ((Config.WALL_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.26, Config.WALL_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + ((Config.LIZARD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.2, Config.LIZARD_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + ((Config.TWEET_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.173, Config.TWEET_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + ((Config.EMP_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.165, Config.EMP_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.BOOST_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.182, Config.BOOST_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.OIL_ITEM_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.2, Config.OIL_ITEM_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.WALL_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.165, Config.WALL_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.LIZARD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.185, Config.LIZARD_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.TWEET_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.2, Config.TWEET_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.EMP_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.21, Config.EMP_MAP_OBJECT)
         mapObjects.put(1.0, Config.EMPTY_MAP_OBJECT)
 
         //generate empty map
@@ -81,16 +81,14 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
             blocks(i) = new Block(position, generatedMapObject, Config.EMPTY_PLAYER)
         }
 
-        val zIndexForObstacles = 0.1
-        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.MUD_MAP_OBJECT, zIndexForObstacles)
-        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.WALL_MAP_OBJECT, zIndexForObstacles)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.MUD_MAP_OBJECT, 0.1)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.WALL_MAP_OBJECT, 0.2)
 
-        val zIndexForPowerups = 0.9
-        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.BOOST_MAP_OBJECT, zIndexForPowerups)
-        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.OIL_ITEM_MAP_OBJECT, zIndexForPowerups)
-        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.LIZARD_MAP_OBJECT, zIndexForPowerups)
-        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.TWEET_MAP_OBJECT, zIndexForPowerups)
-        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.EMP_MAP_OBJECT, zIndexForPowerups)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.BOOST_MAP_OBJECT, 0.9)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.OIL_ITEM_MAP_OBJECT, 0.8)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.LIZARD_MAP_OBJECT, 0.6)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.TWEET_MAP_OBJECT, 0.5)
+        blockObjectCreator.placeObjectOnTrack(blocks, mapObjects, Config.EMP_MAP_OBJECT, 0.4)
 
         setPlayerOneStartPosition(blocks)
         setPlayerTwoStartPosition(blocks)
