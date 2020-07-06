@@ -66,7 +66,7 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
         mapObjects.put(((Config.MUD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.29, Config.MUD_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + ((Config.BOOST_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.182, Config.BOOST_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + ((Config.OIL_ITEM_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.2, Config.OIL_ITEM_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + ((Config.WALL_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.165, Config.WALL_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.WALL_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.405, Config.WALL_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + ((Config.LIZARD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.185, Config.LIZARD_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + ((Config.TWEET_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.2, Config.TWEET_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + ((Config.EMP_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.21, Config.EMP_MAP_OBJECT)
