@@ -64,7 +64,7 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
         val mapObjects = mutable.SortedMap[Double, Int]()
         mapObjects.put(0.0, Config.EMPTY_MAP_OBJECT)
         mapObjects.put(((Config.MUD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.29, Config.MUD_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + ((Config.BOOST_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.182, Config.BOOST_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + ((Config.BOOST_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.189, Config.BOOST_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + ((Config.OIL_ITEM_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.2, Config.OIL_ITEM_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + ((Config.WALL_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.405, Config.WALL_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + ((Config.LIZARD_GENERATION_PERCENTAGE * 0.01) + 0.01) * 0.185, Config.LIZARD_MAP_OBJECT)
