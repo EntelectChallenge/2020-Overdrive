@@ -2,6 +2,8 @@ package za.co.entelect.challenge.game.contracts.game
 
 import java.util
 
+import za.co.entelect.challenge.game.contracts.Config.Config
+
 import scala.collection.JavaConverters._
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap, GameMap}
@@ -14,6 +16,14 @@ class CarGameRoundProcessor extends GameRoundProcessor{
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
     val gamePlayers = carGameMap.getGamePlayers()
     val commandFactory = new CommandFactory
+
+    if (carGameMap.getCurrentRound >= Config.MAX_ROUNDS){
+      for (i <- gamePlayers.indices){
+        val player = gamePlayers(i).asInstanceOf[CarGamePlayer]
+        player.finish()
+      }
+      return true
+    }
 
     val player1StartPositions = carGameMap.getPlayerBlockPosition(1)
     val player2StartPositions = carGameMap.getPlayerBlockPosition(2)
