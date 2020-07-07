@@ -14,8 +14,8 @@ public class RetryableCall<T> implements Call<T> {
     private static final Logger LOGGER = LogManager.getLogger(RetryableCall.class);
 
     private Call<T> originalCall;
-    private int maxRetries;
-    private int retryTimeout;
+    private final int maxRetries;
+    private final int retryTimeout;
 
     public RetryableCall(Call<T> originalCall, int maxRetries, int retryTimeout) {
         this.originalCall = originalCall;
@@ -33,7 +33,7 @@ public class RetryableCall<T> implements Call<T> {
                 Thread.sleep(i * retryTimeout);
                 Response<T> execute = originalCall.execute();
                 if (!execute.isSuccessful()) {
-                    throw new Exception(String.format("Request failed: %s", request));
+                    throw new IllegalStateException(String.format("Request failed: %s", request));
                 }
 
                 return execute;
@@ -41,7 +41,7 @@ public class RetryableCall<T> implements Call<T> {
                 LOGGER.error(String.format("Failed call: %s", request));
             }
 
-            LOGGER.info(String.format("Retrying request: %s", request));
+            LOGGER.info("Retrying request: {}", request);
             originalCall = originalCall.clone();
         }
 

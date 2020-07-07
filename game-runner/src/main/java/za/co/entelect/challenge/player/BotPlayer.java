@@ -3,25 +3,25 @@ package za.co.entelect.challenge.player;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.botrunners.BotRunner;
+import za.co.entelect.challenge.botrunners.local.LocalBotRunner;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
 import za.co.entelect.challenge.utils.FileUtils;
 
-import java.io.*;
+import java.io.IOException;
 
 public class BotPlayer extends BasePlayer {
 
     private static final String BOT_STATE = "state.json";
     private static final String TEXT_MAP = "textMap.txt";
 
-    private BotRunner botRunner;
-    private StopWatch stopWatch;
+    private final LocalBotRunner botRunner;
+    private final StopWatch stopWatch;
 
     private static final Logger log = LogManager.getLogger(BotPlayer.class);
 
-    public BotPlayer(String name, BotRunner botRunner) {
+    public BotPlayer(String name, LocalBotRunner botRunner) {
         super(name);
 
         this.botRunner = botRunner;
@@ -33,9 +33,7 @@ public class BotPlayer extends BasePlayer {
         super.gameStarted();
         try {
             botRunner.run();
-        }
-
-        catch (IOException e) {
+        } catch (IOException e) {
             log.error("Failed to start bot process", e);
             throw e;
         }

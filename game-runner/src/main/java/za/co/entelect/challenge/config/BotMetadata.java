@@ -6,12 +6,13 @@ import com.google.gson.annotations.SerializedName;
 import za.co.entelect.challenge.enums.BotLanguage;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.stream.Stream;
 
-public class BotMetaData {
+public class BotMetadata {
 
     @SerializedName("author")
     private String author;
@@ -34,7 +35,7 @@ public class BotMetaData {
     @SerializedName("arguments")
     private BotArguments arguments;
 
-    public BotMetaData(BotLanguage language, String botLocation, String botFileName) {
+    public BotMetadata(BotLanguage language, String botLocation, String botFileName) {
         this.botLanguage = language;
         this.botLocation = botLocation;
         this.botFileName = botFileName;
@@ -76,21 +77,19 @@ public class BotMetaData {
         return this.arguments;
     }
 
-    public static BotMetaData load(String botLocation) throws Exception {
+    public static BotMetadata load(String botLocation) throws IOException {
+        Path botMetaPath;
 
-        Optional<Path> botMetaPath = Files.walk(Paths.get(botLocation))
-                .filter(path -> path.endsWith("bot.json"))
-                .findFirst();
-
-        if (!botMetaPath.isPresent()) {
-            throw new Exception("Failed to find bot meta data from location: " + botLocation);
+        try (final Stream<Path> files = Files.walk(Paths.get(botLocation))) {
+            botMetaPath = files.filter(path -> path.endsWith("bot.json"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Failed to find bot meta data from location: " + botLocation));
         }
 
-        try (FileReader fileReader = new FileReader(botMetaPath.get().toFile())) {
-
+        try (FileReader fileReader = new FileReader(botMetaPath.toFile())) {
             Gson gson = new GsonBuilder().create();
 
-            BotMetaData botMeta = gson.fromJson(fileReader, BotMetaData.class);
+            BotMetadata botMeta = gson.fromJson(fileReader, BotMetadata.class);
             botMeta.setRelativeBotLocation(botLocation);
 
             return botMeta;

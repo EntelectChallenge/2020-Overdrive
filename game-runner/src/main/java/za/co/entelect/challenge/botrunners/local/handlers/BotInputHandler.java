@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.botrunners.handlers;
+package za.co.entelect.challenge.botrunners.local.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,9 +12,9 @@ public class BotInputHandler implements Runnable {
 
     private static final Logger log = LogManager.getLogger(BotInputHandler.class);
 
-    private InputStream botInputStream;
-    private ReentrantLock reentrantLock;
-    private Condition commandSignalCondition;
+    private final InputStream botInputStream;
+    private final ReentrantLock reentrantLock;
+    private final Condition commandSignalCondition;
     private String lastReceivedCommand;
     private int round;
 
@@ -29,7 +29,7 @@ public class BotInputHandler implements Runnable {
         Scanner scanner = new Scanner(botInputStream);
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
-            log.info(command);
+            log.info("Received command {}", command);
 
             String commandFormat = String.format("C;%d;", round);
             if (command.startsWith(commandFormat)) {

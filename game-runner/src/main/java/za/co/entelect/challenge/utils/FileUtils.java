@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
-import static java.nio.file.StandardOpenOption.WRITE;
+import static java.nio.file.StandardOpenOption.*;
 import static java.util.Collections.singletonList;
 
 public final class FileUtils {
@@ -18,10 +16,10 @@ public final class FileUtils {
         File stateDirectory = new File(fileLocation);
         stateDirectory.getParentFile().mkdirs();
 
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(stateDirectory));
-        bufferedWriter.write(stringToWrite);
-        bufferedWriter.flush();
-        bufferedWriter.close();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(stateDirectory))) {
+            bufferedWriter.write(stringToWrite);
+            bufferedWriter.flush();
+        }
     }
 
     public static void appendToFile(String fileLocation, String stringToWrite) throws IOException {
@@ -36,8 +34,4 @@ public final class FileUtils {
         return String.format("Round %03d", roundNumber);
     }
 
-    public static String getContainerPath(String path) {
-        String file = new File(path).getPath();
-        return String.format("/EntelectChallenge%s", file.substring(file.indexOf('/', file.indexOf('/', 1) + 1)));
-    }
 }
