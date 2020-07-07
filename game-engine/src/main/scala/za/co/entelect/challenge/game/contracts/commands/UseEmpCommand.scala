@@ -21,7 +21,6 @@ class UseEmpCommand extends BaseCarGameCommand {
 
     }
     else {
-      //TODO: report match issues
       carGamePlayer.doNothing()
     }
 

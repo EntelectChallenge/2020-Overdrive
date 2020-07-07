@@ -34,6 +34,8 @@ class MapGeneration_Tests extends FunSuite {
 
       println("avg number of mud blocks: " + averageNumberOfMudBlocksGenerated)
       println("max allowed mud blocks: " + maxAllowedNumberOfMudBlocks)
+      println("acceptable difference: " + deviationInTermsOfNumberOfObjects)
+
       assert(Math.abs(maxAllowedNumberOfMudBlocks - averageNumberOfMudBlocksGenerated) <= deviationInTermsOfNumberOfObjects, "Mud blocks not generated not within bounds");
   }
 
@@ -58,6 +60,7 @@ class MapGeneration_Tests extends FunSuite {
 
       println("avg number of wall blocks: " + averageNumberOfWallBlocksGenerated)
       println("max allowed wall blocks: " + maxAllowedNumberOfWallBlocks)
+      println("acceptable difference: " + deviationInTermsOfNumberOfObjects)
       assert(Math.abs(maxAllowedNumberOfWallBlocks - averageNumberOfWallBlocksGenerated) <= deviationInTermsOfNumberOfObjects, "Wall blocks not generated not within bounds");
   }
 
@@ -82,6 +85,7 @@ class MapGeneration_Tests extends FunSuite {
 
       println("avg number of boost blocks: " + averageNumberOfBoostPickupBlocksGenerated)
       println("max allowed boost blocks: " + maxAllowedNumberOfBoostPickupBlocks)
+      println("acceptable difference: " + deviationInTermsOfNumberOfObjects)
       assert(Math.abs(maxAllowedNumberOfBoostPickupBlocks - averageNumberOfBoostPickupBlocksGenerated) <= deviationInTermsOfNumberOfObjects, "Boost pickup blocks not generated not within bounds");
   }
 
@@ -106,6 +110,7 @@ class MapGeneration_Tests extends FunSuite {
 
       println("avg number of oil blocks: " + averageNumberOfOilPickupBlocksGenerated)
       println("max allowed oil blocks: " + maxAllowedNumberOfOilPickupBlocks)
+    println("acceptable difference: " + deviationInTermsOfNumberOfObjects)
       assert(Math.abs(maxAllowedNumberOfOilPickupBlocks - averageNumberOfOilPickupBlocksGenerated) <= deviationInTermsOfNumberOfObjects, "Oil pickup blocks not generated not within bounds");
   }
 
@@ -130,6 +135,7 @@ class MapGeneration_Tests extends FunSuite {
 
     println("avg number of tweet blocks: " + averageNumberOfTweetPickupBlocksGenerated)
     println("max allowed tweet blocks: " + maxAllowedNumberOfTweetPickupBlocks)
+    println("acceptable difference: " + deviationInTermsOfNumberOfObjects)
     assert(Math.abs(maxAllowedNumberOfTweetPickupBlocks - averageNumberOfTweetPickupBlocksGenerated) <= deviationInTermsOfNumberOfObjects, "Tweet pickup blocks not generated not within bounds");
   }
 
@@ -154,6 +160,7 @@ class MapGeneration_Tests extends FunSuite {
 
       println("avg number of lizard blocks: " + averageNumberOfLizardPickupBlocksGenerated)
       println("max allowed lizard blocks: " + maxAllowedNumberOfLizardPickupBlocks)
+    println("acceptable difference: " + deviationInTermsOfNumberOfObjects)
       assert(Math.abs(maxAllowedNumberOfLizardPickupBlocks - averageNumberOfLizardPickupBlocksGenerated) <= deviationInTermsOfNumberOfObjects, "Lizard pickup blocks not generated not within bounds");
   }
 
@@ -178,6 +185,7 @@ class MapGeneration_Tests extends FunSuite {
 
       println("avg number of emp blocks: " + averageNumberOfEmpPickupBlocksGenerated)
       println("max allowed emp blocks: " + maxAllowedNumberOfEmpPickupBlocks)
+    println("acceptable difference: " + deviationInTermsOfNumberOfObjects)
       assert(Math.abs(maxAllowedNumberOfEmpPickupBlocks - averageNumberOfEmpPickupBlocksGenerated) <= deviationInTermsOfNumberOfObjects, "Lizard pickup blocks not generated not within bounds");
   }
 

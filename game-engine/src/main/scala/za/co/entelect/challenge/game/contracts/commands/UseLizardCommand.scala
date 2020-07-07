@@ -7,6 +7,9 @@ class UseLizardCommand extends BaseCarGameCommand {
         if (carGamePlayer.hasLizard){
             carGamePlayer.useLizard()
         }
+        else {
+          carGamePlayer.doNothing()
+        }
         return CommandHelper.getFuturePosition(carGamePlayer, currentPlayerPosition)
     }
 }
