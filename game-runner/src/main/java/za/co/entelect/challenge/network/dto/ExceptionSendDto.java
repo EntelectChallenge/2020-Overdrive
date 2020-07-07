@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.network.Dto;
+package za.co.entelect.challenge.network.dto;
 
 import com.google.gson.annotations.SerializedName;
 

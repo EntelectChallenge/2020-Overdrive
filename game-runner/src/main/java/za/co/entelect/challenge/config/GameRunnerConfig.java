@@ -9,6 +9,7 @@ import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -66,15 +67,15 @@ public class GameRunnerConfig {
     @SerializedName("tournament")
     public TournamentConfig tournamentConfig;
 
-    public static GameRunnerConfig load(String configFile) throws Exception {
+    public static GameRunnerConfig load(String configFile) throws IOException {
 
-        LOGGER.info(String.format("Reading config file: %s", configFile));
+        LOGGER.info("Reading config file: {}", configFile);
         try (FileReader fileReader = new FileReader(configFile)) {
             Gson gson = new GsonBuilder().create();
             GameRunnerConfig gameRunnerConfig = gson.fromJson(fileReader, GameRunnerConfig.class);
 
             if (gameRunnerConfig == null) {
-                throw new Exception("Failed to load gameRunnerConfig");
+                throw new IllegalStateException("Failed to load gameRunnerConfig");
             }
 
             // Load tournament specific config here
@@ -82,7 +83,7 @@ public class GameRunnerConfig {
             if (gameRunnerConfig.isTournamentMode) {
                 LOGGER.info("Running in tournament mode. Loading tournament config");
                 gameRunnerConfig.matchId = System.getenv(EnvironmentVariable.MATCH_ID.name());
-                gameRunnerConfig.seed = Integer.valueOf(System.getenv(EnvironmentVariable.SEED.name()));
+                gameRunnerConfig.seed = Integer.parseInt(System.getenv(EnvironmentVariable.SEED.name()));
                 gameRunnerConfig.playerAId = System.getenv(EnvironmentVariable.PLAYER_A_ID.name());
                 gameRunnerConfig.playerBId = System.getenv(EnvironmentVariable.PLAYER_B_ID.name());
 
@@ -118,7 +119,7 @@ public class GameRunnerConfig {
             if (gameRunnerConfig.seed == 0) {
                 gameRunnerConfig.seed = (int) TimeUnit.SECONDS.convert(System.nanoTime(), TimeUnit.NANOSECONDS);
             }
-            LOGGER.info(String.format("Match will be running with a seed of: %d", gameRunnerConfig.seed));
+            LOGGER.info("Match will be running with a seed of: {}", gameRunnerConfig.seed);
 
             return gameRunnerConfig;
         }

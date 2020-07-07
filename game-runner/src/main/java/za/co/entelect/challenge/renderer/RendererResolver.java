@@ -6,7 +6,7 @@ import za.co.entelect.challenge.game.contracts.renderer.RendererType;
 
 public class RendererResolver {
 
-    private GameEngineBootstrapper gameEngineBootstrapper;
+    private final GameEngineBootstrapper gameEngineBootstrapper;
 
     public RendererResolver(GameEngineBootstrapper gameEngineBootstrapper) {
         this.gameEngineBootstrapper = gameEngineBootstrapper;

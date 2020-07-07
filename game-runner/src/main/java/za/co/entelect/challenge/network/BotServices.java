@@ -3,7 +3,7 @@ package za.co.entelect.challenge.network;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.*;
-import za.co.entelect.challenge.network.Dto.RunBotResponseDto;
+import za.co.entelect.challenge.network.dto.RunBotResponseDto;
 
 public interface BotServices {
 

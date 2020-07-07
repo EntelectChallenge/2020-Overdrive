@@ -10,25 +10,27 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 
 public class AzureBlobStorageService {
 
     private static final Logger LOGGER = LogManager.getLogger(AzureBlobStorageService.class);
 
-    private CloudBlobClient serviceClient;
+    private final CloudBlobClient serviceClient;
 
-    public AzureBlobStorageService(String connectionString) throws Exception {
-
+    public AzureBlobStorageService(String connectionString) throws URISyntaxException, InvalidKeyException {
         serviceClient = CloudStorageAccount.parse(connectionString)
                 .createCloudBlobClient();
     }
 
-    public File getFile(String file, String outputFile, String container) throws Exception {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public File getFile(String file, String outputFile, String container) throws URISyntaxException, StorageException, IOException {
 
         CloudBlobContainer bloBContainer = serviceClient.getContainerReference(container);
 
-        LOGGER.info(String.format("Downloading %s", file));
+        LOGGER.info("Downloading {}", file);
         File f = new File(outputFile);
 
         File parent = f.getParentFile();
@@ -47,16 +49,15 @@ public class AzureBlobStorageService {
         return f;
     }
 
-    public void putFile(File file, String outputLocation, String container) throws Exception {
+    public void putFile(File file, String outputLocation, String container) throws URISyntaxException, StorageException, IOException {
 
         CloudBlobContainer bloBContainer = serviceClient.getContainerReference(container);
 
-        LOGGER.info(String.format("Uploading %s", file));
+        LOGGER.info("Uploading {}", file);
         CloudBlockBlob blob = bloBContainer.getBlockBlobReference(outputLocation);
 
-        FileInputStream fileInputStream = new FileInputStream(file);
-        blob.upload(fileInputStream, file.length());
-
-        fileInputStream.close();
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            blob.upload(fileInputStream, file.length());
+        }
     }
 }

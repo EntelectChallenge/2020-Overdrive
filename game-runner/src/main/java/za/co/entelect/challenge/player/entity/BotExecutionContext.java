@@ -43,21 +43,6 @@ public class BotExecutionContext {
     }
 
     private String getCommandInfo() {
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append("Command: ");
-        stringBuilder.append(command);
-        stringBuilder.append("\n");
-
-        stringBuilder.append("Execution time: ");
-        stringBuilder.append(executionTime);
-        stringBuilder.append("ms\n");
-
-        stringBuilder.append("Exception: ");
-        stringBuilder.append(exception);
-        stringBuilder.append("\n");
-
-        return stringBuilder.toString();
+        return String.format("Command: %s%nExecution time: %dms%nException: %s%n", command, executionTime, exception);
     }
 }

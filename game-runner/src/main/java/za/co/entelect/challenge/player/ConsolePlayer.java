@@ -13,8 +13,8 @@ public class ConsolePlayer extends BasePlayer {
 
     private static final Logger log = LogManager.getLogger(ConsolePlayer.class);
 
-    private Scanner scanner;
-    private StopWatch stopWatch;
+    private final Scanner scanner;
+    private final StopWatch stopWatch;
 
     public ConsolePlayer(String name) {
         super(name);

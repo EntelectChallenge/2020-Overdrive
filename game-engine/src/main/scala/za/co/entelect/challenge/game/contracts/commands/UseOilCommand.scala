@@ -17,7 +17,7 @@ class UseOilCommand extends BaseCarGameCommand {
             carGameMap.applyOilToBlock(blockToPlaceOil)
         }
         else {
-            //TODO: report match issues
+            carGamePlayer.doNothing()
         }
         return futurePosition
     }

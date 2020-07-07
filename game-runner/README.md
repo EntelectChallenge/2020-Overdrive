@@ -115,9 +115,9 @@ When adding a new language to the game runner a new `BotRunner` is required. Eac
 
 To add a new language, a new `BotRunner` needs to be created, therefore:
 ```java
-public class JavaBotRunner extends BotRunner
+public class JavaBotRunner extends LocalBotRunner
 ```
-Once a new implementation is created, the `runBot()` method needs to be implemented:
+On the new bot runner, implement the `runBot()` method to start the bot:
 ```java
 @Override
 protected void runBot() throws IOException {
@@ -125,7 +125,11 @@ protected void runBot() throws IOException {
     runSimpleCommandLineCommand(line, 0);
 }
 ```
-In the code sample above a new command is created. This command is used to start-up a bot of that specific language. The `getBotFileName()` method will return the path to the executable, in this case, it will be the path to the Jar, for JavaScript, it will be the path to the script. **Note**: that this command should be able to run on Command Prompt (Windows) and Terminal (Linux). Once the command is created simply call the `runSimpleCommandLineCommand()` method with the command as the first parameter and the expected exit code as the second parameter (usually 0).
+**Note**: This command should be able to run on Command Prompt (Windows) and Terminal (Linux).
+
+The LocalBotRunner class you are extending provides some useful utility methods:
+ * `getBotFileName()` will return the path to the executable or bot file (eg. the jar or .js file)
+ * `runSimpleCommandLineCommand()` with the command as the first parameter and the expected exit code as the second parameter (usually 0) will execute the command. 
 
 Once the `BotRunner` is created the language needs to be added to the `BotLanguage` file:
 ```java
@@ -147,9 +151,14 @@ The `@SerializedName()` will take in the text version of the language type. This
 ```
 Note that the `botLanguage` is the same as the text in `@SerializedName()`. This allows the game runner to determine the bot`s language. 
 
-Once the language is added a link needs to be established between the new language and its `BotRunner`. To do this the `BotRunnerFactory` needs to be updated. Therefore, the following entry would be added:
+Once the language is added,  a link needs to be established between the new language and its `BotRunner`. To do this, implement the `createBotRunner` method on your language 
 ```java
-case JAVA:
-    return new JavaBotRunner(botMetaData, timeoutInMilliseconds);
+    @SerializedName("java")
+    JAVA {
+        @Override
+        public LocalBotRunner createBotRunner(BotMetadata botMetadata, int timeoutInMilliseconds) {
+            return new JavaBotRunner(botMetadata, timeoutInMilliseconds);
+        }
+    },
 ```
 Now the game runner will support your new language. Before submitting your new bot please ensure that step two from the above steps has been followed.

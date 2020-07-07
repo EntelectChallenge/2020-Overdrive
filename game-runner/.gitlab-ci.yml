@@ -2,7 +2,8 @@ image: maven:latest
 
 stages:
   - build
-  - publish
+  - publish-dev
+  - publish-prod
 
 build:
   stage: build
@@ -22,8 +23,8 @@ build:
       - "starter-pack-runner-config.json"
     expire_in: 1h
 
-publish:
-  stage: publish
+publish-dev:
+  stage: publish-dev
   image: docker:stable
   services:
     - docker:dind
@@ -32,10 +33,29 @@ publish:
   variables:
     DOCKER_TAG: "latest"
   before_script:
-    - docker login -u $temp_username -p $temp_password
+    - mv game-runner-config-qa.json game-runner-config.json
+    - docker login -u $challenge_username -p $challenge_password
   script:
-    - docker build . -t entelectchallenge2020/game-runner-qa
-    - docker push entelectchallenge2020/game-runner-qa
+    - docker build . -t entelectchallenge/game-runner-qa
+    - docker push entelectchallenge/game-runner-qa
+  only:
+    - develop
+
+publish-prod:
+  stage: publish-prod
+  image: docker:stable
+  services:
+    - docker:dind
+  tags:
+    - docker
+  variables:
+    DOCKER_TAG: "latest"
+  before_script:
+    - mv game-runner-config-prod.json game-runner-config.json
+    - docker login -u $challenge_username -p $challenge_password
+  script:
+    - docker build . -t entelectchallenge/game-runner
+    - docker push entelectchallenge/game-runner
   only:
     - master
 

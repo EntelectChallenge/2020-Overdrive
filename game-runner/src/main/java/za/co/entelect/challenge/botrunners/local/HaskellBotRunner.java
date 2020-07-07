@@ -1,12 +1,12 @@
-package za.co.entelect.challenge.botrunners;
+package za.co.entelect.challenge.botrunners.local;
 
-import za.co.entelect.challenge.config.BotMetaData;
+import za.co.entelect.challenge.config.BotMetadata;
 
 import java.io.IOException;
 
-public class HaskellBotRunner extends BotRunner {
+public class HaskellBotRunner extends LocalBotRunner {
 
-    public HaskellBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+    public HaskellBotRunner(BotMetadata botMetaData, int timeoutInMilliseconds) {
         super(botMetaData, timeoutInMilliseconds);
     }
 
@@ -15,7 +15,7 @@ public class HaskellBotRunner extends BotRunner {
         String runTimeArguments;
         if (this.getArguments() != null) {
             int coreCount = this.getArguments().getCoreCount();
-            runTimeArguments = " +RTS -N" + Integer.toString(coreCount) + " -RTS";
+            runTimeArguments = " +RTS -N" + coreCount + " -RTS";
         } else {
             runTimeArguments = "";
         }

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -22,8 +23,8 @@ import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper;
 import za.co.entelect.challenge.game.contracts.game.GameResult;
 import za.co.entelect.challenge.game.contracts.player.Player;
-import za.co.entelect.challenge.network.Dto.ExceptionSendDto;
 import za.co.entelect.challenge.network.TournamentApi;
+import za.co.entelect.challenge.network.dto.ExceptionSendDto;
 import za.co.entelect.challenge.player.bootstrapper.PlayerBootstrapper;
 import za.co.entelect.challenge.renderer.RendererResolver;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class GameBootstrapper {
@@ -110,22 +112,26 @@ public class GameBootstrapper {
                 gameRunnerConfig.tournamentConfig.gameEngineContainer);
 
         File gameEngineDir = ZipUtils.extractZip(gameEngineZip).getParentFile();
-        gameRunnerConfig.gameEngineJar = gameEngineDir.listFiles((dir, name) -> name.endsWith(".jar"))[0].getPath();
-        gameRunnerConfig.gameConfigFileLocation = gameEngineDir.listFiles(
+        gameRunnerConfig.gameEngineJar = Objects.requireNonNull(gameEngineDir.listFiles((dir, name) -> name.endsWith(".jar")))[0].getPath();
+        gameRunnerConfig.gameConfigFileLocation = Objects.requireNonNull(gameEngineDir.listFiles(
                 (dir, name) -> name.endsWith(".json") || name.endsWith(".properties")
-        )[0].getPath();
+        ))[0].getPath();
     }
 
     private void initLogging(GameRunnerConfig gameRunnerConfig) {
         if (gameRunnerConfig.isVerbose) {
             Configurator.setRootLevel(Level.DEBUG);
         } else {
-            Configurator.setRootLevel(Level.ERROR);
+            Configurator.setRootLevel(Level.WARN);
         }
 
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         LoggerConfig config = ctx.getConfiguration().getRootLogger();
-        Appender appender = FileAppender.newBuilder().withName("File").withFileName(String.format("%s/match.log", gameRunnerConfig.gameName)).build();
+        Appender appender = FileAppender.newBuilder()
+                .withName("File")
+                .withFileName(String.format("%s/match.log", gameRunnerConfig.gameName))
+                .withLayout(PatternLayout.newBuilder().withPattern("%d{HH:mm:ss,SSS} %p %m%n").build())
+                .build();
         config.addAppender(appender, Level.ALL, config.getFilter());
     }
 
@@ -142,20 +148,20 @@ public class GameBootstrapper {
         gameResult.playerAEntryId = System.getenv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name());
 
         Gson gson = new GsonBuilder().create();
-        LOGGER.info(gson.toJson(gameResult));
+        LOGGER.info(() -> gson.toJson(gameResult));
 
-        LOGGER.info(gameResult.toString());
+        LOGGER.info(gameResult);
         TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
         try {
             Call<Void> call = tournamentApi.updateMatchStatus(tournamentConfig.functionKey, gameResult);
             Response<Void> execute = call.execute();
 
             if (!execute.isSuccessful()) {
-                throw new Exception(execute.errorBody().string());
+                LOGGER.error("Failed to notify match completion: {}", execute.errorBody() != null ? execute.errorBody().string() : "");
             }
 
         } catch (Exception e) {
-            LOGGER.error("Failed to notify match completion", e);
+            LOGGER.error("Failed to notify match completion:", e);
         }
     }
 
