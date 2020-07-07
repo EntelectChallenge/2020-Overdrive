@@ -3,10 +3,9 @@ package za.co.entelect.challenge.network;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import za.co.entelect.challenge.game.contracts.game.GameResult;
-import za.co.entelect.challenge.network.Dto.ExceptionSendDto;
+import za.co.entelect.challenge.network.dto.ExceptionSendDto;
 
 public interface TournamentApi {
 

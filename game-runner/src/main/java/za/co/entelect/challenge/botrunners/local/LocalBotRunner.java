@@ -1,11 +1,11 @@
-package za.co.entelect.challenge.botrunners;
+package za.co.entelect.challenge.botrunners.local;
 
 import org.apache.commons.exec.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.botrunners.handlers.CommandHandler;
+import za.co.entelect.challenge.botrunners.local.handlers.CommandHandler;
 import za.co.entelect.challenge.config.BotArguments;
-import za.co.entelect.challenge.config.BotMetaData;
+import za.co.entelect.challenge.config.BotMetadata;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,19 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class BotRunner implements ProcessDestroyer {
+public abstract class LocalBotRunner implements ProcessDestroyer {
 
-    private static final Logger log = LogManager.getLogger(BotRunner.class);
+    private static final Logger log = LogManager.getLogger(LocalBotRunner.class);
 
-    protected BotMetaData botMetaData;
-    protected int timeoutInMilliseconds;
+    protected final BotMetadata botMetaData;
+    protected final int timeoutInMilliseconds;
 
-    private CommandHandler commandHandler;
-    private List<Process> processes;
-    private ReentrantLock lock;
+    private final CommandHandler commandHandler;
+    private final List<Process> processes;
+    private final ReentrantLock lock;
     private boolean stopped = false;
 
-    protected BotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+    protected LocalBotRunner(BotMetadata botMetaData, int timeoutInMilliseconds) {
         this.botMetaData = botMetaData;
         this.timeoutInMilliseconds = timeoutInMilliseconds;
         this.commandHandler = new CommandHandler(timeoutInMilliseconds);
@@ -120,7 +120,7 @@ public abstract class BotRunner implements ProcessDestroyer {
             stopped = true;
             try {
                 commandHandler.stop();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.error("Failed to stop command handler", e);
             }
 

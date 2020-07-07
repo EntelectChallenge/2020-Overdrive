@@ -1,0 +1,19 @@
+{
+  "round-state-output-location": "./match-logs",
+  "game-config-file-location": "game-config.json",
+  "game-engine-jar": "game-engine.jar",
+  "verbose-mode": true,
+  "max-runtime-ms": 1000,
+  "player-a": "../starter-bots/javascript",
+  "player-b": "../reference-bot/java",
+  "max-request-retries": 10,
+  "request-timeout-ms": 5000,
+  "is-tournament-mode": true,
+  "tournament": {
+    "connection-string": "",
+    "bots-container": "bot-source-code-container-qa",
+    "match-logs-container": "match-logs-container-qa",
+    "game-engine-container": "game-engine-container-qa",
+    "api-endpoint": "http://localhost"
+  }
+}

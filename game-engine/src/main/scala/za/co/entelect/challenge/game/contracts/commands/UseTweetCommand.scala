@@ -17,7 +17,6 @@ class UseTweetCommand(lane: Int, block: Int) extends BaseCarGameCommand {
       carGameMap.stageCyberTruckAt(stagedCyberTruckPosition)
     }
     else {
-      //TODO: report match issues
       carGamePlayer.doNothing()
     }
 

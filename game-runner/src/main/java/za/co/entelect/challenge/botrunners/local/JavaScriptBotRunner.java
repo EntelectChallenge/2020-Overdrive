@@ -1,11 +1,11 @@
-package za.co.entelect.challenge.botrunners;
+package za.co.entelect.challenge.botrunners.local;
 
-import za.co.entelect.challenge.config.BotMetaData;
+import za.co.entelect.challenge.config.BotMetadata;
 
 import java.io.IOException;
 
-public class JavaScriptBotRunner extends BotRunner {
-    public JavaScriptBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+public class JavaScriptBotRunner extends LocalBotRunner {
+    public JavaScriptBotRunner(BotMetadata botMetaData, int timeoutInMilliseconds) {
         super(botMetaData, timeoutInMilliseconds);
     }
 

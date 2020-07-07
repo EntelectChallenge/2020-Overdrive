@@ -6,16 +6,14 @@ import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
 import za.co.entelect.challenge.game.contracts.renderer.RendererType;
-import za.co.entelect.challenge.player.BotPlayer;
 import za.co.entelect.challenge.renderer.RendererResolver;
 
 public abstract class BasePlayer extends Player {
 
-    private static final Logger log = LogManager.getLogger(BotPlayer.class);
+    private static final Logger LOGGER = LogManager.getLogger(BasePlayer.class);
+    protected static final String NO_COMMAND = "No Command";
 
     private String playerId;
-
-    protected String NO_COMMAND = "No Command";
 
     protected GameMapRenderer jsonRenderer;
     protected GameMapRenderer textRenderer;
@@ -78,11 +76,11 @@ public abstract class BasePlayer extends Player {
             // on the subclasses i.e Console, File, etc.
             setExecutionResult(botExecutionContext);
             if (botExecutionContext.command == null || botExecutionContext.command.isEmpty()) {
-                log.warn("No command provided by bot. Falling back to default no command");
+                LOGGER.warn("Player {}: No command provided, falling back to default no command", getName());
                 botExecutionContext.command = NO_COMMAND;
             }
         } catch (Exception e) {
-            log.error("No command provided by bot. Falling back to default no command", e);
+            LOGGER.error("Player {}: Exception during bot execution, falling back to default no command", getName(), e);
             botExecutionContext.command = NO_COMMAND;
         }
 
