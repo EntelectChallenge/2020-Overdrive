@@ -8,12 +8,12 @@
   "player-b": "../reference-bot/java",
   "max-request-retries": 10,
   "request-timeout-ms": 5000,
-  "is-tournament-mode": false,
+  "is-tournament-mode": true,
   "tournament": {
     "connection-string": "",
-    "bots-container": "bot-source-code-container-qa",
-    "match-logs-container": "match-logs-container-qa",
-    "game-engine-container": "game-engine-container-qa",
+    "bots-container": "bot-source-code-container",
+    "match-logs-container": "match-logs-container",
+    "game-engine-container": "game-engine-container",
     "api-endpoint": "http://localhost"
   }
 }

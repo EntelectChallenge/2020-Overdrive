@@ -437,6 +437,11 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
         for (a <- 0 until playerPickedUpTweetCount) {
             carGamePlayer.pickupItem(Config.TWEET_MAP_OBJECT, playerIsInert)
         }
+
+        val playerPickedUpEmpCount = empCountInPath(positionToStartCounting, positionToEndCounting)
+        for (a <- 0 until playerPickedUpEmpCount) {
+            carGamePlayer.pickupItem(Config.EMP_MAP_OBJECT, playerIsInert)
+        }
     }
 
     def oilItemCountInPath(startPosition: BlockPosition, endPosition: BlockPosition): Int =
@@ -450,6 +455,9 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
 
     def tweetCountInPath(startPosition: BlockPosition, endPosition: BlockPosition): Int =
     numberOfMapObjectsInPath(startPosition, endPosition, Config.TWEET_MAP_OBJECT)
+
+    def empCountInPath(startPosition: BlockPosition, endPosition: BlockPosition): Int =
+        numberOfMapObjectsInPath(startPosition, endPosition, Config.EMP_MAP_OBJECT)
 
     def applyPickupsInLastBlockToPlayer(carGamePlayer: CarGamePlayer, lastBlockPosition: BlockPosition, playerIsInert: Boolean) = {
         val blockToApply = getBlockMatchingPosition(lastBlockPosition)

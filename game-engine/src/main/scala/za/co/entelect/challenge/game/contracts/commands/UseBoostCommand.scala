@@ -7,13 +7,11 @@ import za.co.entelect.challenge.game.contracts.map.BlockPosition
 class UseBoostCommand extends BaseCarGameCommand {
     override def getFuturePositionAfterAdditionalProcessingOfCommand(carGameMap: CarGameMap, carGamePlayer: CarGamePlayer, currentPlayerPosition: BlockPosition): BlockPosition = {
         val playerHasBoost = carGamePlayer.hasBoost()
-        if (playerHasBoost) 
-        {
+        if (playerHasBoost) {
             carGamePlayer.useBoost()
         }
-        else
-        {
-            //TODO: report match issues
+        else {
+            carGamePlayer.doNothing()
         }
         val futureBlockNumber = currentPlayerPosition.getBlockNumber() + carGamePlayer.getSpeed()
         val futurePosition = new BlockPosition(currentPlayerPosition.getLane(), futureBlockNumber)

@@ -8,29 +8,29 @@ import za.co.entelect.challenge.game.contracts.common.RefereeMessage;
 import za.co.entelect.challenge.game.contracts.game.GameReferee;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
-import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RunnerReferee implements GameReferee {
 
-    private static final Logger log = LogManager.getLogger(RunnerReferee.class);
+    private static final Logger LOGGER = LogManager.getLogger(RunnerReferee.class);
 
+    private final GameReferee gameEngineReferee;
+    private final GameRunnerConfig gameRunnerConfig;
 
-    private GameReferee gameEngineReferee;
-    private GameRunnerConfig gameRunnerConfig;
-    private Hashtable<Player, List<Integer>> playerTimeouts;
-    private Hashtable<Player, List<Integer>> playerExceptions;
+    private final Map<Player, List<Integer>> playerTimeouts;
+    private final Map<Player, List<Integer>> playerExceptions;
 
     RunnerReferee(GameReferee gameEngineReferee, GameRunnerConfig gameRunnerConfig, List<Player> players) {
         this.gameEngineReferee = gameEngineReferee;
         this.gameRunnerConfig = gameRunnerConfig;
 
-        this.playerTimeouts = new Hashtable<>();
-        this.playerExceptions = new Hashtable<>();
+        this.playerTimeouts = new HashMap<>();
+        this.playerExceptions = new HashMap<>();
 
         for (Player player : players) {
             this.playerTimeouts.put(player, new ArrayList<>());
@@ -40,45 +40,47 @@ public class RunnerReferee implements GameReferee {
 
     @Override
     public RefereeMessage isMatchValid(GameMap gameMap) {
+        LOGGER.info("Checking if match is valid");
 
-        log.info("Check if match is valid");
-        List<String> errorList = new ArrayList<>();
-        for (Player player : playerTimeouts.keySet()) {
-            BasePlayer basePlayer = (BasePlayer) player;
-            List<Integer> timeouts = playerTimeouts.get(player);
+        List<String> runnerErrorList = new ArrayList<>();
+        for (Map.Entry<Player, List<Integer>> entry : playerTimeouts.entrySet()) {
+            Player basePlayer = entry.getKey();
+            List<Integer> timeouts = entry.getValue();
 
             // Compare the current round to the previous
             for (int i = 1; i < timeouts.size(); i++) {
                 int previousRound = timeouts.get(i - 1);
                 int currentRound = timeouts.get(i);
                 if (previousRound == currentRound - 1) {
-                    errorList.add(String.format("Player: %s (%s) -> Consecutive timeouts on rounds %d and %d", basePlayer.getPlayerId(), basePlayer.getName(), previousRound, currentRound));
+                    final String errorMessage = String.format("Player %s -> Consecutive timeouts on rounds %d and %d", basePlayer.getName(), previousRound, currentRound);
+                    LOGGER.warn(errorMessage);
+                    runnerErrorList.add(errorMessage);
                 }
             }
         }
 
-        for (Player player : playerExceptions.keySet()) {
-            BasePlayer basePlayer = (BasePlayer) player;
-            List<Integer> exceptions = playerExceptions.get(player);
+        for (Map.Entry<Player, List<Integer>> entry : playerExceptions.entrySet()) {
+            Player player = entry.getKey();
+            List<Integer> exceptions = entry.getValue();
 
             // Compare the current round to the previous
             for (int i = 1; i < exceptions.size(); i++) {
                 int previousRound = exceptions.get(i - 1);
                 int currentRound = exceptions.get(i);
                 if (previousRound == currentRound - 1) {
-                    errorList.add(String.format("Player: %s (%s) -> Consecutive exceptions on rounds %d and %d", basePlayer.getPlayerId(), basePlayer.getName(), previousRound, currentRound));
+                    final String errorMessage = String.format("Player %s -> Consecutive exceptions on rounds %d and %d", player.getName(), previousRound, currentRound);
+                    LOGGER.warn(errorMessage);
+                    runnerErrorList.add(errorMessage);
                 }
             }
         }
 
-        for (String s : errorList) {
-            log.info(s);
-        }
-
         RefereeMessage gameEngineCheck = gameEngineReferee.isMatchValid(gameMap);
-        final boolean isValidOverall = gameEngineCheck.isValid && errorList.isEmpty();
+        gameEngineCheck.reasons.forEach(LOGGER::warn);
+
+        final boolean isValidOverall = gameEngineCheck.isValid && runnerErrorList.isEmpty();
         List<String> overallErrorList = new ArrayList<>(gameEngineCheck.reasons);
-        overallErrorList.addAll(errorList);
+        overallErrorList.addAll(runnerErrorList);
 
         return new RefereeMessage(isValidOverall, overallErrorList);
     }
@@ -89,9 +91,8 @@ public class RunnerReferee implements GameReferee {
     }
 
     private void trackTimeouts(Player player, BotExecutionContext botExecutionContext) {
-        if (botExecutionContext.executionTime >= gameRunnerConfig.maximumBotRuntimeMilliSeconds) {
-            List<Integer> timeouts = playerTimeouts.get(player);
-            timeouts.add(botExecutionContext.round);
+        if (botExecutionContext.executionTime > gameRunnerConfig.maximumBotRuntimeMilliSeconds) {
+            playerTimeouts.get(player).add(botExecutionContext.round);
         }
     }
 

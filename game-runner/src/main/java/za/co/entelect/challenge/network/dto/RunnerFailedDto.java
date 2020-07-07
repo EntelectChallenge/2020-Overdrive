@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.network.Dto;
+package za.co.entelect.challenge.network.dto;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
