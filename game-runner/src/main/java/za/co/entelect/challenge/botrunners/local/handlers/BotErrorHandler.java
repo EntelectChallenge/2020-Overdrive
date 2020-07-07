@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.botrunners.handlers;
+package za.co.entelect.challenge.botrunners.local.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,9 +10,8 @@ public class BotErrorHandler implements Runnable {
 
     private static final Logger log = LogManager.getLogger(BotErrorHandler.class);
 
-    private InputStream botErrorStream;
+    private final InputStream botErrorStream;
     private String lastErrorMessage;
-    private int round;
 
     public BotErrorHandler(InputStream botErrorStream) {
         this.botErrorStream = botErrorStream;
@@ -23,19 +22,13 @@ public class BotErrorHandler implements Runnable {
         Scanner scanner = new Scanner(botErrorStream);
 
         while (scanner.hasNextLine()) {
-            String error = scanner.nextLine();
 
-            lastErrorMessage = error;
+            lastErrorMessage = scanner.nextLine();
             log.error(lastErrorMessage);
         }
     }
 
     public String getLastError() {
         return lastErrorMessage;
-    }
-
-    public void setCurrentRound(int round) {
-        this.round = round;
-        lastErrorMessage = null;
     }
 }

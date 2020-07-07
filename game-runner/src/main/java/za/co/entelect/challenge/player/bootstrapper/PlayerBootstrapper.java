@@ -2,22 +2,23 @@ package za.co.entelect.challenge.player.bootstrapper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.botrunners.BotRunner;
-import za.co.entelect.challenge.botrunners.BotRunnerFactory;
-import za.co.entelect.challenge.config.BotMetaData;
+import za.co.entelect.challenge.botrunners.local.BotRunnerFactory;
+import za.co.entelect.challenge.botrunners.local.LocalBotRunner;
+import za.co.entelect.challenge.config.BotMetadata;
 import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.config.TournamentConfig;
+import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.game.contracts.player.Player;
-import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.player.BotPlayer;
 import za.co.entelect.challenge.player.ConsolePlayer;
 import za.co.entelect.challenge.player.TournamentPlayer;
+import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
-import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.utils.ZipUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -57,31 +58,32 @@ public class PlayerBootstrapper {
         return players;
     }
 
-    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig, String playerId) throws Exception {
+    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig, String playerId) throws IOException {
         return parsePlayer(playerConfig, playerNumber, gameRunnerConfig, playerId, null, -1);
     }
 
-    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig, String playerId, File botZip, int apiPort) throws Exception {
+    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig, String playerId, File botZip, int apiPort) throws IOException {
 
         BasePlayer player;
 
         if (playerConfig.equals("console")) {
             player = new ConsolePlayer(String.format("BotPlayer %s", playerNumber));
         } else {
-            LOGGER.info("Config for player {} : {}", playerNumber, playerConfig);
-            BotMetaData botConfig = BotMetaData.load(playerConfig);
+            BotMetadata botMetaData = BotMetadata.load(playerConfig);
+            String playerName = String.format("%s - %s", playerNumber, botMetaData.getNickName());
 
-            if (gameRunnerConfig.isTournamentMode)
-                player = new TournamentPlayer(gameRunnerConfig, String.format("%s - %s", playerNumber, botConfig.getNickName()), apiPort, botZip);
-            else {
-                LOGGER.info(botConfig.getBotLocation());
-                File botFile = new File(botConfig.getBotDirectory());
+            if (gameRunnerConfig.isTournamentMode) {
+                LOGGER.info("Instantiating tournament player {}", playerName);
+                player = new TournamentPlayer(gameRunnerConfig, playerName, apiPort, botZip);
+            } else {
+                LOGGER.info("Instantiating local player {} with bot {}", playerName, botMetaData.getBotLocation());
+                File botFile = new File(botMetaData.getBotDirectory());
                 if (!botFile.exists()) {
-                    throw new FileNotFoundException(String.format("Could not find %s bot file for %s(%s)", botConfig.getBotLanguage(), botConfig.getAuthor(), botConfig.getNickName()));
+                    throw new FileNotFoundException(String.format("Could not find %s bot file for %s(%s)", botMetaData.getBotLanguage(), botMetaData.getAuthor(), botMetaData.getNickName()));
                 }
 
-                BotRunner botRunner = BotRunnerFactory.createBotRunner(botConfig, gameRunnerConfig.maximumBotRuntimeMilliSeconds);
-                player = new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
+                LocalBotRunner botRunner = BotRunnerFactory.createBotRunner(botMetaData, gameRunnerConfig.maximumBotRuntimeMilliSeconds);
+                player = new BotPlayer(playerName, botRunner);
             }
         }
 

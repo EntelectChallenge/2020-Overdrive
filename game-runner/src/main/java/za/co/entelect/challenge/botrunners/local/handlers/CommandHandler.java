@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.botrunners.handlers;
+package za.co.entelect.challenge.botrunners.local.handlers;
 
 import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +16,7 @@ public class CommandHandler implements ExecuteStreamHandler {
 
     private static final Logger log = LogManager.getLogger(CommandHandler.class);
 
-    private int timeoutInMilliseconds;
+    private final int timeoutInMilliseconds;
 
     private OutputStream botInputStream;
     private InputStream botErrorStream;
@@ -28,34 +28,34 @@ public class CommandHandler implements ExecuteStreamHandler {
     private Thread botInputThread;
     private Thread botErrorThread;
 
-    private ReentrantLock reentrantLock = new ReentrantLock(true);
-    private Condition botReadyCondition = reentrantLock.newCondition();
-    private Condition commandSignalCondition = reentrantLock.newCondition();
+    private final ReentrantLock reentrantLock = new ReentrantLock(true);
+    private final Condition botReadyCondition = reentrantLock.newCondition();
+    private final Condition commandSignalCondition = reentrantLock.newCondition();
 
-    private AtomicBoolean started = new AtomicBoolean(false);
-    private AtomicBoolean stopped = new AtomicBoolean(false);
+    private final AtomicBoolean started = new AtomicBoolean(false);
+    private final AtomicBoolean stopped = new AtomicBoolean(false);
 
     public CommandHandler(int timeoutInMilliseconds) {
         this.timeoutInMilliseconds = timeoutInMilliseconds;
     }
 
     @Override
-    public void setProcessInputStream(OutputStream os) throws IOException {
+    public void setProcessInputStream(OutputStream os) {
         this.botInputStream = os;
     }
 
     @Override
-    public void setProcessErrorStream(InputStream is) throws IOException {
+    public void setProcessErrorStream(InputStream is) {
         this.botErrorStream = is;
     }
 
     @Override
-    public void setProcessOutputStream(InputStream is) throws IOException {
+    public void setProcessOutputStream(InputStream is) {
         botOutputStream = is;
     }
 
     @Override
-    public void start() throws IOException {
+    public void start() {
 
         reentrantLock.lock();
         started.set(true);
@@ -81,7 +81,7 @@ public class CommandHandler implements ExecuteStreamHandler {
     }
 
     @Override
-    public void stop() throws IOException {
+    public void stop() {
         botInputThread.interrupt();
         botErrorThread.interrupt();
 
@@ -134,7 +134,6 @@ public class CommandHandler implements ExecuteStreamHandler {
 
         try {
             botInputHandler.setCurrentRound(round);
-            botErrorHandler.setCurrentRound(round);
 
             if (!stopped.get()) {
                 botInputStream.write(Integer.toString(round).getBytes());

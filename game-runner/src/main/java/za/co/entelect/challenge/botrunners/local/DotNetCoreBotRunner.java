@@ -1,12 +1,12 @@
-package za.co.entelect.challenge.botrunners;
+package za.co.entelect.challenge.botrunners.local;
 
-import za.co.entelect.challenge.config.BotMetaData;
+import za.co.entelect.challenge.config.BotMetadata;
 
 import java.io.IOException;
 
-public class DotNetCoreBotRunner extends BotRunner {
+public class DotNetCoreBotRunner extends LocalBotRunner {
 
-    public DotNetCoreBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+    public DotNetCoreBotRunner(BotMetadata botMetaData, int timeoutInMilliseconds) {
         super(botMetaData, timeoutInMilliseconds);
     }
 
