@@ -30,4 +30,26 @@ class BlockObjectCreator() {
     }
   }
 
+  def placeObjectOnTrack(seed: Int, blocks: Array[Block], mapObjects: mutable.SortedMap[Double, Int], mapObjectOfInterest: Int) = {
+    val randomNumberGenerator = new Random(seed)
+    val trackLength = Config.TRACK_LENGTH
+    for ( i <- 0 to (blocks.length - 1)) {
+      val lane = i/trackLength + 1
+      val blockNumber = i%trackLength + 1
+      val position = new BlockPosition(lane, blockNumber)
+      var generatedMapObject = blocks(i).getMapObject()
+      if(blockNumber >= Config.STARTING_BLOCK_FOR_GENERATED_MAP_OBJECTS && blockNumber < trackLength) {
+        val randomNumber = randomNumberGenerator.nextDouble()
+        val (_, value) = mapObjects.minAfter(randomNumber).get
+        if(value == mapObjectOfInterest) {
+          generatedMapObject = mapObjectOfInterest
+        }
+      } else if (blockNumber == trackLength) {
+        generatedMapObject = Config.FINISH_LINE_MAP_OBJECT
+      }
+
+        blocks(i) = new Block(position, generatedMapObject, Config.EMPTY_PLAYER)
+    }
+  }
+
 }
