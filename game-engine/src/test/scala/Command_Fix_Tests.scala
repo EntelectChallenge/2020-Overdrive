@@ -47,7 +47,7 @@ class Command_Fix_Tests extends FunSuite{
 
     testCarGamePlayer.pickupBoost()
     testCarGamePlayer.setDamage(2)
-    testCarGamePlayer.reduceMaxAllowableSpeed()
+    testCarGamePlayer.recalculateMaxAllowableSpeed()
 
     TestHelper.processRound(gameMap, fixCommand, fixCommand)
 

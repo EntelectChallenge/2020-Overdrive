@@ -81,17 +81,17 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         if (isLizarding) return
         if (item == Config.MUD_MAP_OBJECT) {
             damage += Config.DAMAGE_MUD;
-            reduceMaxAllowableSpeed()
+            recalculateMaxAllowableSpeed()
             hitMud()
         }
         if (item == Config.OIL_SPILL_MAP_OBJECT) {
             damage += Config.DAMAGE_OIL;
-            reduceMaxAllowableSpeed()
+            recalculateMaxAllowableSpeed()
             hitOil()
         }
         if (item == Config.WALL_MAP_OBJECT) {
             damage += Config.DAMAGE_WALL;
-            reduceMaxAllowableSpeed()
+            recalculateMaxAllowableSpeed()
             hitWall()
         }
         capDamageAtSix()
@@ -103,7 +103,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         }
     }
 
-    def reduceMaxAllowableSpeed(): Unit = {
+    def recalculateMaxAllowableSpeed(): Unit = {
         if (allSpeedStates.length < damage){
             maxSpeedState = MINIMUM_SPEED;
             return;
@@ -313,7 +313,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
 
     private def increaseSpeed() = {
         if (!isBoosting()){
-            reduceMaxAllowableSpeed()
+            recalculateMaxAllowableSpeed()
         }
         speed match {
             case MINIMUM_SPEED => speed = SPEED_STATE_1
@@ -370,7 +370,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         reduceSpeedToLevel(allowStop, Config.SPEED_STATE_1)
         updateScore(Config.HIT_CYBERTRUCK_SCORE_PENALTY)
         damage += Config.DAMAGE_CYBERTRUCK;
-        reduceMaxAllowableSpeed()
+        recalculateMaxAllowableSpeed()
     }
 
     def clearStatesThatOccurredLastRound() = {
@@ -384,7 +384,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             damage -= Config.DAMAGE_REPAIR_VALUE;
         }
         capDamageAtZero()
-        reduceMaxAllowableSpeed()
+        recalculateMaxAllowableSpeed()
     }
 
     private def capDamageAtZero() = {
