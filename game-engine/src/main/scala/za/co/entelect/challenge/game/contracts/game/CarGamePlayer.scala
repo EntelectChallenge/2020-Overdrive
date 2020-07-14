@@ -384,6 +384,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             damage -= Config.DAMAGE_REPAIR_VALUE;
         }
         capDamageAtZero()
+        reduceMaxAllowableSpeed()
     }
 
     private def capDamageAtZero() = {
