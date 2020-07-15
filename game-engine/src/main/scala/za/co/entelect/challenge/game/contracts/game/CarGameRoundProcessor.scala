@@ -17,14 +17,6 @@ class CarGameRoundProcessor extends GameRoundProcessor{
     val gamePlayers = carGameMap.getGamePlayers()
     val commandFactory = new CommandFactory
 
-    if (carGameMap.getCurrentRound >= Config.MAX_ROUNDS){
-      for (i <- gamePlayers.indices){
-        val player = gamePlayers(i).asInstanceOf[CarGamePlayer]
-        player.finish()
-      }
-      return true
-    }
-
     val player1StartPositions = carGameMap.getPlayerBlockPosition(1)
     val player2StartPositions = carGameMap.getPlayerBlockPosition(2)
 
@@ -45,6 +37,14 @@ class CarGameRoundProcessor extends GameRoundProcessor{
     carGameMap.calculateEffectsOfAndApplyStagedPositionsToPlayers()
 
     carGameMap.placeRequestedCyberTrucks()
+
+    if (carGameMap.getCurrentRound >= Config.MAX_ROUNDS){
+      for (i <- gamePlayers.indices){
+        val player = gamePlayers(i).asInstanceOf[CarGamePlayer]
+        player.finish()
+      }
+    }
+
     return true
   }
 

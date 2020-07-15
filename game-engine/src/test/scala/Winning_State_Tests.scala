@@ -22,7 +22,7 @@ class Winning_State_Tests extends FunSuite {
     nothingCommand.setCommand(nothingCommandText)
   }
 
-  test("Given the match ends due to max rounds reached player 1 needs to win because of being furthest on the track") {
+  test("Given player 1 is ahead, when the max round limit is reached, player 1 should win") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects()
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
@@ -39,10 +39,10 @@ class Winning_State_Tests extends FunSuite {
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     val winner = carGameMap.getWinningPlayer.asInstanceOf[CarGamePlayer]
-    assert(testCarGamePlayer1.getGamePlayerId().equals(winner.getGamePlayerId()), "Player 1 is the furthest on the track")
+    assert(testCarGamePlayer1.getGamePlayerId().equals(winner.getGamePlayerId()), "Player 1 is the furthest on the track, therefore player 1 needs to be declared the winner")
   }
 
-  test("Given the match ends due to max rounds reached player 1 needs to win because of highest speed") {
+  test("Given player 1 and player 2 are tied and player 1 has the highest speed, when the max round limit is reached, player 1 should win") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects()
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
@@ -60,10 +60,10 @@ class Winning_State_Tests extends FunSuite {
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     val winner = carGameMap.getWinningPlayer.asInstanceOf[CarGamePlayer]
-    assert(testCarGamePlayer1.getGamePlayerId().equals(winner.getGamePlayerId()), "Player 1 was traveling at the fastest speed")
+    assert(testCarGamePlayer1.getGamePlayerId().equals(winner.getGamePlayerId()), "Player 1 has the fastest speed, therefor player 1 is the winner")
   }
 
-  test("Given the match ends due to max rounds reached player 1 needs to win because of highest score") {
+  test("Given player 1 and player 2 are tied on position and have the same speed, when the match ends due to max rounds reached player 1 needs to win because of highest score") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects()
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
@@ -72,19 +72,21 @@ class Winning_State_Tests extends FunSuite {
     val testGamePlayer1 = TestHelper.getTestGamePlayer1()
     val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 1, 3)
+    testCarGamePlayer1.accelerate()
     testCarGamePlayer1.score = 10
 
     val testGamePlayer2 = TestHelper.getTestGamePlayer2()
     val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 2, 3)
+    testCarGamePlayer2.accelerate()
 
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
 
     val winner = carGameMap.getWinningPlayer.asInstanceOf[CarGamePlayer]
-    assert(testCarGamePlayer1.getGamePlayerId().equals(winner.getGamePlayerId()), "Player 1 has the highest score")
+    assert(testCarGamePlayer1.getGamePlayerId().equals(winner.getGamePlayerId()), "Player 1 has the highest score, therefore player 1 is the winner")
   }
 
-  test("Given the match ends due to max rounds reached player 1 needs to win because of furthest on track, fastest speed and highest score") {
+  test("Given player 1 is in the lead, has the fastest speed and has the highest score, when the game ends due to max rounds reached, player 1 needs to win") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithNoMapObjects()
     val carGameMap = gameMap.asInstanceOf[CarGameMap]
@@ -103,6 +105,6 @@ class Winning_State_Tests extends FunSuite {
     TestHelper.processRound(gameMap,nothingCommand, nothingCommand)
 
     val winner = carGameMap.getWinningPlayer.asInstanceOf[CarGamePlayer]
-    assert(testCarGamePlayer1.getGamePlayerId().equals(winner.getGamePlayerId()), "Player 1 has the highest score")
+    assert(testCarGamePlayer1.getGamePlayerId().equals(winner.getGamePlayerId()), "Player 1 is the furthest on the track, has the fastest speed and highest score, therefore player 1 is the winner")
   }
 }
