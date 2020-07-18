@@ -92,6 +92,8 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
         blockObjectCreator.placeObjectOnTrack(seed, blocks, mapObjects, Config.TWEET_MAP_OBJECT)
         blockObjectCreator.placeObjectOnTrack(seed, blocks, mapObjects, Config.EMP_MAP_OBJECT)
 
+        blockObjectCreator.ensureThereIsAlwaysAPathThroughMud(seed, blocks);
+
         setPlayerOneStartPosition(blocks)
         setPlayerTwoStartPosition(blocks)
 

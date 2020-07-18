@@ -52,4 +52,67 @@ class BlockObjectCreator() {
     }
   }
 
+  def ensureThereIsAlwaysAPathThroughMud(seed: Int, blocks: Array[Block]): Unit = {
+    val randomNumberGenerator = new Random(seed)
+
+    var blockNumber = 3
+    do {
+      val l1C = blocks.find(x => x.getPosition().getBlockNumber() - 2 == blockNumber && x.getPosition().getLane() == 1)
+      val l2C = blocks.find(x => x.getPosition().getBlockNumber() - 2 == blockNumber && x.getPosition().getLane() == 2)
+      val l3C = blocks.find(x => x.getPosition().getBlockNumber() - 2 == blockNumber && x.getPosition().getLane() == 3)
+      val l4C = blocks.find(x => x.getPosition().getBlockNumber() - 2 == blockNumber && x.getPosition().getLane() == 4)
+      val l1A = blocks.find(x => x.getPosition().getBlockNumber() - 1 == blockNumber && x.getPosition().getLane() == 1)
+      val l2A = blocks.find(x => x.getPosition().getBlockNumber() - 1 == blockNumber && x.getPosition().getLane() == 2)
+      val l3A = blocks.find(x => x.getPosition().getBlockNumber() - 1 == blockNumber && x.getPosition().getLane() == 3)
+      val l4A = blocks.find(x => x.getPosition().getBlockNumber() - 1 == blockNumber && x.getPosition().getLane() == 4)
+      val l1B = blocks.find(x => x.getPosition().getBlockNumber() == blockNumber && x.getPosition().getLane() == 1)
+      val l2B = blocks.find(x => x.getPosition().getBlockNumber() == blockNumber && x.getPosition().getLane() == 2)
+      val l3B = blocks.find(x => x.getPosition().getBlockNumber() == blockNumber && x.getPosition().getLane() == 3)
+      val l4B = blocks.find(x => x.getPosition().getBlockNumber() == blockNumber && x.getPosition().getLane() == 4)
+
+      val isMudToRemove = //goal is don't want solid block of mud over 2 lanes
+        (l1A.get.getMapObject() == Config.MUD_MAP_OBJECT || l1B.get.getMapObject() == Config.MUD_MAP_OBJECT) &&
+        (l2A.get.getMapObject() == Config.MUD_MAP_OBJECT || l2B.get.getMapObject() == Config.MUD_MAP_OBJECT) &&
+        (l3A.get.getMapObject() == Config.MUD_MAP_OBJECT || l3B.get.getMapObject() == Config.MUD_MAP_OBJECT) &&
+        (l4A.get.getMapObject() == Config.MUD_MAP_OBJECT || l4B.get.getMapObject() == Config.MUD_MAP_OBJECT)
+
+      if(isMudToRemove) {
+        var blocksWhereMudCouldBeRemoved = List[Block]()
+        if(l1C.isDefined && l1C.get.getMapObject() != Config.MUD_MAP_OBJECT) {
+          blocksWhereMudCouldBeRemoved = blocksWhereMudCouldBeRemoved.appended(l1A.get)
+          blocksWhereMudCouldBeRemoved = blocksWhereMudCouldBeRemoved.appended(l1B.get)
+        }
+        if(l2C.isDefined && l2C.get.getMapObject() != Config.MUD_MAP_OBJECT) {
+          blocksWhereMudCouldBeRemoved = blocksWhereMudCouldBeRemoved.appended(l2A.get)
+          blocksWhereMudCouldBeRemoved = blocksWhereMudCouldBeRemoved.appended(l2B.get)
+        }
+        if(l3C.isDefined && l3C.get.getMapObject() != Config.MUD_MAP_OBJECT) {
+          blocksWhereMudCouldBeRemoved = blocksWhereMudCouldBeRemoved.appended(l3A.get)
+          blocksWhereMudCouldBeRemoved = blocksWhereMudCouldBeRemoved.appended(l3B.get)
+        }
+        if(l4C.isDefined && l4C.get.getMapObject() != Config.MUD_MAP_OBJECT) {
+          blocksWhereMudCouldBeRemoved = blocksWhereMudCouldBeRemoved.appended(l4A.get)
+          blocksWhereMudCouldBeRemoved = blocksWhereMudCouldBeRemoved.appended(l4B.get)
+        }
+        if(blocksWhereMudCouldBeRemoved.length > 1) {
+          val indexOfBlockBehindBlockToRemoveMudFrom = randomNumberGenerator.nextInt(blocksWhereMudCouldBeRemoved.length - 1)
+          val blockToRemoveMudFrom = blocksWhereMudCouldBeRemoved(indexOfBlockBehindBlockToRemoveMudFrom)
+          val indexOfBlockToRemoveMudFrom = blocks.indexOf(blockToRemoveMudFrom)
+          blocks(indexOfBlockToRemoveMudFrom) = new Block(blockToRemoveMudFrom.getPosition(), Config.EMPTY_MAP_OBJECT, Config.EMPTY_PLAYER)
+          if(indexOfBlockBehindBlockToRemoveMudFrom % 2 == 0) {
+            val otherBlockToRemoveMudFrom = blocksWhereMudCouldBeRemoved(indexOfBlockBehindBlockToRemoveMudFrom + 1)
+            val otherIndexOfBlockToRemoveMudFrom = blocks.indexOf(otherBlockToRemoveMudFrom)
+            blocks(otherIndexOfBlockToRemoveMudFrom) = new Block(otherBlockToRemoveMudFrom.getPosition(), Config.EMPTY_MAP_OBJECT, Config.EMPTY_PLAYER)
+          } else {
+            val otherBlockToRemoveMudFrom = blocksWhereMudCouldBeRemoved(indexOfBlockBehindBlockToRemoveMudFrom - 1)
+            val otherIndexOfBlockToRemoveMudFrom = blocks.indexOf(otherBlockToRemoveMudFrom)
+            blocks(otherIndexOfBlockToRemoveMudFrom) = new Block(otherBlockToRemoveMudFrom.getPosition(), Config.EMPTY_MAP_OBJECT, Config.EMPTY_PLAYER)
+          }
+        }
+      }
+
+      blockNumber = blockNumber + 1
+    } while(blockNumber < Config.TRACK_LENGTH)
+  }
+
 }
