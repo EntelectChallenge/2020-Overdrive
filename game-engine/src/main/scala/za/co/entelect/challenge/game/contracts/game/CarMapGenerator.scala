@@ -65,10 +65,10 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
 
         val mapObjects = mutable.SortedMap[Double, Int]()
         mapObjects.put(0.0, Config.EMPTY_MAP_OBJECT)
-        mapObjects.put(Config.MUD_GENERATION_PERCENTAGE * 0.01 * 0.35, Config.MUD_MAP_OBJECT)
+        mapObjects.put(Config.MUD_GENERATION_PERCENTAGE * 0.01 * 0.47, Config.MUD_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + Config.BOOST_GENERATION_PERCENTAGE * 0.01, Config.BOOST_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + Config.OIL_ITEM_GENERATION_PERCENTAGE * 0.01, Config.OIL_ITEM_MAP_OBJECT)
-        mapObjects.put(mapObjects.lastKey + Config.WALL_GENERATION_PERCENTAGE * 0.01, Config.WALL_MAP_OBJECT)
+        mapObjects.put(mapObjects.lastKey + Config.WALL_GENERATION_PERCENTAGE * 0.01 * 1.3, Config.WALL_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + Config.LIZARD_GENERATION_PERCENTAGE * 0.01, Config.LIZARD_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + Config.TWEET_GENERATION_PERCENTAGE * 0.01, Config.TWEET_MAP_OBJECT)
         mapObjects.put(mapObjects.lastKey + Config.EMP_GENERATION_PERCENTAGE * 0.01, Config.EMP_MAP_OBJECT)
@@ -92,7 +92,7 @@ class CarMapGenerator(seed: Int) extends GameMapGenerator {
         blockObjectCreator.placeObjectOnTrack(seed, blocks, mapObjects, Config.TWEET_MAP_OBJECT)
         blockObjectCreator.placeObjectOnTrack(seed, blocks, mapObjects, Config.EMP_MAP_OBJECT)
 
-        blockObjectCreator.ensureThereIsAlwaysAPathThroughMud(seed, blocks);
+        blockObjectCreator.ensureThereIsAlwaysAPathThroughObstacles(seed, blocks);
 
         setPlayerOneStartPosition(blocks)
         setPlayerTwoStartPosition(blocks)

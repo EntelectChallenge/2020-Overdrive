@@ -52,33 +52,37 @@ class BlockObjectCreator() {
     }
   }
 
-  def ensureThereIsAlwaysAPathThroughMud(seed: Int, blocks: Array[Block]): Unit = {
+  def ensureThereIsAlwaysAPathThroughObstacles(seed: Int, blocks: Array[Block]): Unit = {
     val randomNumberGenerator = new Random(seed)
 
-    val blockWindow = 2
+    val blockWindow = 15
     var blockNumber = 1 + blockWindow
 
     do {
       val blocksInWindow = blocks.filter(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber)
 
       val isMudToRemove = //goal is don't want solid block of mud over window
-        (blocksInWindow.exists(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber && x.getPosition().getLane() == 1 && x.getMapObject() == Config.MUD_MAP_OBJECT)) &&
-        (blocksInWindow.exists(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber && x.getPosition().getLane() == 2 && x.getMapObject() == Config.MUD_MAP_OBJECT)) &&
-        (blocksInWindow.exists(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber && x.getPosition().getLane() == 3 && x.getMapObject() == Config.MUD_MAP_OBJECT)) &&
-        (blocksInWindow.exists(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber && x.getPosition().getLane() == 4 && x.getMapObject() == Config.MUD_MAP_OBJECT))
+        (blocksInWindow.exists(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber && x.getPosition().getLane() == 1 && (x.getMapObject() == Config.MUD_MAP_OBJECT || x.getMapObject() == Config.WALL_MAP_OBJECT))) &&
+        (blocksInWindow.exists(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber && x.getPosition().getLane() == 2 && (x.getMapObject() == Config.MUD_MAP_OBJECT || x.getMapObject() == Config.WALL_MAP_OBJECT))) &&
+        (blocksInWindow.exists(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber && x.getPosition().getLane() == 3 && (x.getMapObject() == Config.MUD_MAP_OBJECT || x.getMapObject() == Config.WALL_MAP_OBJECT))) &&
+        (blocksInWindow.exists(x => x.getPosition().getBlockNumber() >= blockNumber - blockWindow && x.getPosition().getBlockNumber() <= blockNumber && x.getPosition().getLane() == 4 && (x.getMapObject() == Config.MUD_MAP_OBJECT || x.getMapObject() == Config.WALL_MAP_OBJECT)))
 
       if(isMudToRemove) {
-        val blocksBehindWhereMudCouldBeRemoved = blocksInWindow.filter(x => x.getPosition().getBlockNumber() == blockNumber - blockWindow && x.getMapObject() != Config.MUD_MAP_OBJECT)
-        if(blocksBehindWhereMudCouldBeRemoved.length > 0) {
+        val blocksBehindWhereObstacleCouldBeRemoved = blocksInWindow.filter(x => x.getPosition().getBlockNumber() == blockNumber - blockWindow && (x.getMapObject() != Config.MUD_MAP_OBJECT && x.getMapObject() != Config.WALL_MAP_OBJECT))
+        if(blocksBehindWhereObstacleCouldBeRemoved.length > 0) {
           var indexOfBlockBehindBlocksToRemoveMudFrom = 0
-          if(blocksBehindWhereMudCouldBeRemoved.length > 1) {
-            indexOfBlockBehindBlocksToRemoveMudFrom = randomNumberGenerator.nextInt(blocksBehindWhereMudCouldBeRemoved.length - 1)
+          if(blocksBehindWhereObstacleCouldBeRemoved.length > 1) {
+            indexOfBlockBehindBlocksToRemoveMudFrom = randomNumberGenerator.nextInt(blocksBehindWhereObstacleCouldBeRemoved.length - 1)
           }
-          val blockBehindWhereMudShouldBeRemoved = blocksBehindWhereMudCouldBeRemoved(indexOfBlockBehindBlocksToRemoveMudFrom)
+          val blockBehindWhereMudShouldBeRemoved = blocksBehindWhereObstacleCouldBeRemoved(indexOfBlockBehindBlocksToRemoveMudFrom)
           val blockNumberOfInterest = blockBehindWhereMudShouldBeRemoved.getPosition().getBlockNumber()
           val laneOfInterest = blockBehindWhereMudShouldBeRemoved.getPosition().getLane()
           val blocksToRemoveMudFrom = blocks.filter(x => x.getPosition().getBlockNumber() >= blockNumberOfInterest && x.getPosition().getBlockNumber() <= blockNumberOfInterest + blockWindow && x.getPosition().getLane() == laneOfInterest)
-          blocksToRemoveMudFrom.foreach(x => x.setMapObject(Config.EMPTY_MAP_OBJECT))
+          blocksToRemoveMudFrom.foreach(x => {
+            if(x.getMapObject() == Config.MUD_MAP_OBJECT || x.getMapObject() == Config.WALL_MAP_OBJECT) {
+              x.setMapObject(Config.EMPTY_MAP_OBJECT)
+            }
+          })
         }
       }
 
