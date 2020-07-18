@@ -12,3 +12,7 @@ target/
 .bloop/
 
 .metals/
+
+*.ipr
+
+*.iws

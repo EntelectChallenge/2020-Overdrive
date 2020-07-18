@@ -2,6 +2,8 @@ package za.co.entelect.challenge.game.contracts.game
 
 import java.util
 
+import za.co.entelect.challenge.game.contracts.Config.Config
+
 import scala.collection.JavaConverters._
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.map.{BlockPosition, CarGameMap, GameMap}
@@ -35,6 +37,14 @@ class CarGameRoundProcessor extends GameRoundProcessor{
     carGameMap.calculateEffectsOfAndApplyStagedPositionsToPlayers()
 
     carGameMap.placeRequestedCyberTrucks()
+
+    if (carGameMap.getCurrentRound >= Config.MAX_ROUNDS){
+      for (i <- gamePlayers.indices){
+        val player = gamePlayers(i).asInstanceOf[CarGamePlayer]
+        player.finish()
+      }
+    }
+
     return true
   }
 
