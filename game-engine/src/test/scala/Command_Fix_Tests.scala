@@ -72,4 +72,34 @@ class Command_Fix_Tests extends FunSuite{
     assert(player1Position.getLane() == Config.PLAYER_ONE_START_LANE && player1Position.getBlockNumber() == Config.PLAYER_ONE_START_BLOCK)
   }
 
+  test("Given player with speed when player uses fix on top of a pickup then player does not get another pickup") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 1, Config.BOOST_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    TestHelper.processRound(gameMap, fixCommand, fixCommand)
+    TestHelper.processRound(gameMap, fixCommand, fixCommand)
+    TestHelper.processRound(gameMap, fixCommand, fixCommand)
+    TestHelper.processRound(gameMap, fixCommand, fixCommand)
+
+    assert(testCarGamePlayer.getPowerups().length == 0)
+  }
+
+  test("Given player with speed when player uses fix on top of a obstacle then player does not incur damage from obstacle") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(1, 1, Config.WALL_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer.setDamage(2);
+
+    TestHelper.processRound(gameMap, fixCommand, fixCommand)
+    TestHelper.processRound(gameMap, fixCommand, fixCommand)
+    TestHelper.processRound(gameMap, fixCommand, fixCommand)
+    TestHelper.processRound(gameMap, fixCommand, fixCommand)
+
+    assert(testCarGamePlayer.getDamage() == 0)
+  }
+
 }
