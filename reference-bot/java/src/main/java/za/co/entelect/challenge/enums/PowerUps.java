@@ -10,5 +10,8 @@ public enum PowerUps {
     @SerializedName("TWEET")
     TWEET,
     @SerializedName("LIZARD")
-    LIZARD
+    LIZARD,
+    @SerializedName("EMP")
+    EMP;
+
 }
