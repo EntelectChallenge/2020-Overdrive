@@ -244,7 +244,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
 
     def useBoost() = {
         powerups.subtractOne(Config.BOOST_POWERUP_ITEM)
-        speed = BOOST_SPEED
+        speed = maxSpeedState
         boosting = true
         boostCounter = Config.BOOST_DURATION
         setState(Config.USED_POWERUP_BOOST_PLAYER_STATE)
