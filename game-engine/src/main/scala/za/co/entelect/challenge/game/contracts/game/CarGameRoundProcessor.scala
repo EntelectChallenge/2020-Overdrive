@@ -39,9 +39,22 @@ class CarGameRoundProcessor extends GameRoundProcessor{
     carGameMap.placeRequestedCyberTrucks()
 
     if (carGameMap.getCurrentRound >= Config.MAX_ROUNDS){
-      for (i <- gamePlayers.indices){
+      val playerBlocks = carGameMap.blocks.filter(x => x.getOccupiedByPlayerWithId() == 1 || x.getOccupiedByPlayerWithId() == 2)
+      val player1BlockNumber = playerBlocks.find(x => x.getOccupiedByPlayerWithId() == 1).get.getPosition().getBlockNumber()
+      val player2BlockNumber = playerBlocks.find(x => x.getOccupiedByPlayerWithId() == 2).get.getPosition().getBlockNumber()
+      val player1InFront = player1BlockNumber > player2BlockNumber
+      val player2InFront = player2BlockNumber > player1BlockNumber
+      val playersAreTiedForDistanceTravelled = player1BlockNumber == player2BlockNumber
+
+      for (i <- gamePlayers.indices) {
         val player = gamePlayers(i).asInstanceOf[CarGamePlayer]
-        player.finish()
+
+        if(player.getGamePlayerId() == 1 && (player1InFront || playersAreTiedForDistanceTravelled)) {
+          player.finish()
+        }
+        if(player.getGamePlayerId() == 2 && (player2InFront || playersAreTiedForDistanceTravelled)) {
+          player.finish()
+        }
       }
     }
 
