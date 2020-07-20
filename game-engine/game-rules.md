@@ -299,10 +299,15 @@ Amount of damage suffered per object collision
 * Wall: 2
 * Cybertruck: 2
 
+How damage affects your current speed
+
+If your car accrues 6 or more damage then your speed will reduce to 0. Upon fixing your car should return to the minimum speed of 3.
+
 ###Repairs
 * "Fix" is a new command allowing you to fix damage to your car!
  * Using it removes 2 damage points.
  * Your car stands still for the round while repairs are being performed.
+ * Your car returns to the speed it was traveling to before the fix command was issued.
 
 ## Endgame
 
