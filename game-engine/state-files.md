@@ -16,6 +16,7 @@
   * powerups → *A list of powerups your player has collected.*
   * boosting → *Shows whether or not your player is currently using a boost*
   * boostCounter → *Shows the number of rounds left for which your player will remain in boosted speed*
+  * damage → *Shows the current amount of damage on your car*
 * opponent → *Your opponent's details:*
   * id → *The Id number of your opponent.*
   * position → *Equivalent to the player position element, describing where the opponent is in the map.*
