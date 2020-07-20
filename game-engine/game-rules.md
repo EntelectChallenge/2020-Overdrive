@@ -308,9 +308,7 @@ The amount of damage on your car directly impacts your max speed.
 * Damage of 3 equals in a max speed of 6
 * Damage of 2 equals in a max speed of 8
 * Damage of 1 equals in a max speed of 9
-* Damage of 0 equals in a max speed of 9 
-
-Upon fixing your car will return to a speed of 3.
+* Damage of 0 equals in a max speed of 15 
 
 To prevent things from getting out of hand, max damage will be capped at 5
 
