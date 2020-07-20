@@ -13,7 +13,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     private val SPEED_STATE_3: Int = Config.SPEED_STATE_3
     private val MAXIMUM_SPEED: Int = Config.MAXIMUM_SPEED
     private val BOOST_SPEED: Int = Config.BOOST_SPEED
-    private var allSpeedStates: Array[Int] = Array(MINIMUM_SPEED, SPEED_STATE_1, INITIAL_SPEED, SPEED_STATE_2, SPEED_STATE_3, MAXIMUM_SPEED, BOOST_SPEED)
+    private var allSpeedStates: Array[Int] = Array(MINIMUM_SPEED, SPEED_STATE_1, SPEED_STATE_2, SPEED_STATE_3, MAXIMUM_SPEED, BOOST_SPEED)
     private var allowableSpeedStates = allSpeedStates
     private var maxSpeedState:  Int = Config.BOOST_SPEED
     private var damage: Int = 0;
@@ -94,12 +94,12 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             recalculateMaxAllowableSpeed()
             hitWall()
         }
-        capDamageAtSix()
+        capDamageAtFive()
     }
 
-    def capDamageAtSix() = {
-        if(damage > 6) {
-            damage = 6
+    def capDamageAtFive() = {
+        if(damage > Config.DAMAGE_MAX_VALUE) {
+            damage = Config.DAMAGE_MAX_VALUE
         }
     }
 
