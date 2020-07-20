@@ -15,10 +15,12 @@ public enum Terrain {
     FINISH,
     @SerializedName("5")
     BOOST,
-    @SerializedName( "6")
+    @SerializedName("6")
     WALL,
-    @SerializedName( "7")
+    @SerializedName("7")
     LIZARD,
-    @SerializedName( "8")
-    TWEET
+    @SerializedName("8")
+    TWEET,
+    @SerializedName("9")
+    EMP
 }

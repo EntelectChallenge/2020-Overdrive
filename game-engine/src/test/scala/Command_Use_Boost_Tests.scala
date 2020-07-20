@@ -4,6 +4,7 @@ import za.co.entelect.challenge.game.contracts.Config.Config
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.commands.CommandFactory
 import za.co.entelect.challenge.game.contracts.game.CarGamePlayer
+import za.co.entelect.challenge.game.contracts.map.CarGameMap
 
 class Command_Use_Boost_Tests extends FunSuite{
   private val useBoostCommandText = "USE_BOOST"
@@ -100,5 +101,61 @@ class Command_Use_Boost_Tests extends FunSuite{
 
     assert(!testCarGamePlayer1.isBoosting())
     assert(testCarGamePlayer1.speed != Config.BOOST_SPEED)
+  }
+
+  test("Given player with 2 damage when players boosts then players speed is 8") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(3, 4), Config.MUD_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer1.pickupBoost()
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(gameMap, useBoostCommand, nothingCommand)
+
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_3)
+  }
+
+  test("Given player with 2 damage when players boosts then players moves 8 blocks") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(3, 4), Config.MUD_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer1.pickupBoost()
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(gameMap, useBoostCommand, nothingCommand)
+
+    val expectedBlockNumber = 14
+    val actualBlock = gameMap.asInstanceOf[CarGameMap].getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId())
+    assert(actualBlock.getBlockNumber() == expectedBlockNumber)
+  }
+
+  test("Given player when players boosts through a path that gives 2 damage then players speed is 8") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(7, 8), Config.MUD_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer1.pickupBoost()
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(gameMap, useBoostCommand, nothingCommand)
+
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_3)
+  }
+
+  test("Given player when players boosts through a path that gives 2 damage then players moves 15 blocks") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(7, 8), Config.MUD_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer1.pickupBoost()
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(gameMap, useBoostCommand, useBoostCommand)
+
+    val expectedBlockNumber = 21
+    val actualPosition = gameMap.asInstanceOf[CarGameMap].getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId())
+    assert(actualPosition.getBlockNumber() == expectedBlockNumber)
   }
 }

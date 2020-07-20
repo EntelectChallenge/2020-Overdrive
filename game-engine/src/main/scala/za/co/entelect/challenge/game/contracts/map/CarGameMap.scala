@@ -333,8 +333,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val positionToEndCounting = findPositionToEndCountingCollisionsFromInMiddlePath(newPosition)
             val lastBlockPosition = findLastPositionForIdentifyingEffectsAtEndOfPath(newPosition)
 
-            val oldPostionSameAsNewPosition = (oldPosition.getLane() == newPosition.getLane()) && (oldPosition.getBlockNumber() == newPosition.getBlockNumber())
-            val playerIsInert = (player.speed == 0) && (oldPostionSameAsNewPosition);
+            val playerIsInert = (oldPosition.getLane() == newPosition.getLane()) && (oldPosition.getBlockNumber() == newPosition.getBlockNumber())
             applyMapEffectsInMiddlePathToPlayer(player, positionToStartCounting, positionToEndCounting, playerIsInert)
             applyMapEffectsInLastBlockOfPathToPlayer(player, lastBlockPosition, playerIsInert)
             applyPickupsInPathToPlayer(player, positionToStartCounting, positionToEndCounting, playerIsInert)
