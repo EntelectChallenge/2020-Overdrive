@@ -299,10 +299,24 @@ Amount of damage suffered per object collision
 * Wall: 2
 * Cybertruck: 2
 
+How damage affects your current speed
+
+The amount of damage on your car directly impacts your max speed.
+
+* Damage of 5 equals in a max speed of 0
+* Damage of 4 equals in a max speed of 3
+* Damage of 3 equals in a max speed of 6
+* Damage of 2 equals in a max speed of 8
+* Damage of 1 equals in a max speed of 9
+* Damage of 0 equals in a max speed of 15 
+
+To prevent things from getting out of hand, max damage will be capped at 5
+
 ###Repairs
 * "Fix" is a new command allowing you to fix damage to your car!
  * Using it removes 2 damage points.
  * Your car stands still for the round while repairs are being performed.
+ * Your car returns to the speed it was traveling to before the fix command was issued.
 
 ## Endgame
 

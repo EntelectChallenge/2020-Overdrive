@@ -117,7 +117,8 @@ case class GameEngineConfig
     DAMAGE_OIL: Int,
     DAMAGE_WALL: Int,
     DAMAGE_CYBERTRUCK: Int,
-    DAMAGE_REPAIR_VALUE: Int
+    DAMAGE_REPAIR_VALUE: Int,
+    DAMAGE_MAX_VALUE: Int
 ) {}
 
 object Config {
@@ -250,5 +251,6 @@ object Config {
     def DAMAGE_CYBERTRUCK: Int = ConfigFileValues.DAMAGE_CYBERTRUCK
 
     def DAMAGE_REPAIR_VALUE: Int = ConfigFileValues.DAMAGE_REPAIR_VALUE
+    def DAMAGE_MAX_VALUE: Int = ConfigFileValues.DAMAGE_MAX_VALUE
 
 }
