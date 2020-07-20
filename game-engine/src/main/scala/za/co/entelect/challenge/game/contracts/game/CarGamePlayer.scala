@@ -370,6 +370,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         reduceSpeedToLevel(allowStop, Config.SPEED_STATE_1)
         updateScore(Config.HIT_CYBERTRUCK_SCORE_PENALTY)
         damage += Config.DAMAGE_CYBERTRUCK;
+        capDamageAtSix()
         recalculateMaxAllowableSpeed()
     }
 
