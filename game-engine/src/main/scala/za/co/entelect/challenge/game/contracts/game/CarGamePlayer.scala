@@ -312,9 +312,8 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     private def increaseSpeed() = {
-        if (!isBoosting()){
-            recalculateMaxAllowableSpeed()
-        }
+        recalculateMaxAllowableSpeed()
+
         speed match {
             case MINIMUM_SPEED => speed = SPEED_STATE_1
             case SPEED_STATE_1 => speed = SPEED_STATE_2
@@ -325,7 +324,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             case BOOST_SPEED => speed = BOOST_SPEED
             case invalidSpeed => throw new Exception("Invalid current speed: " + invalidSpeed.toString())
         }
-        if (speed > maxSpeedState && !isBoosting()) {
+        if (speed > maxSpeedState) {
             speed = maxSpeedState;
         }
     }
