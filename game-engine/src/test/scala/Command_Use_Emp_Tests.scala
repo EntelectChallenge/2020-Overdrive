@@ -49,6 +49,33 @@ class Command_Use_Emp_Tests extends FunSuite{
     assert(testCarGamePlayer2.speed == Config.SPEED_STATE_3)
   }
 
+  test("Given player during race with one emp power-up when player uses emp then player has no emp power-ups left")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer1.pickupEmp()
+    TestHelper.processRound(gameMap, useEmpCommand, nothingCommand)
+
+    assert(testCarGamePlayer1.getPowerups().count(x => x == Config.EMP_POWERUP_ITEM) == 0)
+  }
+
+  test ("Given player during race with multiple tweet power-ups when player uses tweet then number of tweet power-ups is reduced by one")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer1.pickupEmp()
+    testCarGamePlayer1.pickupEmp()
+    TestHelper.processRound(gameMap, useEmpCommand, nothingCommand)
+
+    assert(testCarGamePlayer1.getPowerups().count(x => x == Config.EMP_POWERUP_ITEM) == 1)
+  }
+
 
   test("Given player1 with emp behind player2 when USE_EMP command player2 slows down") {
     initialise()
