@@ -309,4 +309,48 @@ class Bug_Tests extends FunSuite {
 
   }
 
+  test("Given a player when player has 3 damage and boosts then player cannot accelerate beyond 6 speed")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(3, Array(73,74,75), Config.MUD_MAP_OBJECT)
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    //initialise player 1 state
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.speed = Config.SPEED_STATE_1 //speed 3
+    testCarGamePlayer1.pickupBoost()
+
+    //initialise player 1 position
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    val player1StartLane = 3;
+    val player1StartBlockNumber = 72;
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, player1StartLane, player1StartBlockNumber)
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand) // player now has 3 damage and 3 speed and moved 3 blocks
+    val expectedLaneAfter1stRound = 3
+    val expectedBlockNumberAfter1stRound = 75
+    val actualPlayerPositionAfter1stRound = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+    assert(testCarGamePlayer1.speed == 3, "player speed not correct after round 1") // 3 speed because mud cannot stop you
+    assert(testCarGamePlayer1.getDamage() == 3, "player damage not correct after round 1")
+    assert(actualPlayerPositionAfter1stRound.getLane() == expectedLaneAfter1stRound && actualPlayerPositionAfter1stRound.getBlockNumber() == expectedBlockNumberAfter1stRound, "player position not correct after round 1")
+
+    TestHelper.processRound(gameMap, useBoostCommand, nothingCommand) //player should now have 6 speed and move 6 blocks
+    val expectedPlayerLaneAfter2ndRound = 3
+    val expectedBlockNumberAfter2ndRound = expectedBlockNumberAfter1stRound + 6
+    val actualPlayerPositionAfter2ndRound = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+    assert(testCarGamePlayer1.speed == 6, "player speed not correct after round 2")
+    assert(testCarGamePlayer1.getDamage() == 3, "player damage not correct after round 2")
+    assert(actualPlayerPositionAfter2ndRound.getLane() == expectedPlayerLaneAfter2ndRound && actualPlayerPositionAfter2ndRound.getBlockNumber() == expectedBlockNumberAfter2ndRound, "player position not correct after round 2")
+
+    TestHelper.processRound(gameMap, accelerateCommand, nothingCommand) //player should now have 6 speed (because of damage) and move 6 blocks
+    assert(testCarGamePlayer1.speed == 6)
+    val expectedPlayerLaneAfter3rdRound = 3
+    val expectedBlockNumberAfter3rdRound = expectedBlockNumberAfter2ndRound + 6
+    val actualPlayerPositionAfter3rdRound = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
+    assert(testCarGamePlayer1.speed == 6, "player speed not correct after round 3")
+    assert(testCarGamePlayer1.getDamage() == 3, "player damage not correct after speed 3")
+    assert(actualPlayerPositionAfter3rdRound.getLane() == expectedPlayerLaneAfter3rdRound && actualPlayerPositionAfter3rdRound.getBlockNumber() == expectedBlockNumberAfter3rdRound, "player position not correct after round 3")
+  }
+
 }
