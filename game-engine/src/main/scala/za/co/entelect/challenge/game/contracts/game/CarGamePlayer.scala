@@ -23,6 +23,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     private var lizarding: Boolean = false
     private var currentCyberTruckPosition: BlockPosition = null
     private var statesThatOccurredThisRound: Array[String] = Array.empty
+    private var collided = false
 
     override def getHealth: Int = {
         return health
@@ -391,5 +392,13 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         if (damage < 0) {
             damage = 0;
         }
+    }
+
+    def setCollided(hasCollided: Boolean) = {
+        collided = hasCollided;
+    }
+
+    def hasCollided(): Boolean = {
+        return collided
     }
 }

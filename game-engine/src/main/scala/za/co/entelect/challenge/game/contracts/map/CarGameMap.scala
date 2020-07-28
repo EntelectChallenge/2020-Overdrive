@@ -258,7 +258,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val correctedLane = stagedPositionOfPlayerCollidingFromBehind.getNewPosition().getLane()
             val correctedPositionOfPlayerCollidingFromBehind = new BlockPosition(correctedLane, correctedBlockNumber)
             stagedPositionOfPlayerCollidingFromBehind.setNewPosition(correctedPositionOfPlayerCollidingFromBehind)
-
+            stagedPositionOfPlayerCollidingFromBehind.getPlayer().setCollided(true)
             return true
         }
 
@@ -268,11 +268,13 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val correctedPlayer1BlockNumber = player1FuturePosition.getBlockNumber() - 1
             val correctedPlayer1FuturePosition = new BlockPosition(correctedPlayer1Lane, correctedPlayer1BlockNumber)
             player1StagedPosition.setNewPosition(correctedPlayer1FuturePosition)
+            player1StagedPosition.getPlayer().setCollided(true)
 
             val correctedPlayer2Lane = player2StagedPosition.getOldPosition().getLane()
             val correctedPlayer2BlockNumber = player2FuturePosition.getBlockNumber() - 1
             val correctedPlayer2FuturePosition = new BlockPosition(correctedPlayer2Lane, correctedPlayer2BlockNumber)
             player2StagedPosition.setNewPosition(correctedPlayer2FuturePosition)
+            player2StagedPosition.getPlayer().setCollided(true)
             return true
         }
 
@@ -286,7 +288,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val correctedLane = stagedPositionOfPlayerCollidingFromBehind.getNewPosition().getLane()
             val correctedPositionOfPlayerCollidingFromBehind = new BlockPosition(correctedLane, correctedBlockNumber)
             stagedPositionOfPlayerCollidingFromBehind.setNewPosition(correctedPositionOfPlayerCollidingFromBehind)
-
+            stagedPositionOfPlayerCollidingFromBehind.getPlayer().setCollided(true)
             return true
         }
 
@@ -338,7 +340,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             val newPosition = x.getNewPosition()
             val oldPosition = x.getOldPosition()
 
-            val positionToStartCounting = findPositionToStartCountingCollisionsFrom(oldPosition, player.hasTurnedThisRound(), newPosition)
+            val positionToStartCounting = findPositionToStartCountingCollisionsFrom(oldPosition, player.hasTurnedThisRound() && !player.hasCollided(), newPosition)
             val positionToEndCounting = findPositionToEndCountingCollisionsFromInMiddlePath(newPosition)
             val lastBlockPosition = findLastPositionForIdentifyingEffectsAtEndOfPath(newPosition)
 
@@ -350,6 +352,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             occupyFinalMapPositionForPlayer(player.getGamePlayerId(), newPosition)
             checkIfPlayerHasWon(player, newPosition)
             player.capSpeedAtMaxAllowable()
+            player.setCollided(false)
         })
         stagedFuturePositions = List[StagedPosition]()
     }
