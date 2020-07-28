@@ -12,6 +12,7 @@ class Command_Tweet_Tests extends FunSuite{
   private val oilCommandText = "USE_OIL"
   private val turnLeftCommandText = "TURN_LEFT"
   private val boostCommandText = "USE_BOOST"
+  private val fixCommandText = "FIX"
 
   private var commandFactory: CommandFactory = null
   private var nothingCommand: RawCommand = null
@@ -19,6 +20,7 @@ class Command_Tweet_Tests extends FunSuite{
   private var oilCommand: RawCommand = null
   private var turnLeftCommand: RawCommand = null
   private var boostCommand: RawCommand = null
+  private var fixCommand: RawCommand = null
 
   def initialise() = {
     Config.loadDefault()
@@ -37,6 +39,9 @@ class Command_Tweet_Tests extends FunSuite{
 
     boostCommand = commandFactory.makeCommand(boostCommandText)
     boostCommand.setCommand(boostCommandText)
+
+    fixCommand = commandFactory.makeCommand(fixCommandText)
+    fixCommand.setCommand(fixCommandText)
   }
 
   def makeTweetCommand(laneX: Int, blockY: Int) : RawCommand =
@@ -975,6 +980,36 @@ class Command_Tweet_Tests extends FunSuite{
 
     assert(testCarGamePlayer2.getState().last == Config.HIT_CYBER_TRUCK_PLAYER_STATE)
     assert(testCarGamePlayer2.getDamage() == Config.DAMAGE_MAX_VALUE)
+  }
+
+  test("Given a round when player fixes and a cyber truck lands on them then cyber truck should be ignored since start block should be ignored") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.pickupTweet()
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_3 // speed 8
+    val newLaneMidRacePlayer2 = 1
+    val newBlockNumberMidRacePlayer2 = 760
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    val targetLane = 1
+    val targetBlock = 760
+    val tweetCommand = makeTweetCommand(targetLane, targetBlock)
+    TestHelper.processRound(gameMap, tweetCommand, fixCommand)
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val expectedPlayer2LaneEndOfRound = 1
+    val expectedPlayer2BlockNumberEndOfRound = 760 + Config.SPEED_STATE_3
+    val actualPlayer2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
+
+    assert(actualPlayer2Position.getLane() == expectedPlayer2LaneEndOfRound && actualPlayer2Position.getBlockNumber() == expectedPlayer2BlockNumberEndOfRound, "enemy player was affected by cyber truck the same round it got tweeted")
   }
 
 }
