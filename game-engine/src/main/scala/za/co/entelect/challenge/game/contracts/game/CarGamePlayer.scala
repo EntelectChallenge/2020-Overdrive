@@ -94,10 +94,10 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             recalculateMaxAllowableSpeed()
             hitWall()
         }
-        capDamageAtFive()
+        capDamageAtMaxValue()
     }
 
-    def capDamageAtFive() = {
+    def capDamageAtMaxValue() = {
         if(damage > Config.DAMAGE_MAX_VALUE) {
             damage = Config.DAMAGE_MAX_VALUE
         }
