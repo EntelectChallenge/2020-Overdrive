@@ -12,11 +12,18 @@ class Command_Turn_Left_Tests extends FunSuite{
   private var commandFactory: CommandFactory = null
   private var turnLeftCommand: RawCommand = null
 
+  private var nothingCommandText: String = null
+  private var nothingCommand: RawCommand = null
+
   def initialise() = {
     Config.loadDefault()
     commandFactory = new CommandFactory
     turnLeftCommand = commandFactory.makeCommand(commandText)
     turnLeftCommand.setCommand(commandText)
+
+    nothingCommandText = Config.NOTHING_COMMAND
+    nothingCommand = commandFactory.makeCommand(nothingCommandText)
+    nothingCommand.setCommand(nothingCommandText)
   }
 
   test("Given start of race when TURN_LEFT command then player turns left and incurs change lane penalty") {
@@ -126,5 +133,29 @@ class Command_Turn_Left_Tests extends FunSuite{
     val newPlayer1PositionAfterCommand = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
     assert((newPlayer1PositionAfterCommand.getLane() == newLaneMidRace-1) && (newPlayer1PositionAfterCommand.getBlockNumber() == newBlockNumberMidRace + Config.BOOST_SPEED - 1))
     assert(testCarGamePlayer1.isBoosting() == true)
+  }
+
+  test("Given a player when turning starting block should not be counted")
+  {
+    //Arrange: setup players for a collision
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(2, 35, Config.BOOST_MAP_OBJECT)
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.pickupBoost()
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2 //should be 6
+    val newLaneMidRacePlayer1 = 2
+    val newBlockNumberMidRacePlayer1 = 35
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+    //Act: process commands that would cause a collision
+    TestHelper.processRound(gameMap, turnLeftCommand, nothingCommand)
+
+    //Assert: player positions have been corrected to resolve the collision
+    val expectedNumberOfBoosts = 1;
+    assert(testCarGamePlayer1.getPowerups().count(x => x.equals(Config.BOOST_POWERUP_ITEM)) == 1)
   }
 }
