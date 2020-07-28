@@ -322,4 +322,36 @@ class ConcurrentLogic_Tests extends FunSuite{
     //Assert: player positions have been corrected to resolve the collision
     assert(testCarGamePlayer1.speed == Config.SPEED_STATE_1, "Player did not interact with map object on corrected path")
   }
+
+  test("Given players during a race when collide their starting block should not be counted twice")
+  {
+    //Arrange: setup players for a collision
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMapObjectAt(2, 35, Config.BOOST_MAP_OBJECT)
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.pickupBoost()
+    val testGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2 //should be 6
+    val newLaneMidRacePlayer1 = 2
+    val newBlockNumberMidRacePlayer1 = 35
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer1Id, newLaneMidRacePlayer1, newBlockNumberMidRacePlayer1)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_3 //should be 8
+    val newLaneMidRacePlayer2 = 3
+    val newBlockNumberMidRacePlayer2 = 32
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    //Act: process commands that would cause a collision
+    TestHelper.processRound(gameMap, turnRightCommand, nothingCommand)
+
+    //Assert: player positions have been corrected to resolve the collision
+    val expectedNumberOfBoosts = 1;
+    assert(testCarGamePlayer1.getPowerups().count(x => x.equals(Config.BOOST_POWERUP_ITEM)) == 1)
+  }
 }
