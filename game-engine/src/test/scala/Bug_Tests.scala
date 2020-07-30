@@ -775,6 +775,58 @@ class Bug_Tests extends FunSuite {
     val expectedP2ScoreAfterRound = p2ScoreBeforeRound
     assert(testCarGamePlayer2.getScore == expectedP2ScoreAfterRound)
   }
+
+  test("Given P1 at speed 6 in front of to P2 (outside of lane range) at speed 8 when P1 uses EMP then P2 is not hit because P2 is out of range")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    //initialise player 1 state
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    val testCarGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    testCarGamePlayer1.speed = Config.SPEED_STATE_2
+    testCarGamePlayer1.pickupEmp()
+
+    val player1StartLane = 4
+    val player1BlockNumber = 51
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1Id, player1StartLane, player1BlockNumber)
+    val p1ScoreBeforeRound = testCarGamePlayer1.getScore
+
+    //initialise player 2 state
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testCarGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_3
+
+    val player2StartLane = 2
+    val player2BlockNumber = 50
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2Id, player2StartLane, player2BlockNumber)
+    val p2ScoreBeforeRound = testCarGamePlayer2.getScore
+
+    TestHelper.processRound(gameMap, useEmpCommand, nothingCommand)
+
+    //Assert P1 affected correctly
+    assert(testCarGamePlayer1.getState().contains(Config.USED_POWERUP_EMP_PLAYER_STATE), "p1 state not correct")
+    assert(testCarGamePlayer1.getPowerups().count(x => x.equals(Config.EMP_POWERUP_ITEM)) == 0, "p1 emp count not correct")
+    val expectP1LaneAfterRound = player1StartLane
+    val expectedP1BlockNumberAfterRound = player1BlockNumber + Config.SPEED_STATE_2
+    val actualP1PositionAfterRound = carGameMap.getPlayerBlockPosition(testCarGamePlayer1Id)
+    assert(actualP1PositionAfterRound.getLane() == expectP1LaneAfterRound && actualP1PositionAfterRound.getBlockNumber() == expectedP1BlockNumberAfterRound, "p1 did not move correct number of blocks")
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_2, "p1 speed not correct after round")
+    val expectedP1ScoreAfterRound = p1ScoreBeforeRound + Config.USE_POWERUP_BONUS
+    assert(testCarGamePlayer1.getScore == expectedP1ScoreAfterRound)
+
+    assert(!testCarGamePlayer2.getState().contains(Config.HIT_EMP_PLAYER_STATE), "p2 state not correct")
+    val expectedP2LaneAfterRound = player2StartLane
+    val expectedP2BlockNumberAfterRound = player2BlockNumber + Config.SPEED_STATE_3
+    val actualP2PositionAfterRound = carGameMap.getPlayerBlockPosition(testCarGamePlayer2Id)
+    assert(actualP2PositionAfterRound.getLane() == expectedP2LaneAfterRound && actualP2PositionAfterRound.getBlockNumber() == expectedP2BlockNumberAfterRound, "p2 did not move correct number of blocks")
+    assert(testCarGamePlayer2.speed == Config.SPEED_STATE_3, "p2 speed not correct after round")
+    val expectedP2ScoreAfterRound = p2ScoreBeforeRound
+    assert(testCarGamePlayer2.getScore == expectedP2ScoreAfterRound)
+  }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Exhaustive EMP Tests B
   test("Given P2 at speed 6 behind P1 at speed 8 when P2 uses EMP then P1 is hit by EMP and slowed down")
@@ -1114,6 +1166,58 @@ class Bug_Tests extends FunSuite {
     testCarGamePlayer2.pickupEmp()
 
     val player2StartLane = 1
+    val player2BlockNumber = 51
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2Id, player2StartLane, player2BlockNumber)
+    val p2ScoreBeforeRound = testCarGamePlayer2.getScore
+
+    TestHelper.processRound(gameMap, nothingCommand, useEmpCommand)
+
+    //Assert P1 affected correctly
+    assert(!testCarGamePlayer1.getState().contains(Config.HIT_EMP_PLAYER_STATE), "p1 state not correct")
+    val expectP1LaneAfterRound = player1StartLane
+    val expectedP1BlockNumberAfterRound = player1BlockNumber + Config.SPEED_STATE_3
+    val actualP1PositionAfterRound = carGameMap.getPlayerBlockPosition(testCarGamePlayer1Id)
+    assert(actualP1PositionAfterRound.getLane() == expectP1LaneAfterRound && actualP1PositionAfterRound.getBlockNumber() == expectedP1BlockNumberAfterRound, "p1 did not move correct number of blocks")
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_3, "p1 speed not correct after round")
+    val expectedP1ScoreAfterRound = p1ScoreBeforeRound
+    assert(testCarGamePlayer1.getScore == expectedP1ScoreAfterRound)
+
+    assert(testCarGamePlayer2.getState().contains(Config.USED_POWERUP_EMP_PLAYER_STATE), "p2 state not correct")
+    assert(testCarGamePlayer1.getPowerups().count(x => x.equals(Config.EMP_POWERUP_ITEM)) == 0, "p2 emp count not correct")
+    val expectedP2LaneAfterRound = player2StartLane
+    val expectedP2BlockNumberAfterRound = player2BlockNumber + Config.SPEED_STATE_2
+    val actualP2PositionAfterRound = carGameMap.getPlayerBlockPosition(testCarGamePlayer2Id)
+    assert(actualP2PositionAfterRound.getLane() == expectedP2LaneAfterRound && actualP2PositionAfterRound.getBlockNumber() == expectedP2BlockNumberAfterRound, "p2 did not move correct number of blocks")
+    assert(testCarGamePlayer2.speed == Config.SPEED_STATE_2, "p2 speed not correct after round")
+    val expectedP2ScoreAfterRound = p2ScoreBeforeRound + Config.USE_POWERUP_BONUS
+    assert(testCarGamePlayer2.getScore == expectedP2ScoreAfterRound)
+  }
+
+  test("Given P2 at speed 6 in front of to P1 (outside of lane range) at speed 8 when P2 uses EMP then P1 is not hit by EMP since P1 is out of range")
+  {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    //initialise player 1 state
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    val testCarGamePlayer1Id = testCarGamePlayer1.getGamePlayerId()
+    testCarGamePlayer1.speed = Config.SPEED_STATE_3
+
+    val player1StartLane = 2
+    val player1BlockNumber = 50
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1Id, player1StartLane, player1BlockNumber)
+    val p1ScoreBeforeRound = testCarGamePlayer1.getScore
+
+    //initialise player 2 state
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testCarGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_2
+    testCarGamePlayer2.pickupEmp()
+
+    val player2StartLane = 4
     val player2BlockNumber = 51
     TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2Id, player2StartLane, player2BlockNumber)
     val p2ScoreBeforeRound = testCarGamePlayer2.getScore
