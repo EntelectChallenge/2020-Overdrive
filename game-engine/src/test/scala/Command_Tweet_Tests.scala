@@ -1012,4 +1012,35 @@ class Command_Tweet_Tests extends FunSuite{
     assert(actualPlayer2Position.getLane() == expectedPlayer2LaneEndOfRound && actualPlayer2Position.getBlockNumber() == expectedPlayer2BlockNumberEndOfRound, "enemy player was affected by cyber truck the same round it got tweeted")
   }
 
+  test("Given a round when player 2 moves to block where player 1 places cyber truck and then p2 fixes then p2 is not affected by cyber truck on round 2 or 3") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.pickupTweet()
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    val testGamePlayer2Id = testCarGamePlayer2.getGamePlayerId()
+    testCarGamePlayer2.speed = Config.SPEED_STATE_3 // speed 8
+    val newLaneMidRacePlayer2 = 1
+    val newBlockNumberMidRacePlayer2 = 752
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testGamePlayer2Id, newLaneMidRacePlayer2, newBlockNumberMidRacePlayer2)
+
+    val targetLane = 1
+    val targetBlock = 760
+    val tweetCommand = makeTweetCommand(targetLane, targetBlock)
+    TestHelper.processRound(gameMap, tweetCommand, nothingCommand)
+    TestHelper.processRound(gameMap, nothingCommand, fixCommand)
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val expectedPlayer2LaneEndOfRound = 1
+    val expectedPlayer2BlockNumberEndOfRound = 760 + Config.SPEED_STATE_3
+    val actualPlayer2Position = carGameMap.getPlayerBlockPosition(testGamePlayer2Id)
+
+    assert(actualPlayer2Position.getLane() == expectedPlayer2LaneEndOfRound && actualPlayer2Position.getBlockNumber() == expectedPlayer2BlockNumberEndOfRound, "enemy player was affected by cyber truck the same round it got tweeted")
+  }
+
 }
