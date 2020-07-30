@@ -188,7 +188,7 @@ class CarGameMap(players: util.List[Player], mapGenerationSeed: Int, lanes: Int,
             )
             val middleOfPathHasCyberTruckAndPlayerIsOnTheGround = blockWithCyberTruckInMiddleOfPath.isDefined && !x.getPlayer().isLizarding
             val playerCollidesWithCyberTruck = middleOfPathHasCyberTruckAndPlayerIsOnTheGround || lastBlockWithCyberTruck.isDefined
-            if(playerCollidesWithCyberTruck) {
+            if(playerCollidesWithCyberTruck && !x.getPlayer().getState().contains(Config.FIX_CAR_PLAYER_STATE)) {
                 if(middleOfPathHasCyberTruckAndPlayerIsOnTheGround) {
                     val definedBlockWithCyberTruck = blockWithCyberTruckInMiddleOfPath.get
                     val adjustedNewLane = definedBlockWithCyberTruck.getPosition().getLane()
