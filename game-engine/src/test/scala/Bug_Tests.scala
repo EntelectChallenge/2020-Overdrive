@@ -395,7 +395,6 @@ class Bug_Tests extends FunSuite {
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand) //boost counter 1
     TestHelper.processRound(gameMap, nothingCommand, nothingCommand) //boost runs out and player is stiil at speed 8 and moved 8 blocks
 
-    val expectedLaneLastRound = 3
     val expectedLaneAfterLastRound = 3
     val expectedBlockNumberAfterLastRound = expectedBlockNumberAfter2ndRound + (8*5)
     val actualPlayerPositionAfterLastRound = carGameMap.getPlayerBlockPosition(testGamePlayer1Id)
