@@ -11,7 +11,6 @@ abstract class BaseCarGameCommand extends RawCommand {
     override def performCommand(gameMap: GameMap, player: GamePlayer) = {
         val carGameMap = gameMap.asInstanceOf[CarGameMap]
         var carGamePlayer = player.asInstanceOf[CarGamePlayer]
-        carGamePlayer.clearStatesThatOccurredLastRound()
 
         //handle ticking powerups
         if (carGamePlayer.isBoosting()) 

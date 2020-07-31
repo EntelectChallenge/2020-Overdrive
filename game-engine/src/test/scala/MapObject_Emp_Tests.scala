@@ -28,7 +28,7 @@ class MapObject_Emp_Tests extends FunSuite{
     assert(testCarGamePlayer.getPowerups().count(x => x == Config.EMP_POWERUP_ITEM) == 1)
   }
 
-  test("Given players during race when player hits boost twice then player gains 2 EMP powerups") {
+  test("Given players during race when player hits EMP twice then player gains 2 EMP powerups") {
     initialise()
     val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(3,4), Config.EMP_MAP_OBJECT)
     val testGamePlayer1 = TestHelper.getTestGamePlayer1()

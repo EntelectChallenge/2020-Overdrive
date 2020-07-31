@@ -23,6 +23,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     private var lizarding: Boolean = false
     private var currentCyberTruckPosition: BlockPosition = null
     private var statesThatOccurredThisRound: Array[String] = Array.empty
+    private var collided = false
 
     override def getHealth: Int = {
         return health
@@ -94,10 +95,10 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             recalculateMaxAllowableSpeed()
             hitWall()
         }
-        capDamageAtFive()
+        capDamageAtMaxValue()
     }
 
-    def capDamageAtFive() = {
+    def capDamageAtMaxValue() = {
         if(damage > Config.DAMAGE_MAX_VALUE) {
             damage = Config.DAMAGE_MAX_VALUE
         }
@@ -276,7 +277,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         val boostOver = boostCounter == 0
         if (boostOver) {
             boosting = false
-            speed = MAXIMUM_SPEED
+            speed = Math.min(maxSpeedState, Config.MAXIMUM_SPEED)
             setState(Config.NOTHING_PLAYER_STATE)
         }
     }
@@ -312,9 +313,8 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     private def increaseSpeed() = {
-        if (!isBoosting()){
-            recalculateMaxAllowableSpeed()
-        }
+        recalculateMaxAllowableSpeed()
+
         speed match {
             case MINIMUM_SPEED => speed = SPEED_STATE_1
             case SPEED_STATE_1 => speed = SPEED_STATE_2
@@ -325,7 +325,7 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
             case BOOST_SPEED => speed = BOOST_SPEED
             case invalidSpeed => throw new Exception("Invalid current speed: " + invalidSpeed.toString())
         }
-        if (speed > maxSpeedState && !isBoosting()) {
+        if (speed > maxSpeedState) {
             speed = maxSpeedState;
         }
     }
@@ -370,7 +370,8 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         reduceSpeedToLevel(allowStop, Config.SPEED_STATE_1)
         updateScore(Config.HIT_CYBERTRUCK_SCORE_PENALTY)
         damage += Config.DAMAGE_CYBERTRUCK;
-        recalculateMaxAllowableSpeed()
+        recalculateMaxAllowableSpeed();
+        capDamageAtMaxValue();
     }
 
     def clearStatesThatOccurredLastRound() = {
@@ -391,5 +392,13 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
         if (damage < 0) {
             damage = 0;
         }
+    }
+
+    def setCollided(hasCollided: Boolean) = {
+        collided = hasCollided;
+    }
+
+    def hasCollided(): Boolean = {
+        return collided
     }
 }

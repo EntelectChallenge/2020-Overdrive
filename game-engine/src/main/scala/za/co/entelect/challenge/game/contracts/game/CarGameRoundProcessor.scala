@@ -25,11 +25,28 @@ class CarGameRoundProcessor extends GameRoundProcessor{
     carStartPositions = carStartPositions.appended(player2StartPositions)
     carGameMap.setStartRound(carStartPositions)
 
+    //clear player states from last round
+    for ( i <- gamePlayers.indices) {
+      val gamePlayer = gamePlayers(i)
+      gamePlayer.asInstanceOf[CarGamePlayer].clearStatesThatOccurredLastRound()
+    }
+
     for ( i <- gamePlayers.indices) {
       val gamePlayer = gamePlayers(i)
       val commandText = commandsToProcess.get(gamePlayer).get(0).getCommand
       var playerCommand: RawCommand = commandFactory.makeCommand(commandText)
       playerCommand.performCommand(gameMap, gamePlayer)
+    }
+
+    //make sure players hit by EMP do not move
+    for ( i <- gamePlayers.indices) {
+      val gamePlayer = gamePlayers(i)
+      val carGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer]
+      val hitByEmp = carGamePlayer.getState().contains(Config.HIT_EMP_PLAYER_STATE)
+      if(hitByEmp) {
+        val stagedPositionToUpdate = carGameMap.stagedFuturePositions.find(x => x.getPlayer().getGamePlayerId() == carGamePlayer.getGamePlayerId()).get
+        stagedPositionToUpdate.setNewPosition(stagedPositionToUpdate.getOldPosition())
+      }
     }
 
     carGameMap.resolveCyberTruckCollisions() //needs to happen first because projected path of player is used in player collisions

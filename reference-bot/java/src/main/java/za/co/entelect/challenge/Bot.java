@@ -43,7 +43,7 @@ public class Bot {
         List<Object> nextBlocks = blocks.subList(0,1);
 
         //Fix first if too damaged to move
-        if(myCar.damage == 6) {
+        if(myCar.damage == 5) {
             return FIX;
         }
         //Accelerate first if going to slow
