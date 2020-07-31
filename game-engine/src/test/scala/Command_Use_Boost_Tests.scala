@@ -158,4 +158,30 @@ class Command_Use_Boost_Tests extends FunSuite{
     val actualPosition = gameMap.asInstanceOf[CarGameMap].getPlayerBlockPosition(testCarGamePlayer1.getGamePlayerId())
     assert(actualPosition.getBlockNumber() == expectedBlockNumber)
   }
+
+  test("Given player with 1 damage when players boosts then players speed is 9") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithMultipleSameMapObjectsAt(1, Array(3), Config.MUD_MAP_OBJECT)
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer1.pickupBoost()
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(gameMap, useBoostCommand, nothingCommand)
+
+    assert(testCarGamePlayer1.speed == Config.MAXIMUM_SPEED)
+  }
+
+  test("Given player with 0 damage when players boosts then players speed is 15") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+
+    testCarGamePlayer1.pickupBoost()
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(gameMap, useBoostCommand, nothingCommand)
+
+    assert(testCarGamePlayer1.speed == Config.BOOST_SPEED)
+  }
 }
