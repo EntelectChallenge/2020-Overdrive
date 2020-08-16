@@ -198,9 +198,38 @@ class Command_Use_Emp_Tests extends FunSuite{
     TestHelper.processRound(gameMap, nothingCommand, accelerateCommand)
     TestHelper.processRound(gameMap, useEmpCommand, accelerateCommand)
 
-    assert(testCarGamePlayer2.speed == Config.SPEED_STATE_2)
+    assert(testCarGamePlayer2.speed == Config.SPEED_STATE_1)
   }
 
+  test("Given player2 with emp behind player1, one lane away, when USE_EMP command player1 slows down") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 4, 100)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 40)
+
+    testCarGamePlayer1.speed = Config.SPEED_STATE_3
+    testCarGamePlayer2.speed = Config.SPEED_STATE_3
+
+    testCarGamePlayer2.pickupEmp()
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+    TestHelper.processRound(gameMap, nothingCommand, useEmpCommand)
+
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_1)
+
+
+    testCarGamePlayer2.pickupEmp()
+    TestHelper.processRound(gameMap, accelerateCommand, nothingCommand)
+    TestHelper.processRound(gameMap, accelerateCommand, useEmpCommand)
+
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_1)
+  }
 
   test("Given player1 with emp behind player2, two lanes away, when USE_EMP command nothing happens") {
     initialise()

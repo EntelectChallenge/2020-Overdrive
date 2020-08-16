@@ -38,7 +38,7 @@ class CarGameRoundProcessor extends GameRoundProcessor{
       playerCommand.performCommand(gameMap, gamePlayer)
     }
 
-    //make sure players hit by EMP do not move
+    //make sure players hit by EMP do not move and that their speed is reduced
     for ( i <- gamePlayers.indices) {
       val gamePlayer = gamePlayers(i)
       val carGamePlayer = gamePlayer.asInstanceOf[CarGamePlayer]
@@ -46,6 +46,7 @@ class CarGameRoundProcessor extends GameRoundProcessor{
       if(hitByEmp) {
         val stagedPositionToUpdate = carGameMap.stagedFuturePositions.find(x => x.getPlayer().getGamePlayerId() == carGamePlayer.getGamePlayerId()).get
         stagedPositionToUpdate.setNewPosition(stagedPositionToUpdate.getOldPosition())
+        carGamePlayer.hitEmpReduceSpeed()
       }
     }
 
