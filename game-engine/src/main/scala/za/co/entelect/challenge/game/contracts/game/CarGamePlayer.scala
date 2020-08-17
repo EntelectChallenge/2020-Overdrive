@@ -141,10 +141,13 @@ class CarGamePlayer(health: Int, var score: Int, gamePlayerId: Int, var speed: I
     }
 
     def hitEmp(): Unit = {
-        val allowStop: Boolean = false
-        reduceSpeedToLevel(allowStop, SPEED_STATE_1)
         setState(Config.HIT_EMP_PLAYER_STATE)
         updateScore(Config.HIT_EMP_SCORE_PENALTY)
+    }
+
+    def hitEmpReduceSpeed(): Unit = {
+        val allowStop: Boolean = false
+        reduceSpeedToLevel(allowStop, SPEED_STATE_1)
     }
 
     private def reduceSpeedToLevel(allowStop: Boolean, speedLevel: Int) = {

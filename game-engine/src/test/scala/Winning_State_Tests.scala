@@ -128,4 +128,78 @@ class Winning_State_Tests extends FunSuite {
     val winner = carGameMap.getWinningPlayer.asInstanceOf[CarGamePlayer]
     assert(testCarGamePlayer1.getGamePlayerId() == winner.getGamePlayerId(), "Player 1 is the furthest on the track, therefore player 1 needs to be declared the winner")
   }
+
+  test("Given both players finish in same round then player with highest speed should win (edge case)") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.pickupBoost()
+    testCarGamePlayer1.useBoost()
+    testCarGamePlayer1.tickBoost()
+    testCarGamePlayer1.tickBoost()
+    testCarGamePlayer1.tickBoost()
+    testCarGamePlayer1.tickBoost() //boost counter is now 1
+    testCarGamePlayer1.score = 541;
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 1, 1491)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer2.pickupBoost()
+    testCarGamePlayer2.useBoost()
+    testCarGamePlayer2.tickBoost()
+    testCarGamePlayer2.tickBoost() //boost counter is now 3
+    testCarGamePlayer2.score = 447
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 1499)
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val winner = carGameMap.getWinningPlayer.asInstanceOf[CarGamePlayer]
+    assert(testCarGamePlayer2.getGamePlayerId() == winner.getGamePlayerId())
+  }
+
+  test("Given both players finish in same round with the same speed then player with the highest score should win") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.score = 541;
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 1, 1496)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer2.score = 447
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 1499)
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val winner = carGameMap.getWinningPlayer.asInstanceOf[CarGamePlayer]
+    assert(testCarGamePlayer1.getGamePlayerId() == winner.getGamePlayerId())
+  }
+
+  test("Given both players finish in same round then player with highest speed should win") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer1.score = 541;
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 1, 1496)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    testCarGamePlayer2.score = 447
+    testCarGamePlayer2.speed = Config.SPEED_STATE_3
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 1499)
+
+    TestHelper.processRound(gameMap, nothingCommand, nothingCommand)
+
+    val winner = carGameMap.getWinningPlayer.asInstanceOf[CarGamePlayer]
+    assert(testCarGamePlayer2.getGamePlayerId() == winner.getGamePlayerId())
+  }
 }
