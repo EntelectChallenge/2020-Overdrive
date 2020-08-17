@@ -1245,4 +1245,45 @@ class Bug_Tests extends FunSuite {
     assert(testCarGamePlayer2.getScore == expectedP2ScoreAfterRound)
   }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  test("Given player 1 uses emp and player 2 boosts then player 2 speed should be 3 from now on") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 4, 30)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 40)
+
+    testCarGamePlayer1.pickupEmp()
+    testCarGamePlayer2.pickupBoost()
+    TestHelper.processRound(gameMap, useEmpCommand, useBoostCommand)
+
+    assert(testCarGamePlayer2.speed == Config.SPEED_STATE_1)
+  }
+
+  test("Given player 2 uses emp and player 1 boosts then player 2 speed should be 3 from now on") {
+    initialise()
+    val gameMap = TestHelper.initialiseGameWithNoMapObjects()
+    val carGameMap = gameMap.asInstanceOf[CarGameMap]
+
+    val testGamePlayer1 = TestHelper.getTestGamePlayer1()
+    val testCarGamePlayer1 = testGamePlayer1.asInstanceOf[CarGamePlayer]
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer1.getGamePlayerId(), 4, 40)
+
+    val testGamePlayer2 = TestHelper.getTestGamePlayer2()
+    val testCarGamePlayer2 = testGamePlayer2.asInstanceOf[CarGamePlayer]
+    TestHelper.putPlayerSomewhereOnTheTrack(carGameMap, testCarGamePlayer2.getGamePlayerId(), 3, 30)
+
+    testCarGamePlayer1.pickupBoost()
+    testCarGamePlayer2.pickupEmp()
+    TestHelper.processRound(gameMap, useBoostCommand, useEmpCommand)
+
+    assert(testCarGamePlayer1.speed == Config.SPEED_STATE_1)
+  }
+
 }
